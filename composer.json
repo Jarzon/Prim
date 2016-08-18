@@ -1,0 +1,27 @@
+{
+    "name": "jarzon/prim",
+    "type": "project",
+    "description": "",
+    "keywords": ["framework"],
+    "homepage": "https://github.com/jarzon/prim",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jarzon",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/jarzon/prim/issues",
+        "source": "https://github.com/jarzon/prim"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "robmorgan/phinx": "^0.4.4",
+        "phroute/phroute": "^2.0"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "4.7.*",
+      "phpunit/dbunit": ">=1.2"
+    }
+}
