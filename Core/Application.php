@@ -1,7 +1,7 @@
 <?php
 namespace Prim\Core;
 
-// TODO : INJECTION but useless without a interface to use?
+// TODO : INJECTION but without a interface to use?
 use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
 
@@ -16,7 +16,7 @@ class Application
 
         include(APP . 'config/routing.php');
 
-        // TODO : Cache $router->getData(), probably with APC
+        // TODO : Cache $router->getData()
         $dispatcher = new Dispatcher($router->getData());
 
         $uri = str_replace(URL_SUB_FOLDER, '', $_SERVER['REQUEST_URI']);

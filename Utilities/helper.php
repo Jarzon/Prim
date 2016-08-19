@@ -1,4 +1,5 @@
 <?php
+namespace Prim\Utilities;
 
 class Helper
 {
