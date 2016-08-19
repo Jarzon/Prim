@@ -19,7 +19,7 @@
         "psr-4": {"Prim\\": "/"}
     },
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.6.0",
         "phroute/phroute": "^2.0"
     },
     "require-dev": {
