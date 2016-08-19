@@ -3,26 +3,17 @@ namespace Prim\Core;
 
 class Controller
 {
-    /**
-     * @var null Database Connection
-     */
     public $db = null;
-    
-    /**
-     * @var Design
-     */
-    public $design = 'design';
-
-    /**
-     * @var null Model
-     */
+    public $design = '';
     public $model = null;
 
     /**
-     * Whenever controller is created, open a database connection too and load "the model".
+     * Whenever controller is created, open a database connection too
      */
     function __construct()
     {
+        $this->design = 'design';
+
         if(DB_ENABLE) {
             $this->openDatabaseConnection();
         }
@@ -30,7 +21,7 @@ class Controller
 
     function design($view, $t = null)
     {
-        require APP . 'view/_templates/'.$this->design.'.php';
+        require '../src/view/_templates/'.$this->design.'.php';
     }
 
     /**
@@ -39,13 +30,14 @@ class Controller
     protected function _getTranslation($language = 'en')
     {
         $yaml = new \Symfony\Component\Yaml\Parser();
+        $file = '../messages/'.$language.'.yaml';
 
         //Check if we have a translation file for that language
-        if (file_exists(APP . 'messages/'.$language.'.yaml')) {
-            // TODO: Cache the file, in apc
-            $messages =  $yaml->parse(file_get_contents(APP . 'messages/'.$language.'.yaml'));
+        if (file_exists($file)) {
+            // TODO: Cache the file
+            $messages =  $yaml->parse(file_get_contents($file));
         } else {
-            $messages =  $yaml->parse(file_get_contents(APP . 'messages/en.yaml'));
+            $messages =  $yaml->parse(file_get_contents('../messages/en.yaml'));
         }
 
         return $messages;
