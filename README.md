@@ -6,4 +6,4 @@ Install with Composer
 composer create-project jarzon/primbase ProjectName
 ```
 
-After that you might want to search/remplace the word PROJECT(case sensitive) by the name of your project.
+After that you might want to copy config.php.dist to config.php and edit it to your needs.
