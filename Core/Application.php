@@ -10,7 +10,7 @@ class Application
     /**
      * Routing
      */
-    public function __construct()
+    public function __construct($method, $url)
     {
         $router = new RouteCollector();
 
@@ -19,9 +19,7 @@ class Application
         // TODO : Cache $router->getData()
         $dispatcher = new Dispatcher($router->getData());
 
-        $uri = str_replace(URL_SUB_FOLDER, '', $_SERVER['REQUEST_URI']);
-
-        $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($uri, PHP_URL_PATH));
+        $response = $dispatcher->dispatch($method, parse_url($url, PHP_URL_PATH));
 
         // Print out the value returned from the dispatched function
         echo $response;
