@@ -30,7 +30,7 @@ class Controller
     protected function _getTranslation($language = 'en')
     {
         $yaml = new \Symfony\Component\Yaml\Parser();
-        $file = '../messages/'.$language.'.yaml';
+        $file = '../app/messages/'.$language.'.yaml';
 
         //Check if we have a translation file for that language
         if (file_exists($file)) {
@@ -44,7 +44,8 @@ class Controller
     }
 
     /**
-     * Open the database connection with the credentials from application/config/config.php
+     * Open the database connection with the credentials from app/config/config.php
+     * TODO: Get the credentials from the method args
      */
     private function openDatabaseConnection()
     {
