@@ -37,7 +37,7 @@ class Controller
             // TODO: Cache the file
             $messages =  $yaml->parse(file_get_contents($file));
         } else {
-            $messages =  $yaml->parse(file_get_contents('../messages/en.yaml'));
+            $messages =  $yaml->parse(file_get_contents('../app/messages/en.yaml'));
         }
 
         return $messages;
