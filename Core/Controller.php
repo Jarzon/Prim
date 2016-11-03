@@ -4,7 +4,7 @@ namespace Prim\Core;
 class Controller
 {
     public $db = null;
-    public $design = '';
+    public $design = 'design';
     public $model = null;
 
     /**
@@ -12,11 +12,13 @@ class Controller
      */
     function __construct()
     {
-        $this->design = 'design';
-
         if(DB_ENABLE) {
             $this->openDatabaseConnection();
         }
+    }
+
+    function setTemplate($design) {
+        $this->design = $design;
     }
 
     function design($view, $t = null)
