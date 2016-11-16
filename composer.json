@@ -16,7 +16,7 @@
         "source": "https://github.com/jarzon/prim"
     },
     "autoload": {
-        "psr-4": {"Prim\\": "/"}
+        "psr-4": {"Prim\\": "/src"}
     },
     "require": {
         "php": ">=5.6.0",
