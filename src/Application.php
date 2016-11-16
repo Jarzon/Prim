@@ -1,5 +1,5 @@
 <?php
-namespace Prim\Core;
+namespace Prim;
 
 // TODO : INJECTION but without a interface to use?
 use Phroute\Phroute\RouteCollector;
