@@ -1,7 +1,6 @@
 <?php
 namespace Prim;
 
-// TODO : INJECTION but without a interface to use?
 use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
 
@@ -9,8 +8,11 @@ class Application
 {
     /**
      * Routing
+     * @param string $method
+     * @param string $url
+     * @param object $error
      */
-    public function __construct($method, $url)
+    public function __construct($method, $url, $error)
     {
         $router = new RouteCollector();
 
@@ -19,9 +21,10 @@ class Application
         // TODO : Cache $router->getData()
         $dispatcher = new Dispatcher($router->getData());
 
-        $response = $dispatcher->dispatch($method, parse_url($url, PHP_URL_PATH));
-
-        // Print out the value returned from the dispatched function
-        echo $response;
+        try {
+            $dispatcher->dispatch($method, parse_url($url, PHP_URL_PATH));
+        } catch (\Exception $e) {
+            echo $error->handleError($e);
+        }
     }
 }

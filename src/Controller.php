@@ -1,11 +1,16 @@
 <?php
 namespace Prim;
 
+use PDO;
+
 class Controller
 {
     public $db = null;
     public $design = 'design';
+    public $language = 'en';
     public $model = null;
+    public $messages = [];
+    public $vars = [];
 
     /**
      * Whenever controller is created, open a database connection too
@@ -13,52 +18,95 @@ class Controller
     function __construct()
     {
         if(DB_ENABLE) {
-            $this->openDatabaseConnection();
+            $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
         }
     }
 
+    /**
+     * Set the default template
+     * @param string $design
+     */
     function setTemplate($design) {
         $this->design = $design;
     }
 
-    function design($view, $t = null)
+    /**
+     * Set the language
+     * @param string $language
+     */
+    function setLanguage($language) {
+        $this->language = $language;
+    }
+
+    /**
+     * Fetch the template design to show the view in
+     * @param string $view
+     */
+    function design($view)
     {
+        // Create the view vars
+        if(!empty($this->vars)) extract($this->vars);
+
+        $_ = function($message) {
+            return $this->messages[$message];
+        };
+
         require '../src/view/_templates/'.$this->design.'.php';
     }
 
     /**
-     * A translation method
+     * Fetch a translation file and return an array that contain the messages
      */
-    protected function _getTranslation($language = 'en')
+    protected function _getTranslation()
     {
         $yaml = new \Symfony\Component\Yaml\Parser();
-        $file = '../app/messages/'.$language.'.yaml';
+        $file = '../app/messages/'.$this->language.'.yaml';
 
-        //Check if we have a translation file for that language
-        if (file_exists($file)) {
-            // TODO: Cache the file
-            $messages =  $yaml->parse(file_get_contents($file));
-        } else {
-            $messages =  $yaml->parse(file_get_contents('../app/messages/en.yaml'));
+        // Check if we have a translation file for that language
+        if (!file_exists($file)) {
+            $file = 'en';
         }
 
-        return $messages;
+        // TODO: Cache the file
+        $messages = $yaml->parse(file_get_contents($file));
+
+        $this->messages = $messages;
     }
 
     /**
-     * Open the database connection with the credentials from app/config/config.php
-     * TODO: Get the credentials from the method args
+     * Add a var for the view
+     * @param string $name
+     * @param mixed $var
      */
-    private function openDatabaseConnection()
+    function addVar($name, $var) {
+        $this->vars[$name] = $var;
+    }
+
+    /**
+     * Add a vars for the view
+     * @param array $vars
+     */
+    function addVars($vars) {
+        foreach($vars as $var) {
+            $this->addVar($var[0], $var[1]);
+        }
+    }
+
+    /**
+     * Open a Database connection using PDO
+     * @param string $type DBMS
+     * @param string $host
+     * @param string $name
+     * @param string $charset
+     * @param string $user
+     * @param string $pass
+     */
+    public function openDatabaseConnection($type, $host, $name, $charset, $user, $pass)
     {
-        // set the (optional) options of the PDO connection. in this case, we set the fetch mode to
-        // "objects", which means all results will be objects, like this: $result->user_name !
-        // For example, fetch mode FETCH_ASSOC would return results like this: $result["user_name] !
-        // @see http://www.php.net/manual/en/pdostatement.fetch.php
-        $options = array(\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_WARNING);
+        // Set the fetch mode to object
+        $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING);
 
         // generate a database connection, using the PDO connector
-        // @see http://net.tutsplus.com/tutorials/php/why-you-should-be-using-phps-pdo-for-database-access/
-        $this->db = new \PDO(DB_TYPE . ':host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET, DB_USER, DB_PASS, $options);
+        $this->db = new PDO($type . ':host=' . $host . ';dbname=' . $name . ';charset=' . $charset, $user, $pass, $options);
     }
 }
