@@ -59,8 +59,7 @@ class Controller
      */
     protected function _getTranslation()
     {
-        $yaml = new \Symfony\Component\Yaml\Parser();
-        $file = '../app/messages/'.$this->language.'.yaml';
+        $file = '../app/messages/'.$this->language.'.json';
 
         // Check if we have a translation file for that language
         if (!file_exists($file)) {
@@ -68,9 +67,7 @@ class Controller
         }
 
         // TODO: Cache the file
-        $messages = $yaml->parse(file_get_contents($file));
-
-        $this->messages = $messages;
+        $this->messages = json_decode(file_get_contents($file), true);
     }
 
     /**
