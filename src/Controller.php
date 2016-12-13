@@ -3,90 +3,28 @@ namespace Prim;
 
 use PDO;
 
-class Controller
+class Controller implements ViewInterface
 {
-    public $db = null;
-    public $design = 'design';
-    public $language = 'en';
-    public $model = null;
-    public $messages = [];
-    public $vars = [];
+    /**
+     * @var PDO $db
+     * @var string $model
+     * @var View $view
+     */
+    public $db;
+    public $model;
+    public $view;
 
     /**
      * Whenever controller is created, open a database connection too
+     * @param ViewInterface $view
      */
-    function __construct()
+    function __construct(ViewInterface $view)
     {
         if(DB_ENABLE) {
             $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
         }
-    }
 
-    /**
-     * Set the default template
-     * @param string $design
-     */
-    function setTemplate($design) {
-        $this->design = $design;
-    }
-
-    /**
-     * Set the language
-     * @param string $language
-     */
-    function setLanguage($language) {
-        $this->language = $language;
-    }
-
-    /**
-     * Fetch the template design to show the view in
-     * @param string $view
-     */
-    function design($view)
-    {
-        // Create the view vars
-        if(!empty($this->vars)) extract($this->vars);
-
-        $_ = function($message) {
-            return $this->messages[$message];
-        };
-
-        require '../src/view/_templates/'.$this->design.'.php';
-    }
-
-    /**
-     * Fetch a translation file and return an array that contain the messages
-     */
-    protected function _getTranslation()
-    {
-        $file = '../app/messages/'.$this->language.'.json';
-
-        // Check if we have a translation file for that language
-        if (!file_exists($file)) {
-            $file = 'en';
-        }
-
-        // TODO: Cache the file
-        $this->messages = json_decode(file_get_contents($file), true);
-    }
-
-    /**
-     * Add a var for the view
-     * @param string $name
-     * @param mixed $var
-     */
-    function addVar($name, $var) {
-        $this->vars[$name] = $var;
-    }
-
-    /**
-     * Add a vars for the view
-     * @param array $vars
-     */
-    function addVars($vars) {
-        foreach($vars as $var) {
-            $this->addVar($var[0], $var[1]);
-        }
+        $this->view = $view;
     }
 
     /**
@@ -105,5 +43,32 @@ class Controller
 
         // generate a database connection, using the PDO connector
         $this->db = new PDO($type . ':host=' . $host . ';dbname=' . $name . ';charset=' . $charset, $user, $pass, $options);
+    }
+
+    // View Methods shortcut
+    function setTemplate($design) {
+        $this->view->setTemplate($design);
+    }
+
+    function setLanguage($language) {
+        $this->view->setLanguage($language);
+    }
+
+    function design($view)
+    {
+        $this->view->design($view);
+    }
+
+    function _getTranslation()
+    {
+        $this->view->_getTranslation();
+    }
+
+    function addVar($name, $var) {
+        $this->view->addVar($name, $var);
+    }
+
+    function addVars($vars) {
+        $this->view->addVars($vars);
     }
 }
