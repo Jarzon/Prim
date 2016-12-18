@@ -11,11 +11,6 @@ class View implements ViewInterface
     public $messages = [];
     public $vars = [];
 
-    function __construct()
-    {
-
-    }
-
     function setTemplate($design) {
         $this->design = $design;
     }
@@ -29,8 +24,10 @@ class View implements ViewInterface
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
 
+        define('LANG_ROW', array_search($this->language, $this->messages['languages']));
+
         $_ = function($message) {
-            return $this->messages[$message];
+            return $this->messages[$message][LANG_ROW];
         };
 
         require '../src/view/_templates/'.$this->design.'.php';
