@@ -10,7 +10,7 @@ class Application
 
     /**
      * Routing
-     * @param string $container
+     * @param object $container
      * @param object $error
      */
     public function __construct($container, $error)

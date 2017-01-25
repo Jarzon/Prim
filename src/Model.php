@@ -6,7 +6,7 @@ class Model
     /**
      * @param object $db A PDO database connection
      */
-    function __construct($db)
+    function __construct(\PDO $db)
     {
         try {
             $this->db = $db;

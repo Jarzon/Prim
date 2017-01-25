@@ -5,21 +5,18 @@ interface ViewInterface
 {
     /**
      * Set the default template
-     * @param string $design
      */
-    function setTemplate($design);
+    function setTemplate(string $design);
 
     /**
      * Set the language
-     * @param string $language
      */
-    function setLanguage($language);
+    function setLanguage(string $language);
 
     /**
      * Fetch the template design to show the view in
-     * @param string $view
      */
-    function design($view);
+    function design(string $view);
 
     /**
      * Fetch a translation file and return an array that contain the messages
@@ -28,14 +25,12 @@ interface ViewInterface
 
     /**
      * Add a var for the view
-     * @param string $name
      * @param mixed $var
      */
-    function addVar($name, $var);
+    function addVar(string $name, $var);
 
     /**
      * Add a vars for the view
-     * @param array $vars
      */
-    function addVars($vars);
+    function addVars(array $vars);
 }

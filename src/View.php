@@ -1,9 +1,6 @@
 <?php
 namespace Prim;
 
-/**
- * @implements ViewInterface
- */
 class View implements ViewInterface
 {
     public $design = 'design';
@@ -11,15 +8,15 @@ class View implements ViewInterface
     public $messages = [];
     public $vars = [];
 
-    function setTemplate($design) {
+    function setTemplate(string $design) {
         $this->design = $design;
     }
 
-    function setLanguage($language) {
+    function setLanguage(string $language) {
         $this->language = $language;
     }
 
-    function design($view)
+    function design(string $view)
     {
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
@@ -44,11 +41,11 @@ class View implements ViewInterface
         }
     }
 
-    function addVar($name, $var) {
+    function addVar(string $name, $var) {
         $this->vars[$name] = $var;
     }
 
-    function addVars($vars) {
+    function addVars(array $vars) {
         foreach($vars as $var) {
             $this->addVar($var[0], $var[1]);
         }

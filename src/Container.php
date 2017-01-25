@@ -6,18 +6,18 @@ class Container
 {
     static protected $shared = array();
 
-    public function __construct(array $parameters = array())
+    public function __construct(array $parameters = [])
     {
         $this->parameters = $parameters;
     }
 
-    private function init($name, ...$args) {
+    private function init(string $name, ...$args) {
         if (isset(self::$shared[$name]))
         {
             return self::$shared[$name];
         }
 
-        $class = $this->parameters[$name.'.class'];
+        $class = $this->parameters["$name.class"];
 
         $obj = new $class(...$args);
 
@@ -33,11 +33,10 @@ class Container
 
     /**
      * Used for all the Controllers
-     * @param Controller $obj
      * */
-    public function getController($obj)
+    public function getController(string $obj)
     {
-        $this->parameters[$obj.'.class'] = $obj;
+        $this->parameters["$obj.class"] = $obj;
 
         return $this->init($obj, $this->getView());
     }
