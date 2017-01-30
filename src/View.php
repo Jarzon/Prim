@@ -3,10 +3,10 @@ namespace Prim;
 
 class View implements ViewInterface
 {
-    public $design = 'design';
-    public $language = 'en';
-    public $messages = [];
-    public $vars = [];
+    private $design = 'design';
+    private $language = 'en';
+    private $messages = [];
+    private $vars = [];
 
     function setTemplate(string $design) {
         $this->design = $design;
