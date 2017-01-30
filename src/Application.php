@@ -51,9 +51,9 @@ class Application
                 $vars = $routeInfo[2];
 
                 $controller = $container->getController($handler[0]);
-
                 $method = $handler[1];
-                $controller->$method($vars);
+
+                $controller->$method(...$vars);
                 break;
         }
     }
