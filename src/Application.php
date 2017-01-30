@@ -48,7 +48,7 @@ class Application
                 break;
             case \FastRoute\Dispatcher::FOUND:
                 $handler = $routeInfo[1];
-                $vars = $routeInfo[2];
+                $vars = array_values($routeInfo[2]);
 
                 $controller = $container->getController($handler[0]);
                 $method = $handler[1];
