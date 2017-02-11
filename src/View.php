@@ -7,6 +7,8 @@ class View implements ViewInterface
     private $language = 'en';
     private $messages = [];
     private $vars = [];
+    private $root = ROOT;
+    private $pack = 'BasePack';
 
     function setTemplate(string $design) {
         $this->design = $design;
@@ -27,12 +29,12 @@ class View implements ViewInterface
             return $this->messages[$message][LANG_ROW];
         };
 
-        require '../src/view/_templates/'.$this->design.'.php';
+        require $this->root . 'src/'.$this->pack.'/view/_templates/'.$this->design.'.php';
     }
 
     function _getTranslation()
     {
-        $file = '../app/config/messages.json';
+        $file = $this->root . 'app/config/messages.json';
 
         // Check if we have a translation file for that language
         if (file_exists($file)) {
