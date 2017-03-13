@@ -7,13 +7,12 @@ class Application
      * @var Container $container
      */
     public $container;
+    public $router;
 
     /**
      * Routing
-     * @param object $container
-     * @param object $error
      */
-    public function __construct($container, $error)
+    public function __construct(Container $container, Controller $error)
     {
         $this->container = $container;
 
@@ -33,6 +32,7 @@ class Application
         define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
 
         $dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $router) {
+            $this->router = $router;
             include(APP . 'config/routing.php');
         });
 
@@ -56,5 +56,21 @@ class Application
                 $controller->$method(...$vars);
                 break;
         }
+    }
+
+    function getRoutes(string $pack, string $routeFile) {
+        include(ROOT . "/src/$pack/config/$routeFile");
+    }
+
+    function get(string $route, string $controller, string $method) {
+        $this->router->get($route, [$controller, $method]);
+    }
+
+    function post(string $route, string $controller, string $method) {
+        $this->router->post($route, [$controller, $method]);
+    }
+
+    function addRoute($type, string $route, string $controller, string $method) {
+        $this->router->addRoute($type, $route, [$controller, $method]);
     }
 }
