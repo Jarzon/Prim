@@ -10,16 +10,27 @@ class View implements ViewInterface
     private $root = ROOT;
     private $pack = 'BasePack';
 
-    function setTemplate(string $design) {
+    function setPack(string $pack)
+    {
+        $this->pack = $pack;
+    }
+
+    function setTemplate(string $design)
+    {
         $this->design = $design;
     }
 
-    function setLanguage(string $language) {
+    function setLanguage(string $language)
+    {
         $this->language = $language;
     }
 
-    function design(string $view)
+    function design(string $view, string $packDirectory = '')
     {
+        if($packDirectory == '') {
+            $packDirectory = $this->pack;
+        }
+
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
 
@@ -29,7 +40,7 @@ class View implements ViewInterface
             return $this->messages[$message][LANG_ROW];
         };
 
-        require $this->root . 'src/'.$this->pack.'/view/_templates/'.$this->design.'.php';
+        require "{$this->root}src/{$this->pack}/view/_templates/{$this->design}.php";
     }
 
     function _getTranslation()
@@ -43,11 +54,13 @@ class View implements ViewInterface
         }
     }
 
-    function addVar(string $name, $var) {
+    function addVar(string $name, $var)
+    {
         $this->vars[$name] = $var;
     }
 
-    function addVars(array $vars) {
+    function addVars(array $vars)
+    {
         foreach($vars as $var) {
             $this->addVar($var[0], $var[1]);
         }
