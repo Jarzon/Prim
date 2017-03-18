@@ -8,7 +8,7 @@ class View implements ViewInterface
     private $messages = [];
     private $vars = [];
     private $root = ROOT;
-    private $pack = 'BasePack';
+    private $pack = '';
 
     function setPack(string $pack)
     {

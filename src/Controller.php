@@ -25,6 +25,9 @@ class Controller implements ViewInterface
 
         $this->view = $view;
 
+        $class = get_class($this);
+        $this->view->setPack(explode('\\', $class)[1]);
+
         $this->_getTranslation();
     }
 
