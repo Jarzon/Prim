@@ -6,7 +6,7 @@ interface ViewInterface
     /**
      * Set the default template
      */
-    function setTemplate(string $design);
+    function setTemplate(string $design, string $pack);
 
     /**
      * Set the language

@@ -44,8 +44,8 @@ class Controller implements ViewInterface
     }
 
     // View Methods shortcut
-    function setTemplate(string $design) {
-        $this->view->setTemplate($design);
+    function setTemplate(string $design, string $pack) {
+        $this->view->setTemplate($design, $pack);
     }
 
     function setLanguage(string $language) {

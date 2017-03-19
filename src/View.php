@@ -4,6 +4,7 @@ namespace Prim;
 class View implements ViewInterface
 {
     private $design = 'design';
+    private $designPack = 'BasePack';
     private $language = 'en';
     private $messages = [];
     private $vars = [];
@@ -15,9 +16,10 @@ class View implements ViewInterface
         $this->pack = $pack;
     }
 
-    function setTemplate(string $design)
+    function setTemplate(string $design, string $pack)
     {
         $this->design = $design;
+        $this->designPack = $pack;
     }
 
     function setLanguage(string $language)
@@ -40,7 +42,7 @@ class View implements ViewInterface
             return $this->messages[$message][LANG_ROW];
         };
 
-        require "{$this->root}src/{$this->pack}/view/_templates/{$this->design}.php";
+        require "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
     }
 
     function _getTranslation()
