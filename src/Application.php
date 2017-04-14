@@ -72,6 +72,6 @@ class Application
     }
 
     function addRoute(array $type, string $route, string $controller, string $method) {
-        $this->router->addRoute(array $type, $route, [$controller, $method]);
+        $this->router->addRoute($type, $route, [$controller, $method]);
     }
 }
