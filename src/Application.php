@@ -5,6 +5,7 @@ class Application
 {
     /**
      * @var Container $container
+     * @var Controller $router
      */
     public $container;
     public $router;
@@ -70,7 +71,7 @@ class Application
         $this->router->post($route, [$controller, $method]);
     }
 
-    function addRoute($type, string $route, string $controller, string $method) {
-        $this->router->addRoute($type, $route, [$controller, $method]);
+    function addRoute(array $type, string $route, string $controller, string $method) {
+        $this->router->addRoute(array $type, $route, [$controller, $method]);
     }
 }
