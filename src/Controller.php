@@ -74,4 +74,9 @@ class Controller implements ViewInterface
     function addVars(array $vars) {
         $this->view->addVars($vars);
     }
+
+    function redirect(string $uri) {
+        header("location: $uri");
+        exit;
+    }
 }
