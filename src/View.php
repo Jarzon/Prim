@@ -59,10 +59,20 @@ class View implements ViewInterface
             return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
         };
 
+        $level = ob_get_level();
         ob_start();
-        if($default) $this->start('default');
-        require "{$this->root}src/$packDirectory/view/$view.php";
-        if($default) $this->end();
+
+        try {
+            if($default) $this->start('default');
+            require "{$this->root}src/$packDirectory/view/$view.php";
+            if($default) $this->end();
+        } catch (Throwable $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+            
+            throw $e;
+        }
 
         require "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
     }
