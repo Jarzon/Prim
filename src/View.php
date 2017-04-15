@@ -40,7 +40,7 @@ class View implements ViewInterface
         $this->renderTemplate($view, $packDirectory);
     }
 
-    function renderTemplate(string $view, string $packDirectory = '', $default = false)
+    function renderTemplate(string $view, string $packDirectory = '', bool $default = false)
     {
         if($packDirectory == '') {
             $packDirectory = $this->pack;
@@ -59,6 +59,7 @@ class View implements ViewInterface
             return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
         };
 
+        ob_start();
         if($default) $this->start('default');
         require "{$this->root}src/$packDirectory/view/$view.php";
         if($default) $this->end();
@@ -74,8 +75,8 @@ class View implements ViewInterface
 
     function start(string $section)
     {
-        ob_start();
         $this->section = $section;
+        ob_start();
     }
 
     function end()
@@ -87,6 +88,9 @@ class View implements ViewInterface
         $this->section = 'default';
     }
 
+    /**
+     * Return the content of a section
+     */
     function section(string $section)
     {
         return isset($this->sections[$section])? $this->sections[$section]: '';
