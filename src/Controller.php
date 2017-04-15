@@ -57,6 +57,11 @@ class Controller implements ViewInterface
         $this->view->design($view);
     }
 
+    function render(string $view)
+    {
+        $this->view->render($view);
+    }
+
     function _getTranslation()
     {
         $this->view->_getTranslation();
