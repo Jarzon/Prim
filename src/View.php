@@ -66,11 +66,11 @@ class View implements ViewInterface
             if($default) $this->start('default');
             require "{$this->root}src/$packDirectory/view/$view.php";
             if($default) $this->end();
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
-            
+
             throw $e;
         }
 
@@ -91,9 +91,9 @@ class View implements ViewInterface
 
     function end()
     {
-        if($this->sectionPush) $this->sections[$this->section] .= ob_get_flush();
-        else $this->sections[$this->section] = ob_get_flush();
-        ob_end_clean();
+        if($this->sectionPush) $this->sections[$this->section] .= ob_get_clean();
+        else $this->sections[$this->section] = ob_get_clean();
+
         $this->sectionPush = false;
         $this->section = 'default';
     }
