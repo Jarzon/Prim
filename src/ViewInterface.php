@@ -21,7 +21,7 @@ interface ViewInterface
     /**
      * Fetch a translation file and return an array that contain the messages
      */
-    function _getTranslation();
+    function fetchTranslation();
 
     /**
      * Add a var for the view

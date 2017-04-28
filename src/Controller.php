@@ -25,10 +25,8 @@ class Controller implements ViewInterface
 
         $this->view = $view;
 
-        $class = get_class($this);
-        $this->view->setPack(explode('\\', $class)[1]);
-
-        $this->_getTranslation();
+        $class = explode('\\', get_class($this))[1];
+        $this->view->setPack($class);
     }
 
     /**
@@ -62,9 +60,9 @@ class Controller implements ViewInterface
         $this->view->render($view);
     }
 
-    function _getTranslation()
+    function fetchTranslation()
     {
-        $this->view->_getTranslation();
+        $this->view->fetchTranslation();
     }
 
     function addVar(string $name, $var) {
