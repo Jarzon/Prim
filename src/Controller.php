@@ -46,10 +46,6 @@ class Controller implements ViewInterface
         $this->view->setTemplate($design, $pack);
     }
 
-    function setLanguage(string $language) {
-        $this->view->setLanguage($language);
-    }
-
     function design(string $view)
     {
         $this->view->design($view);
@@ -58,11 +54,6 @@ class Controller implements ViewInterface
     function render(string $view)
     {
         $this->view->render($view);
-    }
-
-    function fetchTranslation()
-    {
-        $this->view->fetchTranslation();
     }
 
     function addVar(string $name, $var) {

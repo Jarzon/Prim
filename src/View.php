@@ -9,20 +9,11 @@ class View implements ViewInterface
     protected $designPack = 'BasePack';
     protected $pack = '';
 
-    protected $language = 'en';
-    static protected $messagesLanguage = '';
-    protected $messages = [];
-
     protected $vars = [];
 
     protected $sections = [];
     protected $section = 'default';
     protected $sectionPush = false;
-
-    function __construct()
-    {
-        $this->fetchTranslation();
-    }
 
     function setPack(string $pack)
     {
@@ -35,27 +26,6 @@ class View implements ViewInterface
         $this->designPack = $pack;
     }
 
-    function getLanguage() : string
-    {
-        return $this->language;
-    }
-
-    function setLanguage(string $language)
-    {
-        $this->language = $language;
-    }
-
-    function fetchTranslation()
-    {
-        $file = $this->root . 'app/config/messages.json';
-
-        // Check if we have a translation file for that language
-        if (file_exists($file)) {
-            // TODO: Cache the file
-            $this->messages = json_decode(file_get_contents($file), true);
-        }
-    }
-
     function design(string $view, string $packDirectory = '')
     {
         $this->renderTemplate($view, $packDirectory, true);
@@ -64,11 +34,6 @@ class View implements ViewInterface
     function render(string $view, string $packDirectory = '')
     {
         $this->renderTemplate($view, $packDirectory);
-    }
-
-    function translate(string $message) : string
-    {
-        return $this->messages[$message][self::$messagesLanguage];
     }
 
     function escape(string $string) : string
@@ -92,10 +57,6 @@ class View implements ViewInterface
 
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
-
-        if(self::$messagesLanguage === '') {
-            self::$messagesLanguage = array_search($this->language, $this->messages['languages']);
-        }
 
         $level = ob_get_level();
         ob_start();
