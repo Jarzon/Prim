@@ -74,4 +74,8 @@ class Application
     function addRoute(array $type, string $route, string $controller, string $method) {
         $this->router->addRoute($type, $route, [$controller, $method]);
     }
+
+    function addGroup(string $prefix, callable $callback) {
+        $this->router->addGroup($prefix, $callback);
+    }
 }
