@@ -41,15 +41,20 @@ class View implements ViewInterface
         return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
+    function registerFunction(string $name, \Closure $closure)
+    {
+        if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
+    }
+
     function renderTemplate(string $view, string $packDirectory = '', bool $default = false)
     {
         if($packDirectory == '') {
             $packDirectory = $this->pack;
         }
 
-        $e = $esc = $escape = function(string $string) {
+        $this->registerFunction('e', function(string $string) {
             return $this->escape($string);
-        };
+        });
 
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
