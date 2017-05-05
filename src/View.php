@@ -47,10 +47,6 @@ class View implements ViewInterface
             $packDirectory = $this->pack;
         }
 
-        $_ = $trans = $translate = function(string $message) {
-            return $this->translate($message);
-        };
-
         $e = $esc = $escape = function(string $string) {
             return $this->escape($string);
         };
