@@ -64,7 +64,7 @@ class View implements ViewInterface
 
         try {
             if($default) $this->start('default');
-            require "{$this->root}src/$packDirectory/view/$view.php";
+            require "{$this->root}src/$packDirectory/View/$view.php";
             if($default) $this->end();
         } catch (Exception $e) {
             while (ob_get_level() > $level) {
@@ -74,7 +74,7 @@ class View implements ViewInterface
             throw $e;
         }
 
-        require "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
+        require "{$this->root}src/{$this->designPack}/View/_templates/{$this->design}.php";
     }
 
     function push(string $section)
