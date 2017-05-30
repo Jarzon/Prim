@@ -56,6 +56,8 @@ class View implements ViewInterface
             return $this->escape($string);
         });
 
+        $viewPath = "$packDirectory/view/$view.php";
+
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
 
@@ -64,7 +66,11 @@ class View implements ViewInterface
 
         try {
             if($default) $this->start('default');
-            require "{$this->root}src/$packDirectory/view/$view.php";
+            if(file_exists("{$this->root}vendor/$viewPath")) {
+                include("{$this->root}vendor/$viewPath");
+            } else {
+                include("{$this->root}src/$viewPath");
+            }
             if($default) $this->end();
         } catch (Exception $e) {
             while (ob_get_level() > $level) {

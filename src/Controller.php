@@ -25,7 +25,16 @@ class Controller implements ViewInterface
 
         $this->view = $view;
 
-        $class = explode('\\', get_class($this))[1];
+        $namespaces = explode('\\', get_class($this));
+
+        $class = 'BasePack';
+
+        foreach($namespaces as $namespace) {
+            if(strpos($namespace, 'Pack')) {
+                $class = $namespace;
+            }
+        }
+
         $this->view->setPack($class);
     }
 

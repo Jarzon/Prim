@@ -60,7 +60,11 @@ class Application
     }
 
     function getRoutes(string $pack, string $routeFile) {
-        include(ROOT . "/src/$pack/config/$routeFile");
+        if(file_exists(ROOT . "/vendor/$pack/config/$routeFile")) {
+            include(ROOT . "vendor/$pack/config/$routeFile");
+        } else {
+            include(ROOT . "src/$pack/config/$routeFile");
+        }
     }
 
     function get(string $route, string $controller, string $method) {
