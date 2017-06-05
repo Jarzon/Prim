@@ -9,6 +9,7 @@ class Application
      */
     public $container;
     public $router;
+    public $projectNamespace;
 
     /**
      * Routing
@@ -16,6 +17,8 @@ class Application
     public function __construct(Container $container, Controller $error)
     {
         $this->container = $container;
+
+        $this->projectNamespace = $error->projectNamespace;
 
         if(ENV == 'prod') {
             define('URL_RELATIVE_BASE', $_SERVER['REQUEST_URI']);
@@ -51,7 +54,9 @@ class Application
                 $handler = $routeInfo[1];
                 $vars = array_values($routeInfo[2]);
 
-                $controller = $container->getController($handler[0]);
+                list($pack, $controller) = explode('\\', $handler[0]);;
+
+                $controller = $container->getController($this->projectNamespace.'\\'.$pack.'\\Controller\\'.$controller);
                 $method = $handler[1];
 
                 $controller->$method(...$vars);
