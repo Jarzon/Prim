@@ -13,6 +13,8 @@ class Controller implements ViewInterface
     public $db;
     public $model;
     public $view;
+    public $projectNamespace;
+    public $packNamespace;
 
     /**
      * Whenever controller is created, open a database connection too
@@ -25,17 +27,30 @@ class Controller implements ViewInterface
 
         $this->view = $view;
 
+        $this->getNamespace();
+
+        $this->view->setPack($this->packNamespace);
+    }
+
+    public function getNamespace() {
         $namespaces = explode('\\', get_class($this));
 
-        $class = 'BasePack';
+        $pack = '';
+        $project = '';
 
         foreach($namespaces as $namespace) {
             if(strpos($namespace, 'Pack')) {
-                $class = $namespace;
+                if($project == '') {
+                    break;
+                }
+                $pack = $namespace;
+            } else if($project == '')  {
+                $project = $namespace;
             }
         }
 
-        $this->view->setPack($class);
+        $this->projectNamespace = $project;
+        $this->packNamespace = $pack;
     }
 
     /**
