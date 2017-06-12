@@ -27,11 +27,11 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
-    public function getRouter()
+    public function getRouter(\FastRoute\RouteCollector $router)
     {
         $obj = 'router';
 
-        return $this->init($obj);
+        return $this->init($obj, $router);
     }
 
     public function getView()

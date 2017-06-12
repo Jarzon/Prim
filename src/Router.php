@@ -7,7 +7,7 @@ class Router
     public $router = '';
     protected $routes = [];
 
-    public function routes($router)
+    public function __construct($router)
     {
         $this->router = $router;
         include(APP . 'config/routing.php');

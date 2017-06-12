@@ -17,7 +17,6 @@ class Application
     public function __construct(Container $container, Controller $error)
     {
         $this->container = $container;
-        $this->router = $container->getRouter();
 
         $this->projectNamespace = $error->projectNamespace;
 
@@ -37,7 +36,7 @@ class Application
         define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
 
         $dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $router) {
-            $this->router->Routes($router);
+            $this->router = $this->container->getRouter($router);
         });
 
         $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], URL_RELATIVE_BASE);
