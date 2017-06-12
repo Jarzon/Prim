@@ -47,4 +47,11 @@ class Container
 
         return $this->init($obj, $this->getView());
     }
+
+    public function getModel(string $obj)
+    {
+        $this->parameters["$obj.class"] = $obj;
+
+        return $this->init($obj);
+    }
 }
