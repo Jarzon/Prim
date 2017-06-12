@@ -17,6 +17,7 @@ class Application
     public function __construct(Container $container, Controller $error)
     {
         $this->container = $container;
+        $this->router = $container->getRouter();
 
         $this->projectNamespace = $error->projectNamespace;
 
@@ -36,8 +37,7 @@ class Application
         define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
 
         $dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $router) {
-            $this->router = $router;
-            include(APP . 'config/routing.php');
+            $this->router->Routes($router);
         });
 
         $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], URL_RELATIVE_BASE);
@@ -56,37 +56,13 @@ class Application
 
                 list($pack, $controller) = explode('\\', $handler[0]);;
 
+                /* TODO: Get the controller in the from src
+                 * */
                 $controller = $container->getController($this->projectNamespace.'\\'.$pack.'\\Controller\\'.$controller);
                 $method = $handler[1];
 
                 $controller->$method(...$vars);
                 break;
         }
-    }
-
-    function getRoutes(string $pack, string $routeFile) {
-        if(file_exists(ROOT . "src/$pack/config/$routeFile")) {
-            include(ROOT . "src/$pack/config/$routeFile");
-        } else if(file_exists(ROOT . "vendor/$pack/config/$routeFile")) {
-            include(ROOT . "vendor/$pack/config/$routeFile");
-        } else {
-            throw new \Exception("Can't find $routeFile in $pack");
-        }
-    }
-
-    function get(string $route, string $controller, string $method) {
-        $this->router->get($route, [$controller, $method]);
-    }
-
-    function post(string $route, string $controller, string $method) {
-        $this->router->post($route, [$controller, $method]);
-    }
-
-    function addRoute(array $type, string $route, string $controller, string $method) {
-        $this->router->addRoute($type, $route, [$controller, $method]);
-    }
-
-    function addGroup(string $prefix, callable $callback) {
-        $this->router->addGroup($prefix, $callback);
     }
 }

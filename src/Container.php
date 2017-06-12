@@ -6,7 +6,10 @@ class Container
 {
     static protected $shared = array();
 
-    public function __construct(array $parameters = [])
+    public function __construct(array $parameters = [
+        'view.class' => '\\Prim\\View',
+        'router.class' => '\\Prim\\Router'
+    ])
     {
         $this->parameters = $parameters;
     }
@@ -24,6 +27,13 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
+    public function getRouter()
+    {
+        $obj = 'router';
+
+        return $this->init($obj);
+    }
+
     public function getView()
     {
         $obj = 'view';
@@ -31,9 +41,6 @@ class Container
         return $this->init($obj);
     }
 
-    /**
-     * Used for all the Controllers
-     * */
     public function getController(string $obj)
     {
         $this->parameters["$obj.class"] = $obj;
