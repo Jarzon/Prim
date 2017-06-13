@@ -62,6 +62,10 @@ class Router
         $this->currentGroupPrefix = $previousGroupPrefix;
     }
 
+    function removeRoute(string $route) {
+        if(isset($this->routes[$route])) unset($this->routes[$route]);
+    }
+
     function buildRoutes() {
         foreach($this->routes as $uri => $params) {
             list($type, $controller, $method) = $params;
