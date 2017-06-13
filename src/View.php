@@ -56,8 +56,6 @@ class View implements ViewInterface
             return $this->escape($string);
         });
 
-        $viewPath = "$packDirectory/view/$view.php";
-
         // Create the view vars
         if(!empty($this->vars)) extract($this->vars);
 
@@ -66,11 +64,14 @@ class View implements ViewInterface
 
         try {
             if($default) $this->start('default');
-            if(file_exists("{$this->root}vendor/$viewPath")) {
-                include("{$this->root}vendor/$viewPath");
+
+            $viewFile = "{$this->root}vendor/$packDirectory/view/$view.php";
+            if(file_exists($viewFile)) {
+                include($viewFile);
             } else {
-                include("{$this->root}src/$viewPath");
+                include("{$this->root}vendor/".strtolower($packDirectory)."/view/$view.php");
             }
+
             if($default) $this->end();
         } catch (Exception $e) {
             while (ob_get_level() > $level) {
@@ -80,7 +81,12 @@ class View implements ViewInterface
             throw $e;
         }
 
-        require "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
+        $viewFile = "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
+        if(file_exists($viewFile)) {
+            include($viewFile);
+        } else {
+            include("{$this->root}src/".strtolower($this->designPack)."/view/_templates/{$this->design}.php");
+        }
     }
 
     function push(string $section)
