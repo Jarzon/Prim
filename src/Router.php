@@ -18,14 +18,16 @@ class Router
     function getRoutes(string $pack, string $routeFile)
     {
         $included = false;
-        if(file_exists(ROOT . "vendor/$pack/config/$routeFile")) {
+        $file = ROOT . "vendor/".strtolower($pack)."/config/$routeFile";
+        if(file_exists($file)) {
             $included = true;
-            include(ROOT . "vendor/$pack/config/$routeFile");
+            include($file);
         }
 
-        if(file_exists(ROOT . "src/$pack/config/$routeFile")) {
+        $file = ROOT . "src/$pack/config/$routeFile";
+        if(file_exists($file)) {
             $included = true;
-            include(ROOT . "src/$pack/config/$routeFile");
+            include($file);
         }
 
         if(!$included) {
