@@ -13,19 +13,21 @@ class Controller implements ViewInterface
     public $db;
     public $model;
     public $view;
+    public $container;
     public $projectNamespace;
     public $packNamespace;
 
     /**
      * Whenever controller is created, open a database connection too
      */
-    function __construct(ViewInterface $view)
+    function __construct(ViewInterface $view, Container $container)
     {
         if(DB_ENABLE) {
             $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
         }
 
         $this->view = $view;
+        $this->container = $container;
 
         $this->getNamespace();
 
@@ -51,6 +53,21 @@ class Controller implements ViewInterface
 
         $this->projectNamespace = $project;
         $this->packNamespace = $pack;
+    }
+
+    public function getModel(string $model, string $pack = '')
+    {
+        if($pack === '') $pack = $this->packNamespace;
+
+        $namespace = '';
+
+        if(file_exists(ROOT . "src/$pack/Model/$model.php")) {
+            $namespace = $this->projectNamespace.'\\';
+        }
+
+        $namespace .= "$pack\\Model\\$model";
+
+        return $this->container->getModel($namespace, $this->db);
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 namespace Prim;
 
-// TODO: Move more to the Trait for code reuse
 class Container
 {
     static protected $shared = array();
@@ -45,13 +44,13 @@ class Container
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $this->getView());
+        return $this->init($obj, $this->getView(), $this);
     }
 
-    public function getModel(string $obj)
+    public function getModel(string $obj, $db)
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj);
+        return $this->init($obj, $db);
     }
 }

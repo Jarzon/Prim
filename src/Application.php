@@ -55,9 +55,15 @@ class Application
 
                 list($pack, $controller) = explode('\\', $handler[0]);;
 
-                /* TODO: Get the controller in the from src
-                 * */
-                $controller = $container->getController($this->projectNamespace.'\\'.$pack.'\\Controller\\'.$controller);
+                $namespace = '';
+
+                if(file_exists(ROOT . "src/$pack/Controller/$controller.php")) {
+                    $namespace = $this->projectNamespace.'\\';
+                }
+
+                $namespace .= "$pack\\Controller\\$controller";
+
+                $controller = $container->getController($namespace);
                 $method = $handler[1];
 
                 $controller->$method(...$vars);
