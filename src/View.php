@@ -65,7 +65,7 @@ class View implements ViewInterface
         try {
             if($default) $this->start('default');
 
-            $viewFile = "{$this->root}vendor/$packDirectory/view/$view.php";
+            $viewFile = "{$this->root}src/$packDirectory/view/$view.php";
             if(file_exists($viewFile)) {
                 include($viewFile);
             } else {
