@@ -6,6 +6,7 @@ class Router
 {
     public $router = '';
     protected $routes = [];
+    protected $currentGroupPrefix = '';
 
     public function __construct($router)
     {
@@ -49,12 +50,16 @@ class Router
 
     function addRoute(array $type, string $route, string $controller, string $method)
     {
+        $route = $this->currentGroupPrefix . $route;
         $this->routes[$route] = [$type, $controller, $method];
     }
 
     function addGroup(string $prefix, callable $callback)
     {
-        $this->router->addGroup($prefix, $callback);
+        $previousGroupPrefix = $this->currentGroupPrefix;
+        $this->currentGroupPrefix = $previousGroupPrefix . $prefix;
+        $callback($this);
+        $this->currentGroupPrefix = $previousGroupPrefix;
     }
 
     function buildRoutes() {
