@@ -16,7 +16,7 @@
     "source": "https://github.com/jarzon/prim"
   },
   "autoload": {
-    "psr-4": {"Prim\\": "/src"}
+    "psr-4": {"Prim\\": "src/"}
   },
   "autoload-dev": {
     "psr-4": {"Tests\\": "tests/"}
