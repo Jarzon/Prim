@@ -1,29 +1,32 @@
 {
-    "name": "jarzon/prim",
-    "type": "project",
-    "description": "Yet another PHP Framework",
-    "keywords": ["framework"],
-    "homepage": "https://github.com/jarzon/prim",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Jarzon",
-            "role": "Developer"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/jarzon/prim/issues",
-        "source": "https://github.com/jarzon/prim"
-    },
-    "autoload": {
-        "psr-4": {"Prim\\": "/src"}
-    },
-    "require": {
-        "php": ">=7.0.0",
-        "nikic/fast-route": "1.2.*"
-    },
-    "require-dev": {
-      "phpunit/phpunit": "4.7.*",
-      "phpunit/dbunit": ">=1.2"
+  "name": "jarzon/prim",
+  "type": "project",
+  "description": "Yet another PHP Framework",
+  "keywords": ["framework"],
+  "homepage": "https://github.com/jarzon/prim",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jarzon",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/jarzon/prim/issues",
+    "source": "https://github.com/jarzon/prim"
+  },
+  "autoload": {
+    "psr-4": {"Prim\\": "/src"}
+  },
+  "autoload-dev": {
+    "psr-4": {"Tests\\": "tests/"}
+  },
+  "require": {
+    "php": ">=7.0.0",
+    "nikic/fast-route": "1.2.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.7.*",
+    "phpunit/dbunit": ">=1.2"
+  }
 }
