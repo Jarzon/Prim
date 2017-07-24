@@ -19,12 +19,16 @@ class View implements ViewInterface
     {
         $this->root = $root;
 
-        $this->boot();
-    }
+        $class_methods = get_class_methods($this);
 
-    function boot()
-    {
-
+        /*
+         * All methods that start by build get automatically executed when the object is instantiated
+         * */
+        foreach ($class_methods as $method_name) {
+            if (strpos($method_name, 'build') !== false) {
+                $this->$method_name();
+            }
+        }
     }
 
     function setPack(string $pack)
