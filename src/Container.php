@@ -33,18 +33,18 @@ class Container
         return $this->init($obj, $router);
     }
 
-    public function getView()
+    public function getView($root)
     {
         $obj = 'view';
 
-        return $this->init($obj);
+        return $this->init($obj, $root);
     }
 
     public function getController(string $obj)
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $this->getView(), $this);
+        return $this->init($obj, $this->getView(ROOT), $this);
     }
 
     public function getModel(string $obj, $db)
