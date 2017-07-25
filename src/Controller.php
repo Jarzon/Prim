@@ -32,6 +32,17 @@ class Controller implements ViewInterface
         $this->getNamespace();
 
         $this->view->setPack($this->packNamespace);
+
+        $class_methods = get_class_methods($this);
+
+        /*
+         * All methods that start by build get automatically executed when the object is instantiated
+         * */
+        foreach ($class_methods as $method_name) {
+            if (strpos($method_name, 'build') !== false) {
+                $this->$method_name();
+            }
+        }
     }
 
     public function getNamespace() {
