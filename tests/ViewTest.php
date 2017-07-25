@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
+
 class ViewMock extends Prim\View {
     public $build = false;
 
@@ -8,7 +12,7 @@ class ViewMock extends Prim\View {
     }
 }
 
-class ViewTest extends PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
     public function testConstruct()
     {
