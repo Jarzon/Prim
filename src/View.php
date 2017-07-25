@@ -101,7 +101,7 @@ class View implements ViewInterface
         if(file_exists($viewFile)) {
             include($viewFile);
         } else {
-            include("{$this->root}src/".strtolower($this->designPack)."/view/_templates/{$this->design}.php");
+            include("{$this->root}vendor/".strtolower($this->designPack)."/view/_templates/{$this->design}.php");
         }
     }
 

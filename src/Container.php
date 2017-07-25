@@ -40,11 +40,11 @@ class Container
         return $this->init($obj, $root);
     }
 
-    public function getController(string $obj)
+    public function getController(string $obj, string $root)
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $this->getView(ROOT), $this);
+        return $this->init($obj, $this->getView($root), $this);
     }
 
     public function getModel(string $obj, $db)
