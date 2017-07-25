@@ -63,7 +63,7 @@ class Application
 
                 $namespace .= "$pack\\Controller\\$controller";
 
-                $controller = $container->getController($namespace, ROOT);
+                $controller = $container->getController($namespace);
                 $method = $handler[1];
 
                 $controller->$method(...$vars);

@@ -3,7 +3,7 @@ namespace Prim;
 
 class View implements ViewInterface
 {
-    protected $root = '';
+    protected $root = ROOT;
 
     protected $design = 'design';
     protected $designPack = 'BasePack';
@@ -15,10 +15,8 @@ class View implements ViewInterface
     protected $section = 'default';
     protected $sectionPush = false;
 
-    public function __construct($root)
+    public function __construct()
     {
-        $this->root = $root;
-
         $class_methods = get_class_methods($this);
 
         /*

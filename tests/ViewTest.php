@@ -1,22 +1,17 @@
 <?php
-
 declare(strict_types=1);
 
+namespace Tests;
+
 use PHPUnit\Framework\TestCase;
-
-class ViewMock extends Prim\View {
-    public $build = false;
-
-    function buildThis() {
-        $this->build = true;
-    }
-}
 
 class ViewTest extends TestCase
 {
     public function testConstruct()
     {
-        $view = new ViewMock('');
+        define('ROOT', '');
+
+        $view = new \Tests\Mocks\View('');
 
         $this->assertEquals(true, $view->build);
 
