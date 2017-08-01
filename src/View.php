@@ -143,4 +143,8 @@ class View implements ViewInterface
             $this->addVar($var[0], $var[1]);
         }
     }
+
+    function fileHash($name) {
+        return "$name?" . hash_file('fnv1a32', "{$this->root}public/$name");
+    }
 }
