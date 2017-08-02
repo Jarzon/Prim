@@ -1,5 +1,7 @@
 # Prim
 
+[![Build Status](https://travis-ci.org/Jarzon/Prim.svg?branch=master)](https://travis-ci.org/Jarzon/Prim)
+
 A Framework I use to learn and toy with.
 
 Base project skeleton: https://github.com/Jarzon/PrimBase
