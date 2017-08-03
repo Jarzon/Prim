@@ -45,9 +45,9 @@ class View implements ViewInterface
         $this->renderTemplate($view, $packDirectory, true);
     }
 
-    function render(string $view, string $packDirectory = '')
+    function render(string $view, string $packDirectory = '', array $vars = [])
     {
-        $this->renderTemplate($view, $packDirectory);
+        $this->renderTemplate($view, $packDirectory, $vars);
     }
 
     function escape(string $string) : string
@@ -60,8 +60,21 @@ class View implements ViewInterface
         if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
     }
 
-    function renderTemplate(string $view, string $packDirectory = '', bool $default = false)
+    function vars(array $vars = [])
     {
+        if(!empty($vars)) {
+            return $this->vars;
+        }
+
+        $this->vars = array_merge($this->vars, $vars);
+    }
+
+    function renderTemplate(string $view, string $packDirectory = '', bool $default = false, array $vars = [])
+    {
+        $this->vars($vars);
+        unset($vars);
+        extract($this->vars);
+
         if($packDirectory == '') {
             $packDirectory = $this->pack;
         }
@@ -69,9 +82,6 @@ class View implements ViewInterface
         $this->registerFunction('e', function(string $string) {
             return $this->escape($string);
         });
-
-        // Create the view vars
-        if(!empty($this->vars)) extract($this->vars);
 
         $level = ob_get_level();
         ob_start();
@@ -127,9 +137,14 @@ class View implements ViewInterface
     /**
      * Return the content of a section
      */
-    function section(string $section)
+    function section(string $section) : string
     {
         return isset($this->sections[$section])? $this->sections[$section]: '';
+    }
+
+    public function insert(string $name, string $pack, array $data = [])
+    {
+        echo $this->renderTemplate($name, $pack, $data);
     }
 
     function addVar(string $name, $var)
