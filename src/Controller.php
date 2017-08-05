@@ -29,7 +29,7 @@ class Controller implements ViewInterface
         $this->view = $view;
         $this->container = $container;
 
-        $this->getNamespace();
+        $this->getNamespace(get_class($this));
 
         $this->view->setPack($this->packNamespace);
 
@@ -45,8 +45,8 @@ class Controller implements ViewInterface
         }
     }
 
-    public function getNamespace() {
-        $namespaces = explode('\\', get_class($this));
+    public function getNamespace(string $namespaces) {
+        $namespaces = explode('\\', $namespaces);
 
         $pack = '';
         $project = '';

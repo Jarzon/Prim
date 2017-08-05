@@ -10,8 +10,6 @@ class ViewTest extends TestCase
 {
     public function testConstruct()
     {
-        define('ROOT', '');
-
         $view = new View();
 
         $this->assertEquals(true, $view->build);
