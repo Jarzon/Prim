@@ -53,11 +53,11 @@ class Controller implements ViewInterface
 
         foreach($namespaces as $namespace) {
             if(strpos($namespace, 'Pack')) {
-                if($project == '') {
-                    break;
-                }
                 $pack = $namespace;
             } else if($project == '')  {
+                if($pack != '') {
+                    break;
+                }
                 $project = $namespace;
             }
         }
