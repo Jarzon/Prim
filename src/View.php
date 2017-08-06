@@ -47,7 +47,7 @@ class View implements ViewInterface
 
     function render(string $view, string $packDirectory = '', array $vars = [])
     {
-        $this->renderTemplate($view, $packDirectory, $vars);
+        $this->renderTemplate($view, $packDirectory, false, $vars);
     }
 
     function escape(string $string) : string
