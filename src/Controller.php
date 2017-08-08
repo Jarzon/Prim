@@ -98,14 +98,14 @@ class Controller implements ViewInterface
         $this->view->setTemplate($design, $pack);
     }
 
-    function design(string $view)
+    function design(string $view, string $pack, array $vars = [])
     {
-        $this->view->design($view);
+        $this->view->design($view, $pack, $vars);
     }
 
-    function render(string $view)
+    function render(string $view, string $pack, array $vars = [], bool $template = true)
     {
-        $this->view->render($view);
+        $this->view->render($view, $pack, $vars, $template);
     }
 
     function addVar(string $name, $var) {

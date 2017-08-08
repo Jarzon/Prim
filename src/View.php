@@ -40,14 +40,14 @@ class View implements ViewInterface
         $this->designPack = $pack;
     }
 
-    function design(string $view, string $packDirectory = '')
+    function design(string $view, string $packDirectory = '', array $vars = [])
     {
-        $this->renderTemplate($view, $packDirectory, true);
+        $this->renderTemplate($view, $packDirectory, $vars, true);
     }
 
-    function render(string $view, string $packDirectory = '', array $vars = [])
+    function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true)
     {
-        $this->renderTemplate($view, $packDirectory, false, $vars);
+        $this->renderTemplate($view, $packDirectory, $vars, $template);
     }
 
     function escape(string $string) : string
@@ -69,7 +69,7 @@ class View implements ViewInterface
         $this->vars = array_merge($this->vars, $vars);
     }
 
-    function renderTemplate(string $view, string $packDirectory = '', bool $default = false, array $vars = [])
+    function renderTemplate(string $view, string $packDirectory = '', array $vars = [], bool $template = true, bool $default = false)
     {
         $this->vars($vars);
         unset($vars);
@@ -89,6 +89,7 @@ class View implements ViewInterface
         try {
             if($default) $this->start('default');
 
+            // TODO: Move this in a method that detect if the file exist and return the correct string
             $viewFile = "{$this->root}src/$packDirectory/view/$view.php";
             if(file_exists($viewFile)) {
                 include($viewFile);
@@ -105,11 +106,13 @@ class View implements ViewInterface
             throw $e;
         }
 
-        $viewFile = "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
-        if(file_exists($viewFile)) {
-            include($viewFile);
-        } else {
-            include("{$this->root}vendor/".strtolower($this->designPack)."/view/_templates/{$this->design}.php");
+        if ($template) {
+            $viewFile = "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
+            if(file_exists($viewFile)) {
+                include($viewFile);
+            } else {
+                include("{$this->root}vendor/".strtolower($this->designPack)."/view/_templates/{$this->design}.php");
+            }
         }
     }
 
@@ -142,9 +145,9 @@ class View implements ViewInterface
         return isset($this->sections[$section])? $this->sections[$section]: '';
     }
 
-    public function insert(string $name, string $pack, array $data = [])
+    public function insert(string $name, string $pack, array $vars = [])
     {
-        echo $this->renderTemplate($name, $pack, false, $data);
+        echo $this->renderTemplate($name, $pack, $vars, false);
     }
 
     function addVar(string $name, $var)
