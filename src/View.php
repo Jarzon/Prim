@@ -144,7 +144,7 @@ class View implements ViewInterface
 
     public function insert(string $name, string $pack, array $data = [])
     {
-        echo $this->renderTemplate($name, $pack, $data);
+        echo $this->renderTemplate($name, $pack, false, $data);
     }
 
     function addVar(string $name, $var)
