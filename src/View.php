@@ -62,7 +62,7 @@ class View implements ViewInterface
 
     function vars(array $vars = [])
     {
-        if(!empty($vars)) {
+        if(empty($vars)) {
             return $this->vars;
         }
 
