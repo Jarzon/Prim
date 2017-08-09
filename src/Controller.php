@@ -94,16 +94,16 @@ class Controller implements ViewInterface
     }
 
     // View Methods shortcut
-    function setTemplate(string $design, string $pack) {
+    function setTemplate(string $design, string $pack = '') {
         $this->view->setTemplate($design, $pack);
     }
 
-    function design(string $view, string $pack, array $vars = [])
+    function design(string $view, string $pack = '', array $vars = [])
     {
         $this->view->design($view, $pack, $vars);
     }
 
-    function render(string $view, string $pack, array $vars = [], bool $template = true)
+    function render(string $view, string $pack = '', array $vars = [], bool $template = true)
     {
         $this->view->render($view, $pack, $vars, $template);
     }
