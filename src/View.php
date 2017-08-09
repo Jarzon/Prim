@@ -42,12 +42,12 @@ class View implements ViewInterface
 
     function design(string $view, string $packDirectory = '', array $vars = [])
     {
-        $this->renderTemplate($view, $packDirectory, $vars, true);
+        $this->renderTemplate($view, $packDirectory, $vars, true, true);
     }
 
     function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true)
     {
-        $this->renderTemplate($view, $packDirectory, $vars, $template);
+        $this->renderTemplate($view, $packDirectory, $vars, $template, false);
     }
 
     function escape(string $string) : string
@@ -145,9 +145,9 @@ class View implements ViewInterface
         return isset($this->sections[$section])? $this->sections[$section]: '';
     }
 
-    public function insert(string $name, string $pack, array $vars = [])
+    public function insert(string $name, string $pack = '', array $vars = [])
     {
-        echo $this->renderTemplate($name, $pack, $vars, false);
+        echo $this->renderTemplate($name, $pack, $vars, false, false);
     }
 
     function addVar(string $name, $var)
