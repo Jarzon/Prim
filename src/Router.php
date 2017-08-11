@@ -53,7 +53,10 @@ class Router
     function addRoute(array $type, string $route, string $controller, string $method)
     {
         $route = $this->currentGroupPrefix . $route;
-        $this->routes[$route] = [$type, $controller, $method];
+
+        foreach($type as $t) {
+            $this->routes[$route][$t] = [$controller, $method];
+        }
     }
 
     function addGroup(string $prefix, callable $callback)
@@ -69,9 +72,11 @@ class Router
     }
 
     function buildRoutes() {
-        foreach($this->routes as $uri => $params) {
-            list($type, $controller, $method) = $params;
-            $this->router->addRoute($type, $uri, [$controller, $method]);
+        foreach($this->routes as $uri => $types) {
+            foreach($types as $type => $params) {
+                list($controller, $method) = $params;
+                $this->router->addRoute($type, $uri, [$controller, $method]);
+            }
         }
     }
 }
