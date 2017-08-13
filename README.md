@@ -13,11 +13,18 @@ Using composer:
     composer create-project Jarzon/PrimBase ProjectName
 ```
 
-Using git:
+Install PHP dependencies using composer install.
 ```
-git clone --depth 1 https://github.com/Jarzon/PrimBase ProjectName
+    composer install
 ```
 
-Install dependencies using composer install.
-    
+Install Gulp and Prim Gulp for the project Assets.
+```
+    npm update
+```
+
+## Basic Configuration
+
 Copy app/config/config.php.dist to app/config/config.php
+
+Copy phinx.yml.dist to phinx.yml
