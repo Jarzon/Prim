@@ -165,4 +165,8 @@ class View implements ViewInterface
     function fileHash($name) {
         return "$name?" . hash_file('fnv1a32', "{$this->root}public/$name");
     }
+
+    function fileCache($name) {
+        return "$name?" . filemtime( "{$this->root}public/$name");
+    }
 }
