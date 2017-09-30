@@ -53,7 +53,7 @@ class Application
                 $handler = $routeInfo[1];
                 $vars = array_values($routeInfo[2]);
 
-                list($pack, $controller) = explode('\\', $handler[0]);;
+                list($pack, $controller) = explode('\\', $handler[0]);
 
                 $namespace = '';
 
