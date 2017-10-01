@@ -84,7 +84,6 @@ class View implements ViewInterface
         });
 
         $level = ob_get_level();
-        ob_start();
 
         try {
             if($default) $this->start('default');
