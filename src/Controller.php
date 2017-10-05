@@ -84,10 +84,19 @@ class Controller implements ViewInterface
     public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass)
     {
         // Set the fetch mode to object
-        $options = [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING, PDO::ATTR_PERSISTENT => true];
+        $options = [
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING
+        ];
 
         // generate a database connection, using the PDO connector
-        $this->db = new PDO("$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
+        try {
+            $this->db = new PDO("$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
+        } catch (\PDOException $e) {
+            throw new \Exception('Database connection could not be established.');
+        }
     }
 
     // View Methods shortcut
