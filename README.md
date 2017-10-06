@@ -42,16 +42,8 @@ Here's a basic vhost for Apache:
         AllowOverride none
         RewriteEngine On
 
-		# Prevent people from looking directly into folders
-		Options -Indexes
-
-		# If the following conditions are true, then rewrite the URI:
-        # If the requested filename is not a directory,
-        RewriteCond %{REQUEST_FILENAME} !-d
-        # and if the requested filename is not a file that exists,
+        # If the requested filename is not a file that exists, then rewrite the URI:
         RewriteCond %{REQUEST_FILENAME} !-f
-        # and if the requested filename is not a symbolic link,
-        RewriteCond %{REQUEST_FILENAME} !-l
 
         RewriteRule ^(.+)$ index.php [L]
 
