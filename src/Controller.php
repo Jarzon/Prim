@@ -95,6 +95,7 @@ class Controller implements ViewInterface
         try {
             $this->db = new PDO("$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
         } catch (\PDOException $e) {
+            header('HTTP/1.1 503 Service Unavailable');
             throw new \Exception('Database connection could not be established.');
         }
     }
