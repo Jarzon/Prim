@@ -35,9 +35,12 @@ class Application
 
         define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
 
-        $dispatcher = \FastRoute\simpleDispatcher(function(\FastRoute\RouteCollector $router) {
+        $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->router = $this->container->getRouter($router);
-        });
+        }, [
+            'cacheFile' => ROOT . '/app/cache/route.cache',
+            'cacheDisabled' => (ENV === 'dev'),
+        ]);
 
         $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], URL_RELATIVE_BASE);
 
