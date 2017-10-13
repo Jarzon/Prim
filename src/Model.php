@@ -14,7 +14,7 @@ class Model
 
         if($where !== '') {
             $where = "WHERE $where";
-            array_merge($values, $whereValues);
+            $values = array_merge($values, $whereValues);
         }
 
         $query = $this->db->prepare("UPDATE $table SET ".implode('=?,', array_keys($data))."=? $where");
