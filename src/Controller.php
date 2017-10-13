@@ -85,6 +85,7 @@ class Controller implements ViewInterface
     {
         // Set the fetch mode to object
         $options = [
+            PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
             PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
             PDO::ATTR_PERSISTENT => true,
