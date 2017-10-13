@@ -3,7 +3,7 @@ namespace Prim;
 
 class View implements ViewInterface
 {
-    protected $root = ROOT;
+    public $root = ROOT;
 
     protected $design = 'design';
     protected $designPack = 'BasePack';
@@ -97,7 +97,7 @@ class View implements ViewInterface
             }
 
             if($default) $this->end();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }

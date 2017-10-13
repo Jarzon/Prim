@@ -22,6 +22,18 @@ class ModelTest extends TestCase
         return $model;
     }
 
+    public function testUpdateMultiple()
+    {
+        $pdo = new PDO();
+        $model = new Model($pdo);
+
+        $model->update('test', ['test' => '0', 'name' => 'wot'], '', []);
+
+        $this->assertEquals('UPDATE test SET test=?,name=? ', $model->db->sql);
+
+        return $model;
+    }
+
     public function testUpdateWhere()
     {
         $pdo = new PDO();

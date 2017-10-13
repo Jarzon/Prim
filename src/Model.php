@@ -10,37 +10,23 @@ class Model
 
     public function update(string $table, array $data, string $where = '', array $whereValues = [])
     {
-        $columns = [];
-        $values = [];
-
-        foreach ($data as $i => $d) {
-            $columns[] = "$i=?";
-            $values[] = $d;
-        }
+        $values = array_values($data);
 
         if($where !== '') {
             $where = "WHERE $where";
             array_merge($values, $whereValues);
         }
 
-        $query = $this->db->prepare("UPDATE $table SET ".implode(',', $columns)." $where");
+        $query = $this->db->prepare("UPDATE $table SET ".implode('=?,', array_keys($data))."=? $where");
 
         $query->execute($values);
     }
 
     public function insert(string $table, array $data)
     {
-        $columns = [];
-        $values = [];
-
-        foreach ($data as $i => $d) {
-            $columns[] = $i;
-            $values[] = $d;
-        }
-
-        $columns = implode(',', $columns);
+        $columns = implode(',', array_keys($data));
         $placeholders = implode(',', str_split(str_repeat('?', sizeof($columns))));
-        $values = implode(',', $values);
+        $values = implode(',', array_values($data));
 
         $query = $this->db->prepare("INSERT INTO $table ($columns) VALUES($placeholders)");
 
