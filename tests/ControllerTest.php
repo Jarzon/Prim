@@ -40,6 +40,4 @@ class ControllerTest extends TestCase
         $this->assertEquals('', $controller->projectNamespace);
         $this->assertEquals('TestPack', $controller->packNamespace);
     }
-
-    // TODO: Write tests using VFS to test Views
 }
