@@ -25,8 +25,8 @@ class Model
     public function insert(string $table, array $data)
     {
         $columns = implode(',', array_keys($data));
-        $placeholders = implode(',', str_split(str_repeat('?', sizeof($columns))));
-        $values = implode(',', array_values($data));
+        $placeholders = implode(',', str_split(str_repeat('?', sizeof($data))));
+        $values = array_values($data);
 
         $query = $this->db->prepare("INSERT INTO $table ($columns) VALUES($placeholders)");
 
