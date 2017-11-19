@@ -9,17 +9,17 @@ Base project skeleton: https://github.com/Jarzon/PrimBase
 ## Installation
 
 Using composer:
-```
+```bash
     composer create-project Jarzon/PrimBase ProjectName
 ```
 
 Install PHP dependencies using composer install.
-```
+```bash
     composer install
 ```
 
 Install Gulp and Prim Gulp for the project Assets.
-```
+```bash
     npm update
 ```
 
@@ -33,7 +33,7 @@ Config your local webserver to point projectname.localhost to the folder Project
 
 Here's a basic vhost for Apache:
 
-```
+```vhost
 <virtualhost *:80>
     ServerName projectname.localhost
 
