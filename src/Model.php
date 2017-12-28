@@ -37,4 +37,11 @@ class Model
 
         $query->execute($values);
     }
+
+    protected function convertDate(&$data, $index, $format = 'Y-m-d') {
+        if(!empty($data[$index])) {
+            $data[$index] = str_replace('/', '-', $data[$index]);
+            $data[$index] = date($format, strtotime($data[$index]));
+        }
+    }
 }
