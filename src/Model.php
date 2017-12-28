@@ -10,7 +10,7 @@ class Model
 
     public function prepare(string $statement, array $driver_options = [])
     {
-        $this->db->prepare($statement, $driver_options);
+        return $this->db->prepare($statement, $driver_options);
     }
 
     public function update(string $table, array $data, string $where = '', array $whereValues = [])
