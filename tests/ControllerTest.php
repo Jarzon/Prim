@@ -15,8 +15,8 @@ class ControllerTest extends TestCase
         define('ROOT', '');
         define('DB_ENABLE', false);
 
-        $view = new View();
         $container = new Container();
+        $view = new View($container);
         $controller = new Controller($view, $container);
 
         $this->assertEquals('Prim', $controller->projectNamespace);

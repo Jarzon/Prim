@@ -5,6 +5,8 @@ class View implements ViewInterface
 {
     public $root = ROOT;
 
+    protected $container;
+
     protected $design = 'design';
     protected $designPack = 'BasePack';
     protected $pack = '';
@@ -15,8 +17,10 @@ class View implements ViewInterface
     protected $section = 'default';
     protected $sectionPush = false;
 
-    public function __construct()
+    public function __construct(Container $container)
     {
+        $this->container = $container;
+
         $class_methods = get_class_methods($this);
 
         /*

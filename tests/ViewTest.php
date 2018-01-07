@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 
+use Tests\Mocks\Container;
 use Tests\Mocks\View;
 
 class ViewTest extends TestCase
@@ -39,7 +40,8 @@ EOD;
 
     public function testConstruct()
     {
-        $view = new View();
+        $container = new Container();
+        $view = new View($container);
 
         $view->root = vfsStream::url('root/');
 

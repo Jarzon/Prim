@@ -37,7 +37,7 @@ class Container
     {
         $obj = 'view';
 
-        return $this->init($obj);
+        return $this->init($obj, $this);
     }
 
     public function getController(string $obj)
