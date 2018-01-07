@@ -200,7 +200,7 @@ class View implements ViewInterface
                 }
 
                 .primDebug {
-                    position: absolute;
+                    position: fixed;
                     bottom: 0;
                     left: 20px;
                     background: #333;
