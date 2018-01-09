@@ -1,6 +1,8 @@
 <?php
 namespace Prim;
 
+use \PDO;
+
 class Application
 {
     /**
@@ -21,7 +23,6 @@ class Application
 
         if(DB_ENABLE) {
             $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
-            $container->setDB($this->db);
         }
 
         register_shutdown_function( [$this, 'checkFatal'] );
