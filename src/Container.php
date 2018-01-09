@@ -7,7 +7,8 @@ class Container
 
     public function __construct(array $parameters = [
         'view.class' => '\\Prim\\View',
-        'router.class' => '\\Prim\\Router'
+        'router.class' => '\\Prim\\Router',
+        'pdo.class' => '\PDO'
     ])
     {
         $this->parameters = $parameters;
@@ -47,10 +48,17 @@ class Container
         return $this->init($obj, $this->getView(), $this);
     }
 
-    public function getModel(string $obj, $db)
+    public function getModel(string $obj)
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $db);
+        return $this->init($obj, $this);
+    }
+
+    public function getPDO(string $type = '', string $host = '', string $name = '', string $charset = '', string $user = '', string $pass = '', array $options = [])
+    {
+        $obj = 'pdo';
+
+        return $this->init($obj, "$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
     }
 }

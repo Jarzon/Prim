@@ -19,6 +19,11 @@ class Application
 
         $this->projectNamespace = $error->projectNamespace;
 
+        if(DB_ENABLE) {
+            $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
+            $container->setDB($this->db);
+        }
+
         register_shutdown_function( [$this, 'checkFatal'] );
         set_error_handler( [$this, 'logError'] );
         set_exception_handler( [$this, 'logException'] );
@@ -74,6 +79,29 @@ class Application
 
                 $controller->$method(...$vars);
                 break;
+        }
+    }
+
+    /**
+     * Open a Database connection using PDO
+     */
+    public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass)
+    {
+        // Set the fetch mode to object
+        $options = [
+            PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING
+        ];
+
+        // generate a database connection, using the PDO connector
+        try {
+            $this->db = $this->container->getPDO($type, $host, $name, $charset, $user, $pass, $options);
+        } catch (\PDOException $e) {
+            header('HTTP/1.1 503 Service Unavailable');
+            throw new \Exception('Database connection could not be established.');
         }
     }
 

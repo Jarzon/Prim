@@ -3,9 +3,13 @@ namespace Prim;
 
 class Model
 {
-    function __construct(\PDO $db)
+    public $container;
+    public $db;
+
+    function __construct($container)
     {
-        $this->db = $db;
+        $this->container = $container;
+        $this->db = $container->getPDO();
     }
 
     public function prepare(string $statement, array $driver_options = [])

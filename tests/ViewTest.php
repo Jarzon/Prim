@@ -17,8 +17,6 @@ class ViewTest extends TestCase
     */
     private $root;
 
-
-
     public function setUp()
     {
         $view = <<<'EOD'
@@ -41,9 +39,11 @@ EOD;
     public function testConstruct()
     {
         $container = new Container();
-        $view = new View($container);
+        $view = $container->getView();
 
         $view->root = vfsStream::url('root/');
+
+        var_dump($view);
 
         $this->assertEquals(true, $view->build);
 

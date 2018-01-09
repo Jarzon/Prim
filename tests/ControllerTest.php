@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prim\Application;
 use Prim\Controller;
 use Tests\Mocks\Container;
 use Tests\Mocks\View;
@@ -13,10 +14,12 @@ class ControllerTest extends TestCase
     public function testConstruct()
     {
         define('ROOT', '');
+        define('DEBUG', true);
         define('DB_ENABLE', false);
 
         $container = new Container();
-        $view = new View($container);
+        $app = new Application($container, $container->getController('Tests\Mocks\Controller'));
+        $view = $container->getView();
         $controller = new Controller($view, $container);
 
         $this->assertEquals('Prim', $controller->projectNamespace);

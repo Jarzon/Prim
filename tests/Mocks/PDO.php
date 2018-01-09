@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Mocks;
 
-class mockPDO extends \PDO
+class PDO extends \PDO
 {
     public $sql = '';
 
