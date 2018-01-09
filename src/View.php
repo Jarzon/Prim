@@ -7,8 +7,8 @@ class View implements ViewInterface
 
     protected $container;
 
-    protected $design = 'design';
-    protected $designPack = 'BasePack';
+    protected $templateName = 'design';
+    protected $templatePack = 'BasePack';
     protected $pack = '';
 
     protected $vars = [];
@@ -38,10 +38,10 @@ class View implements ViewInterface
         $this->pack = $pack;
     }
 
-    function setTemplate(string $design, string $pack)
+    function setTemplate(string $name, string $pack)
     {
-        $this->design = $design;
-        $this->designPack = $pack;
+        $this->templateName = $name;
+        $this->templatePack = $pack;
     }
 
     function design(string $view, string $packDirectory = '', array $vars = [])
@@ -110,11 +110,11 @@ class View implements ViewInterface
         }
 
         if ($template) {
-            $viewFile = "{$this->root}src/{$this->designPack}/view/_templates/{$this->design}.php";
+            $viewFile = "{$this->root}src/{$this->templatePack}/view/_templates/{$this->design}.php";
             if(file_exists($viewFile)) {
                 include($viewFile);
             } else {
-                include("{$this->root}vendor/".strtolower($this->designPack)."/view/_templates/{$this->design}.php");
+                include("{$this->root}vendor/".strtolower($this->templatePack)."/view/_templates/{$this->design}.php");
             }
         }
     }
