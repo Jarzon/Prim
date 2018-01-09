@@ -3,6 +3,10 @@ namespace Prim;
 
 class Model
 {
+    /**
+     * @var Container $container
+     * @var \PDO $db
+     */
     public $container;
     public $db;
 
