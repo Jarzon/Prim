@@ -110,11 +110,11 @@ class View implements ViewInterface
         }
 
         if ($template) {
-            $viewFile = "{$this->root}src/{$this->templatePack}/view/_templates/{$this->design}.php";
+            $viewFile = "{$this->root}src/{$this->templatePack}/view/_templates/{$this->templateName}.php";
             if(file_exists($viewFile)) {
                 include($viewFile);
             } else {
-                include("{$this->root}vendor/".strtolower($this->templatePack)."/view/_templates/{$this->design}.php");
+                include("{$this->root}vendor/".strtolower($this->templatePack)."/view/_templates/{$this->templateName}.php");
             }
         }
     }
