@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Prim\Application;
 use Prim\Model;
 
 use Tests\Mocks\Container;
@@ -14,7 +13,6 @@ class ModelTest extends TestCase
     public function testUpdate()
     {
         $container = new Container();
-        $app = new Application($container, $container->getController('Tests\Mocks\Controller'));
         $model = new Model($container);
 
         $model->update('test', ['test' => '0'], '', []);
@@ -27,7 +25,6 @@ class ModelTest extends TestCase
     public function testUpdateMultiple()
     {
         $container = new Container();
-        $app = new Application($container, $container->getController('Tests\Mocks\Controller'));
         $model = new Model($container);
 
         $model->update('test', ['test' => '0', 'name' => 'wot'], '', []);
@@ -40,7 +37,6 @@ class ModelTest extends TestCase
     public function testUpdateWhere()
     {
         $container = new Container();
-        $app = new Application($container, $container->getController('Tests\Mocks\Controller'));
         $model = new Model($container);
 
         $model->update('test', ['test' => '0'], 'id = ?', ['1']);

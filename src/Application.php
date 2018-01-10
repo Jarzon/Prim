@@ -12,14 +12,12 @@ class Application
     public $container;
     public $router;
     public $projectNamespace;
-    protected $errorController;
 
-    public function __construct(Container $container, Controller $error)
+    public function __construct(Container $container)
     {
-        $this->errorController = $error;
         $this->container = $container;
 
-        $this->projectNamespace = $error->projectNamespace;
+        $this->projectNamespace = PROJECT_NAME;
 
         if(DB_ENABLE) {
             $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
@@ -55,11 +53,11 @@ class Application
 
         switch ($routeInfo[0]) {
             case \FastRoute\Dispatcher::NOT_FOUND:
-                echo $error->handleError(404);
+                echo $this->container->getErrorController()->handleError(404);
                 break;
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                echo $error->handleError(405, $allowedMethods);
+                echo $this->container->getErrorController()->handleError(405, $allowedMethods);
                 break;
             case \FastRoute\Dispatcher::FOUND:
                 $handler = $routeInfo[1];
@@ -112,7 +110,7 @@ class Application
     public function logException($e)
     {
         if (DEBUG == true ) {
-            echo $this->errorController->debug($e);
+            echo $this->container->getErrorController()->debug($e);
         }
         else {
             $headers[] = 'MIME-Version: 1.0';
@@ -127,7 +125,7 @@ class Application
 
             mail(ERROR_MAIL, 'PHP Error', $message, implode("\r\n", $headers));
 
-            echo $this->errorController->handleError(500);
+            echo $this->container->getErrorController()->handleError(500);
             exit;
         }
     }

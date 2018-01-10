@@ -8,7 +8,8 @@ class Container
     public function __construct(array $parameters = [
         'view.class' => '\\Prim\\View',
         'router.class' => '\\Prim\\Router',
-        'pdo.class' => '\PDO'
+        'pdo.class' => '\PDO',
+        'errorController.class' => 'PrimPack\Controller\Error'
     ])
     {
         $this->parameters = $parameters;
@@ -44,6 +45,13 @@ class Container
     public function getController(string $obj)
     {
         $this->parameters["$obj.class"] = $obj;
+
+        return $this->init($obj, $this->getView(), $this);
+    }
+
+    public function getErrorController()
+    {
+        $obj = 'errorController';
 
         return $this->init($obj, $this->getView(), $this);
     }
