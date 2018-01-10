@@ -23,24 +23,9 @@ class Application
             $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
         }
 
-        register_shutdown_function( [$this, 'checkFatal'] );
-        set_error_handler( [$this, 'logError'] );
-        set_exception_handler( [$this, 'logException'] );
+        $this->setErrorHandlers();
 
-        if(ENV == 'prod') {
-            define('URL_RELATIVE_BASE', $_SERVER['REQUEST_URI']);
-            define('URL_BASE', '');
-        }
-        else {
-            $dirname = str_replace('public', '', dirname($_SERVER['SCRIPT_NAME']));
-            define('URL_RELATIVE_BASE', str_replace($dirname, '', $_SERVER['REQUEST_URI']));
-            define('URL_BASE', $dirname);
-        }
-
-        define('URL_PROTOCOL', !empty($_SERVER['HTTPS'])? 'https://': 'http://');
-        define('URL_DOMAIN', $_SERVER['SERVER_NAME']);
-
-        define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
+        $this->definePaths();
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->router = $this->container->getRouter($router);
@@ -79,6 +64,29 @@ class Application
                 $controller->$method(...$vars);
                 break;
         }
+    }
+
+    public function setErrorHandlers() {
+        register_shutdown_function( [$this, 'checkFatal'] );
+        set_error_handler( [$this, 'logError'] );
+        set_exception_handler( [$this, 'logException'] );
+    }
+
+    public function definePaths() {
+        if(ENV == 'prod') {
+            define('URL_RELATIVE_BASE', $_SERVER['REQUEST_URI']);
+            define('URL_BASE', '');
+        }
+        else {
+            $dirname = str_replace('public', '', dirname($_SERVER['SCRIPT_NAME']));
+            define('URL_RELATIVE_BASE', str_replace($dirname, '', $_SERVER['REQUEST_URI']));
+            define('URL_BASE', $dirname);
+        }
+
+        define('URL_PROTOCOL', !empty($_SERVER['HTTPS'])? 'https://': 'http://');
+        define('URL_DOMAIN', $_SERVER['SERVER_NAME']);
+
+        define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
     }
 
     /**
