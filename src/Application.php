@@ -50,15 +50,15 @@ class Application
 
                 list($pack, $controller) = explode('\\', $handler[0]);
 
-                $namespace = '';
+                $controllerNamespace = "$pack\\Controller\\$controller";
 
-                if(file_exists(ROOT . "src/$pack/Controller/$controller.php")) {
-                    $namespace = $this->projectNamespace.'\\';
+                if(class_exists("$this->projectNamespace\\$controllerNamespace")) {
+                    $controllerNamespace = "$this->projectNamespace\\$controllerNamespace";
+                } else if(!class_exists($controllerNamespace)) {
+                    throw new \Exception("Can't find controller: $controllerNamespace");
                 }
 
-                $namespace .= "$pack\\Controller\\$controller";
-
-                $controller = $container->getController($namespace);
+                $controller = $container->getController($controllerNamespace);
                 $method = $handler[1];
 
                 $controller->$method(...$vars);
