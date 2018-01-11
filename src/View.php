@@ -3,6 +3,9 @@ namespace Prim;
 
 class View implements ViewInterface
 {
+    /**
+     * @var Container $container
+     */
     public $root = ROOT;
 
     protected $container;
@@ -92,13 +95,7 @@ class View implements ViewInterface
         try {
             if($default) $this->start('default');
 
-            // TODO: Move this in a method that detect if the file exist and return the correct string
-            $viewFile = "{$this->root}src/$packDirectory/view/$view.php";
-            if(file_exists($viewFile)) {
-                include($viewFile);
-            } else {
-                include("{$this->root}vendor/".strtolower($packDirectory)."/view/$view.php");
-            }
+            include($this->getViewFile($packDirectory, $view));
 
             if($default) $this->end();
         } catch (\Exception $e) {
@@ -110,12 +107,21 @@ class View implements ViewInterface
         }
 
         if ($template) {
-            $viewFile = "{$this->root}src/{$this->templatePack}/view/_templates/{$this->templateName}.php";
-            if(file_exists($viewFile)) {
-                include($viewFile);
-            } else {
-                include("{$this->root}vendor/".strtolower($this->templatePack)."/view/_templates/{$this->templateName}.php");
-            }
+            include($this->getViewFile($this->templatePack, "_templates/{$this->templateName}"));
+        }
+    }
+
+    protected function getViewFile($packDirectory, $view) {
+        $localViewFile = "{$this->root}src/$packDirectory/view/$view.php";
+        $vendorViewFile = "{$this->root}vendor/".strtolower($packDirectory)."/view/$view.php";
+        if(file_exists($localViewFile)) {
+            return $localViewFile;
+        }
+        elseif(file_exists($vendorViewFile)) {
+            return $vendorViewFile;
+        }
+        else {
+            throw new \Exception("Can't find view $view in $packDirectory");
         }
     }
 
