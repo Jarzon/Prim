@@ -63,15 +63,15 @@ class Controller implements ViewInterface
     {
         if($pack === '') $pack = $this->packNamespace;
 
-        $namespace = '';
+        $modelNamespace = "$pack\\Model\\$model";
 
-        if(file_exists(ROOT . "src/$pack/Model/$model.php")) {
-            $namespace = $this->projectNamespace.'\\';
+        if(class_exists("$this->projectNamespace\\$modelNamespace")) {
+            $modelNamespace = "$this->projectNamespace\\$modelNamespace";
+        } else if(!class_exists($modelNamespace)) {
+            throw new \Exception("Can't find model: $modelNamespace");
         }
 
-        $namespace .= "$pack\\Model\\$model";
-
-        return $this->container->getModel($namespace);
+        return $this->container->getModel($modelNamespace);
     }
 
     // View Methods shortcut
