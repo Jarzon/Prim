@@ -5,15 +5,13 @@ use \PDO;
 
 class Application
 {
-    /**
-     * @var Container $container
-     * @var Controller $router
-     */
     public $container;
-    public $router;
     public $projectNamespace;
 
-    public function __construct(Container $container)
+    /**
+     * @param Container $container
+     */
+    public function __construct($container)
     {
         $this->container = $container;
 
@@ -28,7 +26,7 @@ class Application
         $this->definePaths();
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
-            $this->router = $this->container->getRouter($router);
+            $this->container->getRouter($router);
         }, [
             'cacheFile' => ROOT . '/app/cache/route.cache',
             'cacheDisabled' => (ENV === 'dev'),

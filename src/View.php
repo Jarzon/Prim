@@ -3,9 +3,6 @@ namespace Prim;
 
 class View implements ViewInterface
 {
-    /**
-     * @var Container $container
-     */
     public $root = ROOT;
 
     protected $container;

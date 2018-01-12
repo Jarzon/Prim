@@ -3,13 +3,12 @@ namespace Prim;
 
 class Model
 {
-    /**
-     * @var Container $container
-     * @var \PDO $db
-     */
     public $container;
     public $db;
 
+    /**
+     * @param Container $container
+     */
     function __construct($container)
     {
         $this->container = $container;

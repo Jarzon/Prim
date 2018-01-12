@@ -1,23 +1,19 @@
 <?php
 namespace Prim;
 
-use \PDO;
-
 class Controller implements ViewInterface
 {
-    /**
-     * @var PDO $db
-     * @var string $model
-     * @var ViewInterface $view
-     */
     public $db;
-    public $model;
     public $view;
     public $container;
-    public $projectNamespace;
-    public $packNamespace;
+    public $projectNamespace = '';
+    public $packNamespace = '';
 
-    function __construct(ViewInterface $view, Container $container)
+    /**
+     * @param View $view
+     * @param Container $container
+     */
+    function __construct($view, $container)
     {
         $this->view = $view;
         $this->container = $container;
