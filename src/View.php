@@ -20,7 +20,10 @@ class View implements ViewInterface
     protected $section = 'default';
     protected $sectionPush = false;
 
-    public function __construct(Container $container)
+    /**
+     * @param Container $container
+     */
+    public function __construct($container)
     {
         $this->container = $container;
 
@@ -95,7 +98,7 @@ class View implements ViewInterface
         try {
             if($default) $this->start('default');
 
-            include($this->getViewFile($packDirectory, $view));
+            include($this->getViewFilePath($packDirectory, $view));
 
             if($default) $this->end();
         } catch (\Exception $e) {
@@ -107,22 +110,26 @@ class View implements ViewInterface
         }
 
         if ($template) {
-            include($this->getViewFile($this->templatePack, "_templates/{$this->templateName}"));
+            include($this->getViewFilePath($this->templatePack, "_templates/{$this->templateName}"));
         }
     }
 
-    protected function getViewFile($packDirectory, $view) {
-        $localViewFile = "{$this->root}src/$packDirectory/view/$view.php";
-        $vendorViewFile = "{$this->root}vendor/".strtolower($packDirectory)."/view/$view.php";
+    protected function getViewFilePath($pack, $view) {
+        $localViewFile = "{$this->root}src/$pack/view/$view.php";
+
         if(file_exists($localViewFile)) {
             return $localViewFile;
         }
-        elseif(file_exists($vendorViewFile)) {
-            return $vendorViewFile;
+
+        if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
+            $vendorFile = ROOT . "$vendorPath/view/$view.php";
+
+            if(file_exists($vendorFile)) {
+                return $vendorFile;
+            }
         }
-        else {
-            throw new \Exception("Can't find view $view in $packDirectory");
-        }
+
+        throw new \Exception("Can't find view $view in $pack");
     }
 
     function push(string $section)

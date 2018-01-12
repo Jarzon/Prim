@@ -5,12 +5,17 @@ namespace Prim;
 class Router
 {
     public $router = '';
+    protected $container;
     protected $routes = [];
     protected $currentGroupPrefix = '';
 
-    public function __construct($router)
+    /**
+     * @param Container $container
+     */
+    public function __construct(\FastRoute\RouteCollector $router, $container)
     {
         $this->router = $router;
+        $this->container = $container;
 
         include(APP . 'config/routing.php');
 
@@ -19,21 +24,25 @@ class Router
 
     function getRoutes(string $pack, string $routeFile)
     {
-        include($this->getRoutesFilePath($pack, $routeFile));
-    }
+        $included = false;
 
-    protected function getRoutesFilePath($packDirectory, $file) {
-        $localFile = ROOT . "src/$packDirectory/config/$file";
-        $vendorFile = ROOT . "vendor/".strtolower($packDirectory)."/config/$file";
+        if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
+            $vendorFile = ROOT . "$vendorPath/config/$routeFile";
 
-        if(file_exists($vendorFile)) {
-            return $vendorFile;
-        }
-        elseif(file_exists($localFile)) {
-            return $localFile;
+            if(file_exists($vendorFile)) {
+                $included = true;
+                include($vendorFile);
+            }
         }
 
-        throw new \Exception("Can't find routes file $file in $packDirectory");
+        $localFile = ROOT . "src/$pack/config/$routeFile";
+
+        if(file_exists($localFile)) {
+            $included = true;
+            include($localFile);
+        }
+
+        if(!$included) throw new \Exception("Can't find routes file $routeFile in $pack");
     }
 
     function get(string $route, string $controller, string $method)
