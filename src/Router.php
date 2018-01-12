@@ -11,28 +11,29 @@ class Router
     public function __construct($router)
     {
         $this->router = $router;
+
         include(APP . 'config/routing.php');
+
         $this->buildRoutes();
     }
 
     function getRoutes(string $pack, string $routeFile)
     {
-        $included = false;
-        $file = ROOT . "vendor/".strtolower($pack)."/config/$routeFile";
-        if(file_exists($file)) {
-            $included = true;
-            include($file);
+        include($this->getRoutesFilePath($pack, $routeFile));
+    }
+
+    protected function getRoutesFilePath($packDirectory, $file) {
+        $localFile = ROOT . "src/$packDirectory/config/$file";
+        $vendorFile = ROOT . "vendor/".strtolower($packDirectory)."/config/$file";
+
+        if(file_exists($vendorFile)) {
+            return $vendorFile;
+        }
+        elseif(file_exists($localFile)) {
+            return $localFile;
         }
 
-        $file = ROOT . "src/$pack/config/$routeFile";
-        if(file_exists($file)) {
-            $included = true;
-            include($file);
-        }
-
-        if(!$included) {
-            throw new \Exception("Can't find $routeFile in $pack");
-        }
+        throw new \Exception("Can't find routes file $file in $packDirectory");
     }
 
     function get(string $route, string $controller, string $method)
