@@ -8,9 +8,9 @@ class Container
     public function __construct(array $parameters = [])
     {
         $this->parameters = array_merge([
-            'view.class' => '\Prim\View',
-            'router.class' => '\Prim\Router',
-            'pdo.class' => '\PDO',
+            'view.class' => 'Prim\View',
+            'router.class' => 'Prim\Router',
+            'pdo.class' => 'PDO',
             'errorController.class' => 'PrimPack\Controller\Error'
         ], $parameters);
     }
@@ -35,7 +35,7 @@ class Container
     {
         $obj = 'router';
 
-        return $this->init($obj, $router);
+        return $this->init($obj, $router, $this);
     }
 
     /**
@@ -86,5 +86,24 @@ class Container
         $obj = 'pdo';
 
         return $this->init($obj, "$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
+    }
+
+    /**
+     * @return Composer\Autoload\ClassLoader
+     */
+    public function getComposer()
+    {
+        $name = 'composer.class';
+
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        if($composer = require ROOT . 'vendor/autoload.php') {
+            return self::$shared[$name] = $composer;
+        }
+
+        throw new \Exception("Couldn't get composer");
     }
 }
