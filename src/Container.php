@@ -11,6 +11,7 @@ class Container
             'view.class' => 'Prim\View',
             'router.class' => 'Prim\Router',
             'pdo.class' => 'PDO',
+            'packList.class' => 'Prim\PackList',
             'errorController.class' => 'PrimPack\Controller\Error'
         ], $parameters);
     }
@@ -105,5 +106,15 @@ class Container
         }
 
         throw new \Exception("Couldn't get composer");
+    }
+
+    /**
+     * @return PackList
+     */
+    public function getPackList()
+    {
+        $obj = 'packList';
+
+        return $this->init($obj, $this->getComposer());
     }
 }
