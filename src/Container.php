@@ -8,6 +8,7 @@ class Container
     public function __construct(array $parameters = [])
     {
         $this->parameters = array_merge([
+            'application.class' => 'Prim\Application',
             'view.class' => 'Prim\View',
             'router.class' => 'Prim\Router',
             'pdo.class' => 'PDO',
@@ -27,6 +28,16 @@ class Container
         $obj = new $class(...$args);
 
         return self::$shared[$name] = $obj;
+    }
+
+    /**
+     * @return Application
+     */
+    public function getApplication()
+    {
+        $obj = 'application';
+
+        return $this->init($obj, $this);
     }
 
     /**
