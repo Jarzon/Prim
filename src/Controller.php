@@ -13,7 +13,7 @@ class Controller implements ViewInterface
      * @param View $view
      * @param Container $container
      */
-    function __construct($view, $container)
+    function __construct($view, $container, ...$args)
     {
         $this->view = $view;
         $this->container = $container;
@@ -22,16 +22,32 @@ class Controller implements ViewInterface
 
         $this->view->setPack($this->packNamespace);
 
-        $class_methods = get_class_methods($this);
+        /*
+         * Dynamic dependency injection, so we don't have to extends the Controller to inject services
+         * */
+        foreach ($args as $arg) {
+            $service = $this->getClassName(get_class($arg));
+
+            if(!isset($this->{$service})) {
+                $this->{$service} = $arg;
+            }
+        }
 
         /*
-         * All methods that start by build get automatically executed when the object is instantiated
+         * All methods that start by build get automatically executed when the object is instantiated, so we don't have to overload the __constructor()
          * */
+        $class_methods = get_class_methods($this);
+
         foreach ($class_methods as $method_name) {
             if (strpos($method_name, 'build') !== false) {
                 $this->$method_name();
             }
         }
+    }
+
+    function getClassName($classname) {
+        if ($pos = strrpos($classname, '\\')) return strtolower(substr($classname, $pos + 1));
+        return $pos;
     }
 
     public function getNamespace(string $namespaces) {
