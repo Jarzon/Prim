@@ -17,7 +17,7 @@ class Container
         ], $parameters);
     }
 
-    private function init(string $name, ...$args) {
+    protected function init(string $name, ...$args) {
         if (isset(self::$shared[$name]))
         {
             return self::$shared[$name];
