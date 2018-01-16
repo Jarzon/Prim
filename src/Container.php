@@ -3,18 +3,20 @@ namespace Prim;
 
 class Container
 {
-    static protected $shared = array();
+    protected $parameters = [];
+
+    static protected $shared = [];
 
     public function __construct(array $parameters = [])
     {
-        $this->parameters = array_merge([
+        $this->parameters = $parameters += [
             'application.class' => 'Prim\Application',
             'view.class' => 'Prim\View',
             'router.class' => 'Prim\Router',
             'pdo.class' => 'PDO',
             'packList.class' => 'Prim\PackList',
             'errorController.class' => 'PrimPack\Controller\Error'
-        ], $parameters);
+        ];
     }
 
     protected function init(string $name, ...$args) {
@@ -107,7 +109,7 @@ class Container
     }
 
     /**
-     * @return Composer\Autoload\ClassLoader
+     * @return \Composer\Autoload\ClassLoader
      */
     public function getComposer()
     {
