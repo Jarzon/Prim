@@ -22,6 +22,11 @@ class Router
         $this->buildRoutes();
     }
 
+    function getRoutesCount()
+    {
+        return count($this->routes);
+    }
+
     function getRoutes(string $pack, string $routeFile)
     {
         $included = false;
