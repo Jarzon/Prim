@@ -49,9 +49,10 @@ class Container
     }
 
     /**
+     * @param \FastRoute\RouteCollector $router
      * @return Router
      */
-    public function getRouter(\FastRoute\RouteCollector $router)
+    public function getRouter($router = '')
     {
         $obj = 'router';
 
