@@ -3,16 +3,15 @@ namespace Prim;
 
 class Model
 {
-    public $container;
     public $db;
+    protected $container;
 
     /**
-     * @param Container $container
+     * @param \PDO $db
      */
-    function __construct($container)
+    function __construct($db)
     {
-        $this->container = $container;
-        $this->db = $container->getPDO();
+        $this->db = $db;
     }
 
     public function prepare(string $statement, array $driver_options = [])
@@ -29,9 +28,11 @@ class Model
             $values = array_merge($values, $whereValues);
         }
 
-        $query = $this->db->prepare("UPDATE $table SET ".implode('=?,', array_keys($data))."=? $where");
+        $query = $this->prepare("UPDATE $table SET ".implode('=?,', array_keys($data))."=? $where");
 
         $query->execute($values);
+
+        return $query->rowCount();
     }
 
     public function insert(string $table, array $data)
@@ -40,9 +41,11 @@ class Model
         $placeholders = implode(',', str_split(str_repeat('?', sizeof($data))));
         $values = array_values($data);
 
-        $query = $this->db->prepare("INSERT INTO $table ($columns) VALUES($placeholders)");
+        $query = $this->prepare("INSERT INTO $table ($columns) VALUES($placeholders)");
 
         $query->execute($values);
+
+        return $this->db->lastInsertId();
     }
 
     protected function convertDate(&$data, $index, $format = 'Y-m-d') {

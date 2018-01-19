@@ -6,14 +6,13 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Prim\Model;
 
-use Tests\Mocks\Container;
+use Tests\Mocks\PDO;
 
 class ModelTest extends TestCase
 {
     public function testUpdate()
     {
-        $container = new Container();
-        $model = new Model($container);
+        $model = new Model(new PDO());
 
         $model->update('test', ['test' => '0'], '', []);
 
@@ -24,8 +23,7 @@ class ModelTest extends TestCase
 
     public function testUpdateMultiple()
     {
-        $container = new Container();
-        $model = new Model($container);
+        $model = new Model(new PDO());
 
         $model->update('test', ['test' => '0', 'name' => 'wot'], '', []);
 
@@ -36,8 +34,7 @@ class ModelTest extends TestCase
 
     public function testUpdateWhere()
     {
-        $container = new Container();
-        $model = new Model($container);
+        $model = new Model(new PDO());
 
         $model->update('test', ['test' => '0'], 'id = ?', ['1']);
 
@@ -48,8 +45,7 @@ class ModelTest extends TestCase
 
     public function testInsert()
     {
-        $container = new Container();
-        $model = new Model($container);
+        $model = new Model(new PDO());
 
         $model->insert('test', ['test' => '0']);
 

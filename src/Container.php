@@ -96,7 +96,7 @@ class Container
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $this);
+        return $this->init($obj, $this->getPDO());
     }
 
     /**

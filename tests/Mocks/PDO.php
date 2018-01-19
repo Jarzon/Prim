@@ -19,4 +19,9 @@ class PDO extends \PDO
     public function execute(array $values) {
 
     }
+
+    public function lastInsertId($name = null)
+    {
+        return 1;
+    }
 }
