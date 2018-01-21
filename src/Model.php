@@ -14,6 +14,9 @@ class Model
         $this->db = $db;
     }
 
+    /**
+     * @return \PDO
+     */
     public function prepare(string $statement, array $driver_options = [])
     {
         return $this->db->prepare($statement, $driver_options);
