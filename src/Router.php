@@ -22,7 +22,7 @@ class Router
         $this->buildRoutes();
     }
 
-    function getRoutesCount()
+    function getRoutesCount() : int
     {
         return count($this->routes);
     }

@@ -14,9 +14,6 @@ class Model
         $this->db = $db;
     }
 
-    /**
-     * @return \PDO
-     */
     public function prepare(string $statement, array $driver_options = [])
     {
         return $this->db->prepare($statement, $driver_options);
@@ -51,7 +48,7 @@ class Model
         return $this->db->lastInsertId();
     }
 
-    protected function convertDate(&$data, $index, $format = 'Y-m-d') {
+    protected function convertDate(array &$data, $index, string $format = 'Y-m-d') {
         if(!empty($data[$index])) {
             $data[$index] = str_replace('/', '-', $data[$index]);
             $data[$index] = date($format, strtotime($data[$index]));

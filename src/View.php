@@ -111,7 +111,7 @@ class View implements ViewInterface
         }
     }
 
-    protected function getViewFilePath($pack, $view) {
+    protected function getViewFilePath(string $pack, string $view) : string {
         $localViewFile = "{$this->root}src/$pack/view/$view.php";
 
         if(file_exists($localViewFile)) {
@@ -175,11 +175,11 @@ class View implements ViewInterface
         }
     }
 
-    function fileHash($name) {
+    function fileHash(string $name) : string {
         return "$name?v=" . hash_file('fnv1a32', "{$this->root}public$name");
     }
 
-    function fileCache($name) {
+    function fileCache(string $name) : string {
         return "$name?v=" . filemtime( "{$this->root}public/$name");
     }
 }

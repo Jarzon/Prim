@@ -32,7 +32,7 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
-    protected function setDefaultParameter($obj, $class) {
+    protected function setDefaultParameter(string $obj, string $class) {
         if(!isset($this->parameters["$obj.class"])) {
             $this->parameters["$obj.class"] = $class;
         }

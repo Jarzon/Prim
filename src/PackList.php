@@ -6,16 +6,13 @@ class PackList
     protected $vendorPacksList;
     protected $composer;
 
-    /**
-     * @param \Composer\Autoload\ClassLoader $composer
-     */
-    public function __construct($composer)
+    public function __construct(\Composer\Autoload\ClassLoader $composer)
     {
         $this->composer = $composer;
         $this->vendorPacksList = $this->getComposerPacks();
     }
 
-    public function getVendorPath(string $pack)
+    public function getVendorPath(string $pack) : string
     {
         if(!empty($this->vendorPacksList[$pack])) {
             return $this->vendorPacksList[$pack];
@@ -24,7 +21,7 @@ class PackList
         return '';
     }
 
-    protected function getComposerPacks() {
+    protected function getComposerPacks() : array {
         $prefixes = array_merge($this->composer->getPrefixesPsr4(), $this->composer->getPrefixes());
 
         $packs = [];

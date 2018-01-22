@@ -45,7 +45,7 @@ class Controller implements ViewInterface
         }
     }
 
-    function getClassName($classname) {
+    function getClassName(string $classname) {
         if ($pos = strrpos($classname, '\\')) return strtolower(substr($classname, $pos + 1));
         return $pos;
     }
