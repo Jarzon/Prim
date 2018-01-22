@@ -17,13 +17,13 @@ class Application
 
         $this->projectNamespace = PROJECT_NAME;
 
-        if(DB_ENABLE) {
-            $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
-        }
-
         $this->setErrorHandlers();
 
         $this->definePaths();
+
+        if(DB_ENABLE) {
+            $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
+        }
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->container->getRouter($router);
@@ -101,13 +101,7 @@ class Application
             PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING
         ];
 
-        // generate a database connection, using the PDO connector
-        try {
-            $this->db = $this->container->getPDO($type, $host, $name, $charset, $user, $pass, $options);
-        } catch (\PDOException $e) {
-            header('HTTP/1.1 503 Service Unavailable');
-            throw new \Exception('Database connection could not be established.');
-        }
+        $this->db = $this->container->getPDO($type, $host, $name, $charset, $user, $pass, $options);
     }
 
     /**
@@ -119,6 +113,8 @@ class Application
             echo $this->container->getErrorController()->debug($e);
         }
         else {
+            $errorCode = 500;
+
             $headers[] = 'MIME-Version: 1.0';
             $headers[] = 'To: ' . ERROR_MAIL;
             $headers[] = 'From: ' . ERROR_MAIL_FROM;
@@ -127,11 +123,25 @@ class Application
             $message[] = "Message: {$e->getMessage()}";
             $message[] = "File: {$e->getFile()}";
             $message[] = "Line: {$e->getLine()}";
+
+
+            // SQL server is down\unreachable
+            if(get_class($e) === 'PDOException') {
+                $errorCode = 503;
+            }
+            // The query and params shouldn't be sended by email but logged
+            else if(strpos($e->getMessage(), 'PDO') !== false) {
+                $PDO = $this->container->getPDO();
+
+                $message[] = 'Query: ' . nl2br($PDO->lastQuery);
+                $message[] = 'Params: ' . var_export($PDO->lastParams);
+            }
+
             $message = wordwrap(implode("\r\n", $message), 70, "\r\n");
 
             mail(ERROR_MAIL, 'PHP Error', $message, implode("\r\n", $headers));
 
-            echo $this->container->getErrorController()->handleError(500);
+            echo $this->container->getErrorController()->handleError($errorCode);
             exit;
         }
     }
