@@ -27,7 +27,7 @@ class Router
         return count($this->routes);
     }
 
-    function getRoutes(string $pack, string $routeFile)
+    function getRoutes(string $pack, string $routeFile) : void
     {
         $included = false;
 
@@ -50,22 +50,22 @@ class Router
         if(!$included) throw new \Exception("Can't find routes file $routeFile in $pack");
     }
 
-    function get(string $route, string $controller, string $method)
+    function get(string $route, string $controller, string $method) : void
     {
         $this->addRoute(['GET'], $route, $controller, $method);
     }
 
-    function post(string $route, string $controller, string $method)
+    function post(string $route, string $controller, string $method) : void
     {
         $this->addRoute(['POST'], $route, $controller, $method);
     }
 
-    function both(string $route, string $controller, string $method)
+    function both(string $route, string $controller, string $method) : void
     {
         $this->addRoute(['GET', 'POST'], $route, $controller, $method);
     }
 
-    function addRoute(array $type, string $route, string $controller, string $method)
+    function addRoute(array $type, string $route, string $controller, string $method) : void
     {
         $route = $this->currentGroupPrefix . $route;
 
@@ -74,7 +74,7 @@ class Router
         }
     }
 
-    function addGroup(string $prefix, callable $callback)
+    function addGroup(string $prefix, callable $callback) : void
     {
         $previousGroupPrefix = $this->currentGroupPrefix;
         $this->currentGroupPrefix = $previousGroupPrefix . $prefix;
@@ -82,11 +82,13 @@ class Router
         $this->currentGroupPrefix = $previousGroupPrefix;
     }
 
-    function removeRoute(string $route) {
+    function removeRoute(string $route) : void
+    {
         if(isset($this->routes[$route])) unset($this->routes[$route]);
     }
 
-    function buildRoutes() {
+    function buildRoutes() : void
+    {
         foreach($this->routes as $uri => $types) {
             foreach($types as $type => $params) {
                 list($controller, $method) = $params;

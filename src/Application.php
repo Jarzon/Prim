@@ -64,13 +64,15 @@ class Application
         }
     }
 
-    public function setErrorHandlers() {
+    public function setErrorHandlers() : void
+    {
         register_shutdown_function( [$this, 'checkFatal'] );
         set_error_handler( [$this, 'logError'] );
         set_exception_handler( [$this, 'logException'] );
     }
 
-    public function definePaths() {
+    public function definePaths() : void
+    {
         if(ENV == 'prod') {
             define('URL_RELATIVE_BASE', $_SERVER['REQUEST_URI']);
             define('URL_BASE', '');
@@ -90,7 +92,7 @@ class Application
     /**
      * Open a Database connection using PDO
      */
-    public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass)
+    public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass) : void
     {
         // Set the fetch mode to object
         $options = [
@@ -107,7 +109,7 @@ class Application
     /**
      * Uncaught exception handler.
      */
-    public function logException($e)
+    public function logException($e) : void
     {
         if (DEBUG == true ) {
             echo $this->container->getErrorController()->debug($e);
@@ -149,7 +151,7 @@ class Application
     /**
      * Checks for a fatal error, work around for set_error_handler not working on fatal errors.
      */
-    public function checkFatal()
+    public function checkFatal() : void
     {
         $error = error_get_last();
         if ($error['type'] == E_ERROR) {
@@ -160,7 +162,7 @@ class Application
     /**
      * Error handler, passes flow over the exception logger with new ErrorException.
      */
-    public function logError($num, $str, $file, $line, $context = null)
+    public function logError(int $num, string $str, string $file, int $line, $context = null) : void
     {
         $this->logException(new \ErrorException( $str, 0, $num, $file, $line ));
     }

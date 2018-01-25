@@ -21,7 +21,8 @@ class PackList
         return '';
     }
 
-    protected function getComposerPacks() : array {
+    protected function getComposerPacks() : array
+    {
         $prefixes = array_merge($this->composer->getPrefixesPsr4(), $this->composer->getPrefixes());
 
         $packs = [];

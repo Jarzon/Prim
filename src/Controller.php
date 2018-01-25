@@ -45,12 +45,14 @@ class Controller implements ViewInterface
         }
     }
 
-    function getClassName(string $classname) {
+    function getClassName(string $classname) : string
+    {
         if ($pos = strrpos($classname, '\\')) return strtolower(substr($classname, $pos + 1));
         return $pos;
     }
 
-    public function getNamespace(string $namespaces) {
+    public function getNamespace(string $namespaces) : void
+    {
         $namespaces = explode('\\', $namespaces);
 
         $pack = '';
@@ -71,7 +73,7 @@ class Controller implements ViewInterface
         $this->packNamespace = $pack;
     }
 
-    public function getModel(string $model, string $pack = '')
+    public function getModel(string $model, string $pack = '') : object
     {
         if($pack === '') $pack = $this->packNamespace;
 
@@ -87,7 +89,8 @@ class Controller implements ViewInterface
     }
 
     // View Methods shortcut
-    function setTemplate(string $design, string $pack = '') {
+    function setTemplate(string $design, string $pack = '') : void
+    {
         $this->view->setTemplate($design, $pack);
     }
 

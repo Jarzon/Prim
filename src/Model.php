@@ -14,12 +14,12 @@ class Model
         $this->db = $db;
     }
 
-    public function prepare(string $statement, array $driver_options = [])
+    public function prepare(string $statement, array $driver_options = []) : object
     {
         return $this->db->prepare($statement, $driver_options);
     }
 
-    public function update(string $table, array $data, string $where = '', array $whereValues = [])
+    public function update(string $table, array $data, string $where = '', array $whereValues = []) : int
     {
         $values = array_values($data);
 
@@ -35,7 +35,7 @@ class Model
         return $query->rowCount();
     }
 
-    public function insert(string $table, array $data)
+    public function insert(string $table, array $data) : int
     {
         $columns = implode(',', array_keys($data));
         $placeholders = implode(',', str_split(str_repeat('?', sizeof($data))));
@@ -45,10 +45,11 @@ class Model
 
         $query->execute($values);
 
-        return $this->db->lastInsertId();
+        return (int) $this->db->lastInsertId();
     }
 
-    protected function convertDate(array &$data, $index, string $format = 'Y-m-d') {
+    protected function convertDate(array &$data, $index, string $format = 'Y-m-d') : void
+    {
         if(!empty($data[$index])) {
             $data[$index] = str_replace('/', '-', $data[$index]);
             $data[$index] = date($format, strtotime($data[$index]));

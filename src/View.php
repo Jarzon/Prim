@@ -36,23 +36,23 @@ class View implements ViewInterface
         }
     }
 
-    function setPack(string $pack)
+    function setPack(string $pack) : void
     {
         $this->pack = $pack;
     }
 
-    function setTemplate(string $name, string $pack)
+    function setTemplate(string $name, string $pack) : void
     {
         $this->templateName = $name;
         $this->templatePack = $pack;
     }
 
-    function design(string $view, string $packDirectory = '', array $vars = [])
+    function design(string $view, string $packDirectory = '', array $vars = []) : void
     {
         $this->renderTemplate($view, $packDirectory, $vars, true, true);
     }
 
-    function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true)
+    function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true) : void
     {
         $this->renderTemplate($view, $packDirectory, $vars, $template, false);
     }
@@ -67,16 +67,16 @@ class View implements ViewInterface
         if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
     }
 
-    function vars(array $vars = [])
+    function vars(array $vars = []) : array
     {
-        if(empty($vars)) {
-            return $this->vars;
+        if(!empty($vars)) {
+            $this->vars = $vars + $this->vars;
         }
 
-        $this->vars = array_merge($this->vars, $vars);
+        return $this->vars;
     }
 
-    function renderTemplate(string $view, string $packDirectory = '', array $vars = [], bool $template = true, bool $default = false)
+    function renderTemplate(string $view, string $packDirectory = '', array $vars = [], bool $template = true, bool $default = false) : void
     {
         $this->vars($vars);
         unset($vars);
@@ -111,7 +111,8 @@ class View implements ViewInterface
         }
     }
 
-    protected function getViewFilePath(string $pack, string $view) : string {
+    protected function getViewFilePath(string $pack, string $view) : string
+    {
         $localViewFile = "{$this->root}src/$pack/view/$view.php";
 
         if(file_exists($localViewFile)) {
@@ -158,28 +159,30 @@ class View implements ViewInterface
         return isset($this->sections[$section])? $this->sections[$section]: '';
     }
 
-    public function insert(string $name, string $pack = '', array $vars = [])
+    public function insert(string $name, string $pack = '', array $vars = []) : void
     {
         echo $this->renderTemplate($name, $pack, $vars, false, false);
     }
 
-    function addVar(string $name, $var)
+    function addVar(string $name, $var) : void
     {
         $this->vars[$name] = $var;
     }
 
-    function addVars(array $vars)
+    function addVars(array $vars) : void
     {
         foreach($vars as $var) {
             $this->addVar($var[0], $var[1]);
         }
     }
 
-    function fileHash(string $name) : string {
+    function fileHash(string $name) : string
+    {
         return "$name?v=" . hash_file('fnv1a32', "{$this->root}public$name");
     }
 
-    function fileCache(string $name) : string {
+    function fileCache(string $name) : string
+    {
         return "$name?v=" . filemtime( "{$this->root}public/$name");
     }
 }

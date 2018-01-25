@@ -19,7 +19,8 @@ class Container
         ];
     }
 
-    protected function init(string $name, ...$args) {
+    protected function init(string $name, ...$args) : object
+    {
         if (isset(self::$shared[$name]))
         {
             return self::$shared[$name];
@@ -32,7 +33,8 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
-    protected function setDefaultParameter(string $obj, string $class) {
+    protected function setDefaultParameter(string $obj, string $class) : object
+    {
         if(!isset($this->parameters["$obj.class"])) {
             $this->parameters["$obj.class"] = $class;
         }
@@ -41,7 +43,7 @@ class Container
     /**
      * @return Application
      */
-    public function getApplication()
+    public function getApplication() : object
     {
         $obj = 'application';
 
@@ -52,7 +54,7 @@ class Container
      * @param \FastRoute\RouteCollector $router
      * @return Router
      */
-    public function getRouter($router = '')
+    public function getRouter($router = null) : object
     {
         $obj = 'router';
 
@@ -62,7 +64,7 @@ class Container
     /**
      * @return View
      */
-    public function getView()
+    public function getView() : object
     {
         $obj = 'view';
 
@@ -72,7 +74,7 @@ class Container
     /**
      * @return Controller
      */
-    public function getController(string $obj)
+    public function getController(string $obj) : object
     {
         $this->parameters["$obj.class"] = $obj;
 
@@ -82,7 +84,7 @@ class Container
     /**
      * @return Controller
      */
-    public function getErrorController()
+    public function getErrorController() : object
     {
         $obj = 'errorController';
 
@@ -92,7 +94,7 @@ class Container
     /**
      * @return Model
      */
-    public function getModel(string $obj)
+    public function getModel(string $obj) : object
     {
         $this->parameters["$obj.class"] = $obj;
 
@@ -102,7 +104,7 @@ class Container
     /**
      * @return \PDO
      */
-    public function getPDO(string $type = '', string $host = '', string $name = '', string $charset = '', string $user = '', string $pass = '', array $options = [])
+    public function getPDO(string $type = '', string $host = '', string $name = '', string $charset = '', string $user = '', string $pass = '', array $options = []) : object
     {
         $obj = 'pdo';
 
@@ -112,7 +114,7 @@ class Container
     /**
      * @return \Composer\Autoload\ClassLoader
      */
-    public function getComposer()
+    public function getComposer() : object
     {
         $name = 'composer.class';
 
@@ -131,7 +133,7 @@ class Container
     /**
      * @return PackList
      */
-    public function getPackList()
+    public function getPackList() : object
     {
         $obj = 'packList';
 
