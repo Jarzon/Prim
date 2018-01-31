@@ -146,6 +146,6 @@ class Container
     {
         $obj = 'packList';
 
-        return $this->init($obj, $this->getComposer());
+        return $this->init($obj, $this->getComposer(), $this->options);
     }
 }
