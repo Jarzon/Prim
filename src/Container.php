@@ -4,10 +4,11 @@ namespace Prim;
 class Container
 {
     protected $parameters = [];
+    protected $options = [];
 
     static protected $shared = [];
 
-    public function __construct(array $parameters = [])
+    public function __construct(array $parameters = [], array $options = [])
     {
         $this->parameters = $parameters += [
             'application.class' => 'Prim\Application',
@@ -16,6 +17,12 @@ class Container
             'pdo.class' => 'PDO',
             'packList.class' => 'Prim\PackList',
             'errorController.class' => 'PrimPack\Controller\Error'
+        ];
+
+        $this->options = $options += [
+            'root' => '',
+            'url_protocol' => !empty($_SERVER['HTTPS'])? 'https://': 'http://',
+            'url_domain' => $_SERVER['SERVER_NAME']
         ];
     }
 
