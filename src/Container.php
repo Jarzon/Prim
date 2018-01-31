@@ -95,7 +95,7 @@ class Container
     {
         $obj = 'errorController';
 
-        return $this->init($obj, $this->getView(), $this);
+        return $this->init($obj, $this->getView(), $this, $this->options);
     }
 
     /**
@@ -105,7 +105,7 @@ class Container
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $this->getPDO());
+        return $this->init($obj, $this->getPDO(), $this->options);
     }
 
     /**
@@ -130,11 +130,13 @@ class Container
             return self::$shared[$name];
         }
 
-        if($composer = require ROOT . 'vendor/autoload.php') {
-            return self::$shared[$name] = $composer;
+        $composer = "{$this->options['root']}vendor/autoload.php";
+
+        if(!file_exists($composer)) {
+            throw new \Exception("Couldn't get composer");
         }
 
-        throw new \Exception("Couldn't get composer");
+        return self::$shared[$name] = require $composer;
     }
 
     /**

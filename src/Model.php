@@ -4,14 +4,17 @@ namespace Prim;
 class Model
 {
     public $db;
-    protected $container;
+    protected $options = [];
 
     /**
      * @param \PDO $db
      */
-    function __construct($db)
+    function __construct($db, array $options = [])
     {
         $this->db = $db;
+        $this->options = $options += [
+
+        ];
     }
 
     public function prepare(string $statement, array $driver_options = []) : object
