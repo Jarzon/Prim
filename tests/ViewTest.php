@@ -7,14 +7,13 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 
-use Tests\Mocks\Container;
-use Tests\Mocks\View;
+use Prim\Container;
 
 class ViewTest extends TestCase
 {
     /**
-    * @var  vfsStreamDirectory
-    */
+     * @var  vfsStreamDirectory
+     */
     private $root;
 
     public function setUp()
@@ -36,24 +35,24 @@ EOD;
         $this->root = vfsStream::setup('root', null, $structure);
     }
 
-    public function testConstruct()
+    public function testViewConstruct()
     {
-        $container = new Container();
+        $container = new Container([
+            'view.class' => '\Tests\Mocks\View',
+            'pdo.class' => '\Tests\Mocks\PDO'
+        ], [
+            'root' => vfsStream::url('root').'/'
+        ]);
         $view = $container->getView();
-
-        $view->root = vfsStream::url('root/');
-
-        var_dump($view);
 
         $this->assertEquals(true, $view->build);
 
         return $view;
     }
 
-
     /**
-    * @depends testConstruct
-    */
+     * @depends testViewConstruct
+     */
     public function testBasicRender($view)
     {
         $view->start('default');
@@ -61,5 +60,14 @@ EOD;
         $view->end();
 
         $this->assertEquals('static page', $view->section('default'));
+    }
+
+    /**
+     * @depends testViewConstruct
+     * @expectedException \Exception
+     */
+    public function testMissingView($view)
+    {
+        $view->render('aViewThatDontExist', 'BasePack', [], false);
     }
 }

@@ -3,9 +3,9 @@ namespace Prim;
 
 class View implements ViewInterface
 {
-    public $root = ROOT;
-
     protected $container;
+
+    protected $options = [];
 
     protected $templateName = 'design';
     protected $templatePack = 'BasePack';
@@ -20,9 +20,13 @@ class View implements ViewInterface
     /**
      * @param Container $container
      */
-    public function __construct($container)
+    public function __construct($container, array $options = [])
     {
         $this->container = $container;
+
+        $this->options = $options += [
+            'root' => ''
+        ];
 
         $class_methods = get_class_methods($this);
 
@@ -113,14 +117,14 @@ class View implements ViewInterface
 
     protected function getViewFilePath(string $pack, string $view) : string
     {
-        $localViewFile = "{$this->root}src/$pack/view/$view.php";
+        $localViewFile = "{$this->options['root']}src/$pack/view/$view.php";
 
         if(file_exists($localViewFile)) {
             return $localViewFile;
         }
 
         if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
-            $vendorFile = ROOT . "$vendorPath/view/$view.php";
+            $vendorFile = "{$this->options['root']}$vendorPath/view/$view.php";
 
             if(file_exists($vendorFile)) {
                 return $vendorFile;
@@ -161,7 +165,7 @@ class View implements ViewInterface
 
     public function insert(string $name, string $pack = '', array $vars = []) : void
     {
-        echo $this->renderTemplate($name, $pack, $vars, false, false);
+        $this->renderTemplate($name, $pack, $vars, false, false);
     }
 
     function addVar(string $name, $var) : void
@@ -178,11 +182,11 @@ class View implements ViewInterface
 
     function fileHash(string $name) : string
     {
-        return "$name?v=" . hash_file('fnv1a32', "{$this->root}public$name");
+        return "$name?v=" . hash_file('fnv1a32', "{$this->options['root']}public$name");
     }
 
     function fileCache(string $name) : string
     {
-        return "$name?v=" . filemtime( "{$this->root}public/$name");
+        return "$name?v=" . filemtime( "{$this->options['root']}public/$name");
     }
 }

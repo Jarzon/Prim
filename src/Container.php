@@ -75,7 +75,7 @@ class Container
     {
         $obj = 'view';
 
-        return $this->init($obj, $this);
+        return $this->init($obj, $this, $this->options);
     }
 
     /**
