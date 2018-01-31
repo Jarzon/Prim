@@ -20,9 +20,7 @@ class Container
         ];
 
         $this->options = $options += [
-            'root' => '',
-            'url_protocol' => !empty($_SERVER['HTTPS'])? 'https://': 'http://',
-            'url_domain' => $_SERVER['SERVER_NAME']
+            'root' => ''
         ];
     }
 
