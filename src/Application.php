@@ -6,33 +6,36 @@ use \PDO;
 class Application
 {
     public $container;
-    public $projectNamespace;
+
+    protected $options = [];
 
     /**
      * @param Container $container
      */
-    public function __construct($container)
+    public function __construct($container, array $options = [])
     {
-        $this->container = $container;
+        $this->options = $options += [
+            'root' => '',
+            'project_name' => '',
+            'db_enable' => false
+        ];
 
-        $this->projectNamespace = PROJECT_NAME;
+        $this->container = $container;
 
         $this->setErrorHandlers();
 
-        $this->definePaths();
-
-        if(DB_ENABLE) {
-            $this->openDatabaseConnection(DB_TYPE, DB_HOST, DB_NAME, DB_CHARSET, DB_USER, DB_PASS);
+        if($options['db_enable']) {
+            $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_charset'], $options['db_user'], $options['db_password']);
         }
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->container->getRouter($router);
         }, [
-            'cacheFile' => ROOT . '/app/cache/route.cache',
-            'cacheDisabled' => (ENV === 'dev'),
+            'cacheFile' => "{$this->options['root']}/app/cache/route.cache",
+            'cacheDisabled' => ($options['environment'] === 'dev'),
         ]);
 
-        $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], URL_RELATIVE_BASE);
+        $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 
         switch ($routeInfo[0]) {
             case \FastRoute\Dispatcher::NOT_FOUND:
@@ -50,8 +53,8 @@ class Application
 
                 $controllerNamespace = "$pack\\Controller\\$controller";
 
-                if(class_exists("$this->projectNamespace\\$controllerNamespace")) {
-                    $controllerNamespace = "$this->projectNamespace\\$controllerNamespace";
+                if(class_exists("{$this->options['project_name']}\\$controllerNamespace")) {
+                    $controllerNamespace = "{$this->options['project_name']}\\$controllerNamespace";
                 } else if(!class_exists($controllerNamespace)) {
                     throw new \Exception("Can't find controller: $controllerNamespace");
                 }
@@ -69,24 +72,6 @@ class Application
         register_shutdown_function( [$this, 'checkFatal'] );
         set_error_handler( [$this, 'logError'] );
         set_exception_handler( [$this, 'logException'] );
-    }
-
-    public function definePaths() : void
-    {
-        if(ENV == 'prod') {
-            define('URL_RELATIVE_BASE', $_SERVER['REQUEST_URI']);
-            define('URL_BASE', '');
-        }
-        else {
-            $dirname = str_replace('public', '', dirname($_SERVER['SCRIPT_NAME']));
-            define('URL_RELATIVE_BASE', str_replace($dirname, '', $_SERVER['REQUEST_URI']));
-            define('URL_BASE', $dirname);
-        }
-
-        define('URL_PROTOCOL', !empty($_SERVER['HTTPS'])? 'https://': 'http://');
-        define('URL_DOMAIN', $_SERVER['SERVER_NAME']);
-
-        define('URL', URL_PROTOCOL . URL_DOMAIN . URL_BASE);
     }
 
     /**
@@ -111,15 +96,15 @@ class Application
      */
     public function logException($e) : void
     {
-        if (DEBUG == true ) {
+        if ($this->options['debug'] == true ) {
             echo $this->container->getErrorController()->debug($e);
         }
         else {
             $errorCode = 500;
 
             $headers[] = 'MIME-Version: 1.0';
-            $headers[] = 'To: ' . ERROR_MAIL;
-            $headers[] = 'From: ' . ERROR_MAIL_FROM;
+            $headers[] = 'To: ' . $this->options['error_mail'];
+            $headers[] = 'From: ' . $this->options['error_mail_from'];
 
             $message[] = 'Type: ' . get_class($e);
             $message[] = "Message: {$e->getMessage()}";
