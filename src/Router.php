@@ -6,18 +6,23 @@ class Router
 {
     public $router = '';
     protected $container;
+    protected $options = [];
     protected $routes = [];
     protected $currentGroupPrefix = '';
 
     /**
      * @param Container $container
      */
-    public function __construct(\FastRoute\RouteCollector $router, $container)
+    public function __construct(\FastRoute\RouteCollector $router, $container, array $options = [])
     {
         $this->router = $router;
         $this->container = $container;
 
-        include(APP . 'config/routing.php');
+        $this->options = $options += [
+            'root' => ''
+        ];
+
+        include("{$this->options['root']}app/config/routing.php");
 
         $this->buildRoutes();
     }
@@ -32,7 +37,7 @@ class Router
         $included = false;
 
         if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
-            $vendorFile = ROOT . "$vendorPath/config/$routeFile";
+            $vendorFile = "{$this->options['root']}$vendorPath/config/$routeFile";
 
             if(file_exists($vendorFile)) {
                 $included = true;
@@ -40,7 +45,7 @@ class Router
             }
         }
 
-        $localFile = ROOT . "src/$pack/config/$routeFile";
+        $localFile = "{$this->options['root']}src/$pack/config/$routeFile";
 
         if(file_exists($localFile)) {
             $included = true;

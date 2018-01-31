@@ -65,7 +65,7 @@ class Container
     {
         $obj = 'router';
 
-        return $this->init($obj, $router, $this);
+        return $this->init($obj, $router, $this, $this->options);
     }
 
     /**
