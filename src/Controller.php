@@ -9,14 +9,22 @@ class Controller implements ViewInterface
     public $projectNamespace = '';
     public $packNamespace = '';
 
+    protected $options = [];
+
     /**
      * @param View $view
      * @param Container $container
      */
-    function __construct($view, $container, ...$args)
+    function __construct($view, $container, array $options = [], ...$args)
     {
         $this->view = $view;
         $this->container = $container;
+
+        $this->options = $options += [
+            'root' => '/root/',
+            'project_name' => '',
+            'db_enable' => false
+        ];
 
         $this->getNamespace(get_class($this));
 

@@ -85,7 +85,7 @@ class Container
     {
         $this->parameters["$obj.class"] = $obj;
 
-        return $this->init($obj, $this->getView(), $this);
+        return $this->init($obj, $this->getView(), $this, $this->options);
     }
 
     /**

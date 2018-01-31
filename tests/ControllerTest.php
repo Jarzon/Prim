@@ -9,15 +9,16 @@ use Tests\Mocks\Container;
 
 class ControllerTest extends TestCase
 {
-    public function testConstruct()
+    public function testControllerConstruct()
     {
-        define('ROOT', '');
-        define('DEBUG', true);
-        define('DB_ENABLE', false);
+        $container = new Container([
+            'view.class' => '\Tests\Mocks\View',
+            'router.class' => '\\Prim\\Router',
+            'pdo.class' => '\Tests\Mocks\PDO'
+        ], ['root' => 'vfs://root/']);
 
-        $container = new Container();
         $view = $container->getView();
-        $controller = new Controller($view, $container);
+        $controller = new Controller($view, $container, []);
 
         $this->assertEquals('Prim', $controller->projectNamespace);
         $this->assertEquals('', $controller->packNamespace);
@@ -26,7 +27,7 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @depends testConstruct
+     * @depends testControllerConstruct
      */
     public function testgetNamespace($controller)
     {
