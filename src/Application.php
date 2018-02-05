@@ -17,7 +17,8 @@ class Application
         $this->options = $options += [
             'root' => '',
             'project_name' => '',
-            'db_enable' => false
+            'db_enable' => false,
+            'db_options' => []
         ];
 
         $this->container = $container;
@@ -25,7 +26,7 @@ class Application
         $this->setErrorHandlers();
 
         if($options['db_enable']) {
-            $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_charset'], $options['db_user'], $options['db_password']);
+            $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_charset'], $options['db_user'], $options['db_password'], $options['db_options']);
         }
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
@@ -77,17 +78,8 @@ class Application
     /**
      * Open a Database connection using PDO
      */
-    public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass) : void
+    public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass, array $options) : void
     {
-        // Set the fetch mode to object
-        $options = [
-            PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
-            PDO::ATTR_PERSISTENT => true,
-            PDO::ATTR_ORACLE_NULLS => PDO::NULL_TO_STRING
-        ];
-
         $this->db = $this->container->getPDO($type, $host, $name, $charset, $user, $pass, $options);
     }
 
