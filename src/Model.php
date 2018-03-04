@@ -31,11 +31,19 @@ class Model
             $values = array_merge($values, $whereValues);
         }
 
-        $query = $this->prepare("UPDATE $table SET ".implode('=?,', array_keys($data))."=? $where");
+        $query = "UPDATE $table SET ".implode('=?,', array_keys($data))."=? $where";
 
-        $query->execute($values);
+        $statement = $this->prepare($query);
 
-        return $query->rowCount();
+        if($statement->execute($values)) {
+            return $statement->rowCount();
+        }
+
+        $valuesString = var_export($values, true);
+
+        throw new \Exception("Model->update() on $table table failed.<br>
+        Query: $query<br>
+        Params: $valuesString");
     }
 
     public function insert(string $table, array $data) : int
@@ -44,11 +52,19 @@ class Model
         $placeholders = implode(',', str_split(str_repeat('?', sizeof($data))));
         $values = array_values($data);
 
-        $query = $this->prepare("INSERT INTO $table ($columns) VALUES($placeholders)");
+        $query = "INSERT INTO $table ($columns) VALUES($placeholders)";
 
-        $query->execute($values);
+        $statement = $this->prepare($query);
 
-        return (int) $this->db->lastInsertId();
+        if($statement->execute($values)) {
+            return (int) $this->db->lastInsertId();
+        }
+
+        $valuesString = var_export($data, true);
+
+        throw new \Exception("Model->insert() on $table table failed.<br>
+        Query: $query<br>
+        Params: $valuesString");
     }
 
     protected function convertDate(array &$data, $index, string $format = 'Y-m-d') : void

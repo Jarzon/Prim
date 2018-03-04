@@ -11,13 +11,9 @@ class PDO extends \PDO
     public function prepare($sql, $options = null) {
         $this->sql = $sql;
 
-        $statement = new \PDOStatement();
+        $statement = new PDOStatement();
 
         return $statement;
-    }
-
-    public function execute(array $values) {
-
     }
 
     public function lastInsertId($name = null)
