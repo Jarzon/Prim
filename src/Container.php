@@ -113,6 +113,10 @@ class Container
     {
         $obj = 'pdo';
 
+        if(!$this->options['db_enable']) {
+            throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
+        }
+
         return $this->init($obj, "$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
     }
 
