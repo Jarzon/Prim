@@ -118,7 +118,7 @@ class Application
 
             $message = wordwrap(implode("\r\n", $message), 70, "\r\n");
 
-            mail(ERROR_MAIL, 'PHP Error', $message, implode("\r\n", $headers));
+            mail($this->options['error_mail'], 'PHP Error', $message, implode("\r\n", $headers));
 
             echo $this->container->getErrorController()->handleError($errorCode);
             exit;
