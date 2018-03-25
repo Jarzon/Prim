@@ -94,35 +94,10 @@ class Application
         else {
             $errorCode = 500;
 
-            $headers[] = 'MIME-Version: 1.0';
-            $headers[] = 'To: ' . $this->options['error_mail'];
-            $headers[] = 'From: ' . $this->options['error_mail_from'];
-
-            $message[] = 'Type: ' . get_class($e);
-            $message[] = "Message: {$e->getMessage()}";
-            $message[] = "File: {$e->getFile()}";
-            $message[] = "Line: {$e->getLine()}";
-
-
-            // SQL server is down\unreachable
-            if(get_class($e) === 'PDOException') {
-                $errorCode = 503;
-            }
-            // The query and params shouldn't be sended by email but logged
-            else if(strpos($e->getMessage(), 'PDO') !== false) {
-                $PDO = $this->container->getPDO();
-
-                $message[] = 'Query: ' . nl2br($PDO->lastQuery);
-                $message[] = 'Params: ' . var_export($PDO->lastParams);
-            }
-
-            $message = wordwrap(implode("\r\n", $message), 70, "\r\n");
-
-            mail($this->options['error_mail'], 'PHP Error', $message, implode("\r\n", $headers));
-
-            echo $this->container->getErrorController()->handleError($errorCode);
-            exit;
+            echo $this->container->getErrorController()->handleError($errorCode, '', $e);
         }
+
+        exit;
     }
 
     /**
