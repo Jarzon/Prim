@@ -182,11 +182,28 @@ class View implements ViewInterface
 
     function fileHash(string $name) : string
     {
-        return "$name?v=" . hash_file('fnv1a32', "{$this->options['root']}public$name");
+        $path = $this->getFilePath($name, $algo = 'fnv1a32');
+
+        if(file_exists($path)) {
+            $name .= '?v=' . hash_file($algo, $path);
+        }
+
+        return $name;
     }
 
     function fileCache(string $name) : string
     {
-        return "$name?v=" . filemtime( "{$this->options['root']}public/$name");
+        $path = $this->getFilePath($name);
+
+        if(file_exists($path)) {
+            $name .= '?v=' . filemtime($path);
+        }
+
+        return $name;
+    }
+
+    function getFilePath(string $name) : string
+    {
+        return "{$this->options['root']}public/$name";
     }
 }
