@@ -17,6 +17,11 @@ class Model
         ];
     }
 
+    public function setOption($name, $value)
+    {
+        $this->options[$name] = $value;
+    }
+
     public function prepare(string $statement, array $driver_options = []) : object
     {
         return $this->db->prepare($statement, $driver_options);

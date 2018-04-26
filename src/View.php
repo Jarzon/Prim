@@ -155,9 +155,6 @@ class View implements ViewInterface
         $this->section = 'default';
     }
 
-    /**
-     * Return the content of a section
-     */
     function section(string $section) : string
     {
         return isset($this->sections[$section])? $this->sections[$section]: '';
