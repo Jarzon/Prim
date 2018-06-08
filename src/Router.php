@@ -29,14 +29,7 @@ class Router
 
     function getRoutesCount() : int
     {
-        $count = 0;
-
-        foreach ($this->routes as $value)
-        {
-            $count += count($value);
-        }
-
-        return $count;
+        return array_sum(array_map("count", $this->routes));
     }
 
     function getRoutes(string $pack, string $routeFile) : void
