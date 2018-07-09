@@ -18,7 +18,8 @@ class Application
             'root' => '',
             'project_name' => '',
             'db_enable' => false,
-            'db_options' => []
+            'db_options' => [],
+            'router_query_string' => false
         ];
 
         $this->container = $container;
@@ -36,7 +37,12 @@ class Application
             'cacheDisabled' => ($options['environment'] === 'dev'),
         ]);
 
-        $routeInfo = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
+        $httpMethod = $_SERVER['REQUEST_METHOD'];
+        $uri = $_SERVER['REQUEST_URI'];
+
+        if($options['router_query_string']) $uri = parse_url($uri, PHP_URL_PATH);
+
+        $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
         switch ($routeInfo[0]) {
             case \FastRoute\Dispatcher::NOT_FOUND:
