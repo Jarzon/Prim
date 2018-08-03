@@ -26,9 +26,7 @@ class Application
 
         $this->setErrorHandlers();
 
-        if($options['db_enable']) {
-            $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_charset'], $options['db_user'], $options['db_password'], $options['db_options']);
-        }
+        $this->openDatabaseConnection($options['db_enable'], $options['db_type'], $options['db_host'], $options['db_name'], $options['db_charset'], $options['db_user'], $options['db_password'], $options['db_options']);
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->container->getRouter($router);
@@ -81,12 +79,11 @@ class Application
         set_exception_handler( [$this, 'logException'] );
     }
 
-    /**
-     * Open a Database connection using PDO
-     */
-    public function openDatabaseConnection(string $type, string $host, string $name, string $charset, string $user, string $pass, array $options) : void
+    public function openDatabaseConnection(bool $enable = false, string $type, string $host, string $name, string $charset, string $user, string $pass, array $options) : void
     {
-        $this->db = $this->container->getPDO($type, $host, $name, $charset, $user, $pass, $options);
+        if($enable) {
+            $this->db = $this->container->getPDO($type, $host, $name, $charset, $user, $pass, $options);
+        }
     }
 
     /**

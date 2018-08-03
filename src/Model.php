@@ -9,12 +9,29 @@ class Model
     /**
      * @param \PDO $db
      */
-    function __construct($db, array $options = [])
+    function __construct($db, array $options = [], ...$args)
     {
         $this->db = $db;
         $this->options = $options += [
 
         ];
+
+        /*
+         * Dynamic dependency injection, so we don't have to extends the Controller to inject services
+         * */
+        foreach ($args as $arg) {
+            $service = $this->getClassName(get_class($arg));
+
+            if($service && !isset($this->{$service})) {
+                $this->{$service} = $arg;
+            }
+        }
+    }
+
+    function getClassName(string $classname) : string
+    {
+        if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
+        return $pos;
     }
 
     public function setOption($name, $value)

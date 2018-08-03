@@ -36,7 +36,7 @@ class Controller implements ViewInterface
         foreach ($args as $arg) {
             $service = $this->getClassName(get_class($arg));
 
-            if(!isset($this->{$service})) {
+            if($service && !isset($this->{$service})) {
                 $this->{$service} = $arg;
             }
         }
@@ -55,7 +55,7 @@ class Controller implements ViewInterface
 
     function getClassName(string $classname) : string
     {
-        if ($pos = strrpos($classname, '\\')) return strtolower(substr($classname, $pos + 1));
+        if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
         return $pos;
     }
 
