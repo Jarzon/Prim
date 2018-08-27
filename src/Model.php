@@ -39,6 +39,7 @@ class Model
         $this->options[$name] = $value;
     }
 
+    /** @return \PDOStatement */
     public function prepare(string $statement, array $driver_options = []) : object
     {
         return $this->db->prepare($statement, $driver_options);
