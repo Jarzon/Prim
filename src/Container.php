@@ -81,7 +81,9 @@ class Container
      */
     public function getController(string $obj) : object
     {
-        $this->parameters["$obj.class"] = $obj;
+        if(!isset($this->parameters["$obj.class"])) {
+            $this->parameters["$obj.class"] = $obj;
+        }
 
         return $this->init($obj, $this->getView(), $this, $this->options);
     }
