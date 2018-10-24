@@ -91,7 +91,7 @@ class Application
      */
     public function logException($e) : void
     {
-        if ($this->options['debug'] == true ) {
+        if ($this->options['debug'] == true) {
             echo $this->container->getErrorController()->debug($e);
         }
         else {

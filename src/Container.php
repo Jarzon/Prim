@@ -91,9 +91,7 @@ class Container
      */
     public function getErrorController() : object
     {
-        $obj = 'errorController';
-
-        return $this->init($obj, $this->getView(), $this, $this->options);
+        return $this->getController('errorController');
     }
 
     /**
