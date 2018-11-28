@@ -38,6 +38,11 @@ class View implements ViewInterface
                 $this->$method_name();
             }
         }
+
+        // Register view function shortcuts
+        $this->registerFunction('e', function(string $string) {
+            return $this->escape($string);
+        });
     }
 
     function setPack(string $pack) : void
@@ -89,10 +94,6 @@ class View implements ViewInterface
         if($packDirectory == '') {
             $packDirectory = $this->pack;
         }
-
-        $this->registerFunction('e', function(string $string) {
-            return $this->escape($string);
-        });
 
         $level = ob_get_level();
 
