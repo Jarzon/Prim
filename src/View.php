@@ -210,8 +210,14 @@ class View implements ViewInterface
         return isset($_SESSION['_flashMessage']);
     }
 
-    function getMessage(): array
+    function getMessage(bool $canBeDeleted = true): array
     {
-        return $_SESSION['_flashMessage']?? [];
+        $message = $_SESSION['_flashMessage']?? [];
+
+        if($canBeDeleted && $this->messageExist()) {
+            unset($_SESSION['_flashMessage']);
+        }
+
+        return $message;
     }
 }
