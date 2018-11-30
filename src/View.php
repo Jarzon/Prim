@@ -204,4 +204,14 @@ class View implements ViewInterface
     {
         return "{$this->options['root']}public/$name";
     }
+
+    function messageExist(): bool
+    {
+        return isset($_SESSION['_flashMessage']);
+    }
+
+    function getMessage(): array
+    {
+        return $_SESSION['_flashMessage']?? [];
+    }
 }

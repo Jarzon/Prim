@@ -112,15 +112,23 @@ class Controller implements ViewInterface
         $this->view->render($view, $pack, $vars, $template);
     }
 
-    function addVar(string $name, $var) {
+    function addVar(string $name, $var)
+    {
         $this->view->addVar($name, $var);
     }
 
-    function addVars(array $vars) {
+    function addVars(array $vars)
+    {
         $this->view->addVars($vars);
     }
 
-    function redirect(string $uri) {
+    function message(string $type, $message)
+    {
+        $_SESSION['_flashMessage'] = [$type, $message];
+    }
+
+    function redirect(string $uri)
+    {
         header("location: $uri");
         exit;
     }
