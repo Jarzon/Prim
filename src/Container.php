@@ -109,7 +109,7 @@ class Container
     /**
      * @return \PDO
      */
-    public function getPDO(string $type = '', string $host = '', string $name = '', string $charset = '', string $user = '', string $pass = '', array $options = []) : object
+    public function getPDO(string $type = '', string $host = '', string $name = '', string $user = '', string $pass = '', array $options = []) : object
     {
         $obj = 'pdo';
 
@@ -117,7 +117,7 @@ class Container
             throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
         }
 
-        return $this->init($obj, "$type:host=$host;dbname=$name;charset=$charset", $user, $pass, $options);
+        return $this->init($obj, "$type:host=$host;dbname=$name", $user, $pass, $options);
     }
 
     /**
