@@ -4,11 +4,12 @@ namespace Prim;
 class Container
 {
     protected $parameters = [];
+    protected $services = [];
     protected $options = [];
 
     static protected $shared = [];
 
-    public function __construct(array $parameters = [], array $options = [])
+    public function __construct(array $parameters = [], array $options = [], array $services = [])
     {
         $this->parameters = $parameters += [
             'application.class' => 'Prim\Application',
@@ -22,6 +23,26 @@ class Container
         $this->options = $options += [
             'root' => ''
         ];
+
+        $this->services = $services;
+    }
+
+    protected function getServices($obj)
+    {
+        $inject = [];
+
+        // TODO: Add glob injection in services
+
+        if(!isset($this->services[$obj])) {
+            return false;
+        }
+
+        $services = $this->services[$obj]($this);
+        foreach ($services as $service) {
+            $inject[] = $service;
+        }
+
+        return $inject;
     }
 
     protected function init(string $name, ...$args) : object
@@ -30,6 +51,10 @@ class Container
         {
             return self::$shared[$name];
         }
+
+        $services = $this->getServices($name);
+
+        if($services) $args = array_merge($args, $services);
 
         $class = $this->parameters["$name.class"];
 
@@ -109,7 +134,7 @@ class Container
     /**
      * @return \PDO
      */
-    public function getPDO(string $type = '', string $host = '', string $name = '', string $user = '', string $pass = '', array $options = []) : object
+    public function getPDO(string $type = '', string $host = '', string $name = '', string $user = '', string $pass = '', array $options = [], string $charset = 'utf8') : object
     {
         $obj = 'pdo';
 
@@ -117,7 +142,15 @@ class Container
             throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
         }
 
-        return $this->init($obj, "$type:host=$host;dbname=$name", $user, $pass, $options);
+        $args = "$type:host=$host;dbname=$name";
+
+        if($type !== 'pgsql') {
+            $args .= ";charset=$charset";
+        } else {
+            $options += [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset"];
+        }
+
+        return $this->init($obj, $args, $user, $pass, $options);
     }
 
     /**
