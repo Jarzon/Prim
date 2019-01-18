@@ -26,7 +26,7 @@ class Application
 
         $this->setErrorHandlers();
 
-        $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_charset'], $options['db_user'], $options['db_password'], $options['db_options'], $options['db_enable']);
+        $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_user'], $options['db_password'], $options['db_options'], $options['db_charset'], $options['db_enable']);
 
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->container->getRouter($router);
