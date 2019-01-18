@@ -8,34 +8,32 @@ class Router
     public $router;
     /** @var \FastRoute\Dispatcher */
     public $dispatcher;
-
+    /** @var Container */
     protected $container;
+
     protected $options = [];
     protected $routes = [];
     protected $currentGroupPrefix = '';
 
-    /**
-     * @param Container $container
-     */
     public function __construct($container, array $options = [])
     {
         $this->container = $container;
 
         $this->options = $options += [
             'root' => '',
-            'router_query_string' => true
+            'router_query_string' => true,
+            'server' => $_SERVER
         ];
 
         include("{$this->options['root']}app/config/routing.php");
 
         $this->dispatcher = \FastRoute\CachedDispatcher(function(\FastRoute\RouteCollector $router) {
+            $this->buildRoutes($router);
             $this->router = $router;
         }, [
             'cacheFile' => "{$this->options['root']}/app/cache/route.cache",
             'cacheDisabled' => ($this->options['environment'] === 'dev'),
         ]);
-
-        $this->buildRoutes();
     }
 
     function dispatchRoute() {
@@ -62,6 +60,8 @@ class Router
 
                 list($pack, $controller) = explode('\\', $handler[0]);
 
+                $method = $handler[1];
+
                 $controllerNamespace = "$pack\\Controller\\$controller";
 
                 if(class_exists("{$this->options['project_name']}\\$controllerNamespace")) {
@@ -71,19 +71,18 @@ class Router
                 }
 
                 $controller = $this->container->getController($controllerNamespace);
-                $method = $handler[1];
 
                 $controller->$method(...$vars);
                 break;
         }
     }
 
-    function getRoutesCount() : int
+    function getRoutesCount(): int
     {
         return array_sum(array_map("count", $this->routes));
     }
 
-    function getRoutes(string $pack, string $routeFile) : void
+    function getRoutes(string $pack, string $routeFile): void
     {
         $included = false;
 
@@ -106,22 +105,22 @@ class Router
         if(!$included) throw new \Exception("Can't find routes file $routeFile in $pack");
     }
 
-    function get(string $route, string $controller, string $method) : void
+    function get(string $route, string $controller, string $method): void
     {
         $this->addRoute(['GET'], $route, $controller, $method);
     }
 
-    function post(string $route, string $controller, string $method) : void
+    function post(string $route, string $controller, string $method): void
     {
         $this->addRoute(['POST'], $route, $controller, $method);
     }
 
-    function both(string $route, string $controller, string $method) : void
+    function both(string $route, string $controller, string $method): void
     {
         $this->addRoute(['GET', 'POST'], $route, $controller, $method);
     }
 
-    function addRoute(array $type, string $route, string $controller, string $method) : void
+    function addRoute(array $type, string $route, string $controller, string $method): void
     {
         $route = $this->currentGroupPrefix . $route;
 
@@ -130,7 +129,7 @@ class Router
         }
     }
 
-    function addGroup(string $prefix, callable $callback) : void
+    function addGroup(string $prefix, callable $callback): void
     {
         $previousGroupPrefix = $this->currentGroupPrefix;
         $this->currentGroupPrefix = $previousGroupPrefix . $prefix;
@@ -138,17 +137,17 @@ class Router
         $this->currentGroupPrefix = $previousGroupPrefix;
     }
 
-    function removeRoute(string $route) : void
+    function removeRoute(string $route): void
     {
         if(isset($this->routes[$route])) unset($this->routes[$route]);
     }
 
-    function buildRoutes() : void
+    function buildRoutes($router): void
     {
         foreach($this->routes as $uri => $types) {
             foreach($types as $type => $params) {
                 list($controller, $method) = $params;
-                $this->router->addRoute($type, $uri, [$controller, $method]);
+                $router->addRoute($type, $uri, [$controller, $method]);
             }
         }
     }

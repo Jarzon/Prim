@@ -19,6 +19,7 @@ class Application
             'project_name' => '',
             'debug' => false,
             'environment' => 'dev',
+
             'db_enable' => false,
             'db_type' => 'mysql',
             'db_name' => $options['project_name']?? '',
@@ -27,9 +28,9 @@ class Application
             'db_password' => '',
             'db_charset' => 'utf8',
             'db_options' => [],
+
             'disableRouter' => false,
-            'disableCustomErrorHandler' => false,
-            'server' => $_SERVER
+            'disableCustomErrorHandler' => false
         ];
 
         $this->container = $container;
@@ -41,13 +42,9 @@ class Application
         $this->openDatabaseConnection($options);
 
         if(!$this->options['disableRouter']) {
-            $this->routing();
+            $router = $container->getRouter();
+            $router->dispatchRoute();
         }
-    }
-
-    public function routing()
-    {
-        $this->container->getRouter();
     }
 
     public function setErrorHandlers() : void

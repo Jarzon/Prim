@@ -81,14 +81,13 @@ class Container
     }
 
     /**
-     * @param \FastRoute\RouteCollector $router
      * @return Router
      */
-    public function getRouter($router = null) : object
+    public function getRouter() : object
     {
         $obj = 'router';
 
-        return $this->init($obj, $router, $this, $this->options);
+        return $this->init($obj, $this, $this->options);
     }
 
     /**
