@@ -27,7 +27,7 @@
     "nikic/fast-route": "1.2.*"
   },
   "require-dev": {
-    "phpunit/phpunit": "6.2.*",
+    "phpunit/phpunit": "~7.5.0",
     "mikey179/vfsStream": "1.6.x"
   }
 }
