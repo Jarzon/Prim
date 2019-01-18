@@ -17,28 +17,50 @@ class Application
         $this->options = $options += [
             'root' => '',
             'project_name' => '',
+            'debug' => false,
+            'environment' => 'dev',
             'db_enable' => false,
+            'db_type' => 'mysql',
+            'db_name' => $options['project_name']?? '',
+            'db_host' => '127.0.0.1',
+            'db_user' => 'root',
+            'db_password' => '',
+            'db_charset' => 'utf8',
             'db_options' => [],
-            'router_query_string' => false
+            'disableRouter' => false,
+            'disableCustomErrorHandler' => false,
+            'router_query_string' => false,
+            'server' => $_SERVER
         ];
 
         $this->container = $container;
 
-        $this->setErrorHandlers();
+        if(!$this->options['disableCustomErrorHandler']) {
+            $this->setErrorHandlers();
+        }
 
-        $this->openDatabaseConnection($options['db_type'], $options['db_host'], $options['db_name'], $options['db_user'], $options['db_password'], $options['db_options'], $options['db_charset'], $options['db_enable']);
+        $this->openDatabaseConnection($options);
 
+        if(!$this->options['disableRouter']) {
+            $this->routing();
+        }
+    }
+
+    public function routing()
+    {
         $dispatcher = \FastRoute\cachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->container->getRouter($router);
         }, [
             'cacheFile' => "{$this->options['root']}/app/cache/route.cache",
-            'cacheDisabled' => ($options['environment'] === 'dev'),
+            'cacheDisabled' => ($this->options['environment'] === 'dev'),
         ]);
 
-        $httpMethod = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
+        $httpMethod = $this->options['server']['REQUEST_METHOD'];
+        $uri = $this->options['server']['REQUEST_URI'];
 
-        if($options['router_query_string']) $uri = parse_url($uri, PHP_URL_PATH);
+        if($this->options['router_query_string']) {
+            $uri = parse_url($uri, PHP_URL_PATH);
+        }
 
         $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
@@ -64,7 +86,7 @@ class Application
                     throw new \Exception("Can't find controller: $controllerNamespace");
                 }
 
-                $controller = $container->getController($controllerNamespace);
+                $controller = $this->container->getController($controllerNamespace);
                 $method = $handler[1];
 
                 $controller->$method(...$vars);
@@ -79,10 +101,10 @@ class Application
         set_exception_handler( [$this, 'logException'] );
     }
 
-    public function openDatabaseConnection(string $type, string $host, string $name, string $user, string $pass, array $options, string $charset = 'utf8', bool $enable = false) : void
+    public function openDatabaseConnection(array $options) : void
     {
-        if($enable) {
-            $this->db = $this->container->getPDO($type, $host, $name, $user, $pass, $options, $charset);
+        if($options['db_enable']) {
+            $this->db = $this->container->getPDO($options['db_type'], $options['db_host'], $options['db_name'], $options['db_user'], $options['db_password'], $options['db_options'], $options['db_charset']);
         }
     }
 

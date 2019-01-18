@@ -7,18 +7,40 @@ use PHPUnit\Framework\TestCase;
 use Prim\Application;
 use Tests\Mocks\Container;
 
+use org\bovigo\vfs\vfsStream;
+
 class ApplicationTest extends TestCase
 {
+    public function setUp()
+    {
+        $routes = <<<'EOD'
+    <?php $this->both('/', 'aController', 'aMethod');
+EOD;
+
+        $structure = [
+            'app' => [
+                'config' => [
+                    'routing.php' => $routes,
+                ]
+            ]
+        ];
+
+        $this->root = vfsStream::setup('root', null, $structure);
+    }
+
     public function testApplicationConstruct()
     {
         $conf = [
-            'view.class' => '\Tests\Mocks\View',
-            'router.class' => '\\Prim\\Router',
-            'pdo.class' => '\Tests\Mocks\PDO',
-            'errorController.class' => '\Tests\Mocks\Controller'
+            'disableCustomErrorHandler' => true,
+            'disableRouter' => true,
+            'db_enable' => false
         ];
 
-        $app = new Application(new Container($conf, []), $conf);
+        $container = new Container($conf, ['root' => 'vfs://root/']);
+
+        $app = new Application($container, $conf);
+
+        $this->assertIsObject($app->container);
 
         return $app;
     }
