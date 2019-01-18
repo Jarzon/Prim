@@ -7,26 +7,8 @@ use PHPUnit\Framework\TestCase;
 use Prim\Application;
 use Tests\Mocks\Container;
 
-use org\bovigo\vfs\vfsStream;
-
 class ApplicationTest extends TestCase
 {
-    public function setUp()
-    {
-        $routes = <<<'EOD'
-    <?php $this->both('/', 'aController', 'aMethod');
-EOD;
-
-        $structure = [
-            'app' => [
-                'config' => [
-                    'routing.php' => $routes,
-                ]
-            ]
-        ];
-
-        $this->root = vfsStream::setup('root', null, $structure);
-    }
 
     public function testApplicationConstruct()
     {
@@ -36,12 +18,27 @@ EOD;
             'db_enable' => false
         ];
 
-        $container = new Container($conf, ['root' => 'vfs://root/']);
+        $container = new Container([], $conf);
 
         $app = new Application($container, $conf);
 
         $this->assertIsObject($app->container);
 
         return $app;
+    }
+
+    public function testOpenDatabaseConnection()
+    {
+        $conf = [
+            'disableCustomErrorHandler' => true,
+            'disableRouter' => true,
+            'db_enable' => true
+        ];
+
+        $container = new Container(['pdo.class' => '\Tests\Mocks\PDO'], $conf);
+
+        $app = new Application($container, $conf);
+
+        $this->assertIsObject($app->db);
     }
 }

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use FastRoute\DataGenerator\CharCountBased;
-use FastRoute\RouteParser\Std;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -38,9 +36,17 @@ EOD;
 
     public function testRouterConstruct()
     {
-        $router = new Router(new \FastRoute\RouteCollector(new Std(), new CharCountBased()), new Container(), [
-            'root' => vfsStream::url('root/')
-        ]);
+        $conf = [
+            'root' => vfsStream::url('root/'),
+            'environment' => 'dev',
+            'router_query_string' => false,
+            'server' => [
+                'REQUEST_METHOD' => 'GET',
+                'REQUEST_URI' => '/'
+            ]
+        ];
+
+        $router = new Router(new Container([], $conf), $conf);
 
         $this->assertEquals(2, $router->getRoutesCount());
 
