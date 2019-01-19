@@ -84,7 +84,7 @@ class Container
 
         $class = $this->parameters["$name.class"];
 
-        $obj = new $class($this->getPackList(), $this->options);
+        $obj = new $class($this, $this->getPackList(), $this->options);
 
         return self::$shared[$name] = $obj;
     }

@@ -4,14 +4,17 @@ namespace Prim;
 
 class Service
 {
+    /** @var Container */
+    protected $container;
     /** @var PackList */
     protected $packList;
 
     protected $options = [];
     public $services = [];
 
-    public function __construct($packList, array $options = [])
+    public function __construct($container, $packList, array $options = [])
     {
+        $this->container = $container;
         $this->packList = $packList;
 
         $this->options = $options += [
@@ -31,7 +34,7 @@ class Service
             return false;
         }
 
-        $services = $this->services[$obj]($this);
+        $services = $this->services[$obj]($this->container);
         foreach ($services as $service) {
             $inject[] = $service;
         }
@@ -41,8 +44,8 @@ class Service
 
     function getServices(string $pack, string $serviceFile = 'services.php'): void
     {
-        if($vendorPath = $this->packList->getVendorPath($pack)) {
-            $vendorFile = "{$this->options['root']}$vendorPath/config/$serviceFile";
+        if($vendorFile = $this->packList->getVendorPath($pack)) {
+            $vendorFile = "{$this->options['root']}$vendorFile/config/$serviceFile";
         }
 
         $localFile = "{$this->options['root']}src/$pack/config/$serviceFile";
