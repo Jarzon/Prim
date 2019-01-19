@@ -4,12 +4,11 @@ namespace Prim;
 class Container
 {
     protected $parameters = [];
-    protected $services = [];
     protected $options = [];
 
     static protected $shared = [];
 
-    public function __construct(array $parameters = [], array $options = [], array $services = [])
+    public function __construct(array $parameters = [], array $options = [])
     {
         $this->parameters = $parameters += [
             'application.class' => 'Prim\Application',
@@ -17,32 +16,13 @@ class Container
             'router.class' => 'Prim\Router',
             'pdo.class' => 'PDO',
             'packList.class' => 'Prim\PackList',
-            'errorController.class' => 'PrimPack\Controller\Error'
+            'errorController.class' => 'PrimPack\Controller\Error',
+            'service.class' => 'Prim\Service'
         ];
 
         $this->options = $options += [
             'root' => ''
         ];
-
-        $this->services = $services;
-    }
-
-    protected function getServices($obj)
-    {
-        $inject = [];
-
-        // TODO: Add glob injection in services
-
-        if(!isset($this->services[$obj])) {
-            return false;
-        }
-
-        $services = $this->services[$obj]($this);
-        foreach ($services as $service) {
-            $inject[] = $service;
-        }
-
-        return $inject;
     }
 
     protected function init(string $name, ...$args) : object
@@ -52,7 +32,7 @@ class Container
             return self::$shared[$name];
         }
 
-        $services = $this->getServices($name);
+        $services = $this->getService()->getServicesInjection($name);
 
         if($services) $args = array_merge($args, $services);
 
@@ -89,6 +69,26 @@ class Container
 
         return $this->init($obj, $this, $this->options);
     }
+
+    /**
+     * @return Service
+     */
+    public function getService() : object
+    {
+        $name = 'service';
+
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $class = $this->parameters["$name.class"];
+
+        $obj = new $class($this, $this->options);
+
+        return self::$shared[$name] = $obj;
+    }
+
 
     /**
      * @return View
