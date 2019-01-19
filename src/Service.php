@@ -4,15 +4,15 @@ namespace Prim;
 
 class Service
 {
-    /** @var Container */
-    protected $container;
+    /** @var PackList */
+    protected $packList;
 
     protected $options = [];
     public $services = [];
 
-    public function __construct($container, array $options = [])
+    public function __construct($packList, array $options = [])
     {
-        $this->container = $container;
+        $this->packList = $packList;
 
         $this->options = $options += [
             'root' => ''
@@ -41,7 +41,7 @@ class Service
 
     function getServices(string $pack, string $serviceFile = 'services.php'): void
     {
-        if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
+        if($vendorPath = $this->packList->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorPath/config/$serviceFile";
         }
 
@@ -68,5 +68,7 @@ class Service
         if(file_exists($file)) {
             return include($file);
         }
+
+        return null;
     }
 }

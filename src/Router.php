@@ -82,7 +82,7 @@ class Router
         return array_sum(array_map("count", $this->routes));
     }
 
-    function getRoutes(string $pack, string $routeFile): void
+    function getRoutes(string $pack, string $routeFile = 'routing.php'): void
     {
         $included = false;
 

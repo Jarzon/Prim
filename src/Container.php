@@ -25,7 +25,7 @@ class Container
         ];
     }
 
-    protected function init(string $name, ...$args) : object
+    protected function init(string $name, ...$args): object
     {
         if (isset(self::$shared[$name]))
         {
@@ -43,7 +43,7 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
-    protected function setDefaultParameter(string $obj, string $class) : void
+    protected function setDefaultParameter(string $obj, string $class): void
     {
         if(!isset($this->parameters["$obj.class"])) {
             $this->parameters["$obj.class"] = $class;
@@ -53,7 +53,7 @@ class Container
     /**
      * @return Application
      */
-    public function getApplication() : object
+    public function getApplication(): object
     {
         $obj = 'application';
 
@@ -63,7 +63,7 @@ class Container
     /**
      * @return Router
      */
-    public function getRouter() : object
+    public function getRouter(): object
     {
         $obj = 'router';
 
@@ -73,7 +73,7 @@ class Container
     /**
      * @return Service
      */
-    public function getService() : object
+    public function getService(): object
     {
         $name = 'service';
 
@@ -84,7 +84,7 @@ class Container
 
         $class = $this->parameters["$name.class"];
 
-        $obj = new $class($this, $this->options);
+        $obj = new $class($this->getPackList(), $this->options);
 
         return self::$shared[$name] = $obj;
     }
@@ -93,7 +93,7 @@ class Container
     /**
      * @return View
      */
-    public function getView() : object
+    public function getView(): object
     {
         $obj = 'view';
 
@@ -103,7 +103,7 @@ class Container
     /**
      * @return Controller
      */
-    public function getController(string $obj) : object
+    public function getController(string $obj): object
     {
         if(!isset($this->parameters["$obj.class"])) {
             $this->parameters["$obj.class"] = $obj;
@@ -115,7 +115,7 @@ class Container
     /**
      * @return Controller
      */
-    public function getErrorController() : object
+    public function getErrorController(): object
     {
         return $this->getController('errorController');
     }
@@ -123,7 +123,7 @@ class Container
     /**
      * @return Model
      */
-    public function getModel(string $obj) : object
+    public function getModel(string $obj): object
     {
         $this->parameters["$obj.class"] = $obj;
 
@@ -133,7 +133,7 @@ class Container
     /**
      * @return \PDO
      */
-    public function getPDO(string $type = '', string $host = '', string $name = '', string $user = '', string $pass = '', array $options = [], string $charset = 'utf8') : object
+    public function getPDO(string $type = '', string $host = '', string $name = '', string $user = '', string $pass = '', array $options = [], string $charset = 'utf8'): object
     {
         $obj = 'pdo';
 
@@ -155,7 +155,7 @@ class Container
     /**
      * @return \Composer\Autoload\ClassLoader
      */
-    public function getComposer() : object
+    public function getComposer(): object
     {
         $name = 'composer.class';
 
@@ -176,10 +176,19 @@ class Container
     /**
      * @return PackList
      */
-    public function getPackList() : object
+    public function getPackList(): object
     {
-        $obj = 'packList';
+        $name = 'packList';
 
-        return $this->init($obj, $this->getComposer(), $this->options);
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $class = $this->parameters["$name.class"];
+
+        $obj = new $class($this->getComposer(), $this->options);
+
+        return self::$shared[$name] = $obj;
     }
 }
