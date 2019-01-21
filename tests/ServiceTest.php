@@ -46,7 +46,9 @@ EOD;
             ]
         ];
 
-        $service = new Service(new Container(['errorController.class' => '\Tests\Mocks\Controller'], $conf), $conf);
+        $container = new Container(['errorController.class' => '\Tests\Mocks\Controller'], $conf);
+
+        $service = new Service($container, $container->getPackList(), $conf);
 
         $this->assertEquals(['aClass' => (object)[]], $service->services);
 

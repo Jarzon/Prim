@@ -35,7 +35,7 @@ class ApplicationTest extends TestCase
             'db_enable' => true
         ];
 
-        $container = new Container(['pdo.class' => '\Tests\Mocks\PDO'], $conf);
+        $container = new Container(['pdo.class' => '\Tests\Mocks\PDO', 'service.class' => '\Tests\Mocks\Service'], $conf);
 
         $app = new Application($container, $conf);
 

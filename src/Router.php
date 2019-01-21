@@ -36,7 +36,8 @@ class Router
         ]);
     }
 
-    function dispatchRoute() {
+    function dispatchRoute(): object
+    {
         $httpMethod = $this->options['server']['REQUEST_METHOD'];
         $uri = $this->options['server']['REQUEST_URI'];
 
@@ -46,13 +47,15 @@ class Router
 
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
 
+        $controller = $this->container->getErrorController();
+
         switch ($routeInfo[0]) {
             case \FastRoute\Dispatcher::NOT_FOUND:
-                echo $this->container->getErrorController()->handleError(404);
+                echo $controller->handleError(404);
                 break;
             case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                echo $this->container->getErrorController()->handleError(405, $allowedMethods);
+                echo $controller->handleError(405, $allowedMethods);
                 break;
             case \FastRoute\Dispatcher::FOUND:
                 $handler = $routeInfo[1];
@@ -75,6 +78,8 @@ class Router
                 $controller->$method(...$vars);
                 break;
         }
+
+        return $controller;
     }
 
     function getRoutesCount(): int

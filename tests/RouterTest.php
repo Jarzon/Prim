@@ -20,7 +20,7 @@ class RouterTest extends TestCase
     public function setUp()
     {
         $routes = <<<'EOD'
-    <?php $this->both('/', 'aController', 'aMethod');
+    <?php $this->both('/', 'Pack\Controller', 'aMethod');
 EOD;
 
         $structure = [
@@ -39,6 +39,7 @@ EOD;
         $conf = [
             'root' => vfsStream::url('root/'),
             'environment' => 'dev',
+            'project_name' => 'Tests',
             'router_query_string' => false,
             'server' => [
                 'REQUEST_METHOD' => 'GET',
@@ -46,9 +47,21 @@ EOD;
             ]
         ];
 
-        $router = new Router(new Container([], $conf), $conf);
+        $router = new Router(new Container(['errorController.class' => '\Tests\Mocks\Controller'], $conf), $conf);
 
         $this->assertEquals(2, $router->getRoutesCount());
+
+        return $router;
+    }
+
+    /**
+     * @depends testRouterConstruct
+     */
+    public function testDispatchRoute($router)
+    {
+        $controller = $router->dispatchRoute();
+
+        $this->assertEquals(true, $controller->methodCalled);
 
         return $router;
     }
