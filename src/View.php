@@ -28,17 +28,6 @@ class View implements ViewInterface
             'root' => ''
         ];
 
-        $class_methods = get_class_methods($this);
-
-        /*
-         * All methods that start by build get automatically executed when the object is instantiated
-         * */
-        foreach ($class_methods as $method_name) {
-            if (strpos($method_name, 'build') !== false) {
-                $this->$method_name();
-            }
-        }
-
         // Register view function shortcuts
         $this->registerFunction('e', function(?string $string) {
             return $this->escape($string);
@@ -158,7 +147,16 @@ class View implements ViewInterface
 
     function section(string $section): string
     {
-        return isset($this->sections[$section])? $this->sections[$section]: '';
+        return $this->sections[$section]?? '';
+    }
+
+    public function fetch(string $name, string $pack = '', array $vars = []): string
+    {
+        $this->start('fetch');
+        $this->renderTemplate($name, $pack, $vars, false, false);
+        $this->end();
+
+        return $this->section('fetch');
     }
 
     public function insert(string $name, string $pack = '', array $vars = []): void

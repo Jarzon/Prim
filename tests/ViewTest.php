@@ -38,14 +38,13 @@ EOD;
     public function testViewConstruct()
     {
         $container = new Container([
-            'view.class' => '\Tests\Mocks\View',
             'pdo.class' => '\Tests\Mocks\PDO'
         ], [
             'root' => vfsStream::url('root').'/'
         ]);
         $view = $container->getView();
 
-        $this->assertEquals(true, $view->build);
+        $this->assertEquals(1, $this->count($view->vars()));
 
         return $view;
     }
