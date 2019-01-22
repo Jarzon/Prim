@@ -130,6 +130,23 @@ class Container
         return $this->init($obj, $this->getPDO(), $this->options);
     }
 
+    public function model(string $model): object
+    {
+        list($pack, $model) = explode('\\', $model);
+
+        $modelNamespace = "$pack\\Model\\$model";
+
+        $localNamespace = "{$this->options['project_name']}\\$modelNamespace";
+
+        if(class_exists($localNamespace)) {
+            $modelNamespace = $localNamespace;
+        } else if(!class_exists($modelNamespace)) {
+            throw new \Exception("Can't find model: $modelNamespace");
+        }
+
+        return $this->getModel($modelNamespace);
+    }
+
     /**
      * @return \PDO
      */
