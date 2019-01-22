@@ -18,7 +18,7 @@ class PackList
         $this->vendorPacksList = $this->getComposerPacks();
     }
 
-    public function getVendorPath(string $pack) : string
+    public function getVendorPath(string $pack): string
     {
         if(!empty($this->vendorPacksList[$pack])) {
             return $this->vendorPacksList[$pack];
@@ -27,7 +27,7 @@ class PackList
         return '';
     }
 
-    protected function getComposerPacks() : array
+    protected function getComposerPacks(): array
     {
         $prefixes = array_merge($this->composer->getPrefixesPsr4(), $this->composer->getPrefixes());
 

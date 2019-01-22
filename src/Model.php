@@ -28,7 +28,7 @@ class Model
         }
     }
 
-    function getClassName(string $classname) : string
+    function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
         return $pos;
@@ -40,12 +40,12 @@ class Model
     }
 
     /** @return \PDOStatement */
-    public function prepare(string $statement, array $driver_options = []) : object
+    public function prepare(string $statement, array $driver_options = []): object
     {
         return $this->db->prepare($statement, $driver_options);
     }
 
-    public function update(string $table, array $data, string $where = '', array $whereValues = []) : int
+    public function update(string $table, array $data, string $where = '', array $whereValues = []): int
     {
         $values = array_values($data);
 
@@ -69,7 +69,7 @@ class Model
         Params: $valuesString");
     }
 
-    public function insert(string $table, array $data) : int
+    public function insert(string $table, array $data): int
     {
         $columns = implode(',', array_keys($data));
         $placeholders = implode(',', str_split(str_repeat('?', sizeof($data))));
@@ -90,7 +90,7 @@ class Model
         Params: $valuesString");
     }
 
-    protected function convertDate(array &$data, $index, string $format = 'Y-m-d') : void
+    protected function convertDate(array &$data, $index, string $format = 'Y-m-d'): void
     {
         if(!empty($data[$index])) {
             $data[$index] = str_replace('/', '-', $data[$index]);

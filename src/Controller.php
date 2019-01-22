@@ -15,7 +15,7 @@ class Controller implements ViewInterface
      * @param View $view
      * @param Container $container
      */
-    function __construct($view, $container, array $options = [], ...$args)
+    function __construct($view, Container $container, array $options = [])
     {
         $this->view = $view;
         $this->container = $container;
@@ -29,37 +29,15 @@ class Controller implements ViewInterface
         $this->getNamespace(get_class($this));
 
         $this->view->setPack($this->packNamespace);
-
-        /*
-         * Dynamic dependency injection, so we don't have to extends the Controller to inject services
-         * */
-        foreach ($args as $arg) {
-            $service = $this->getClassName(get_class($arg));
-
-            if($service && !isset($this->{$service})) {
-                $this->{$service} = $arg;
-            }
-        }
-
-        /*
-         * All methods that start by build get automatically executed when the object is instantiated, so we don't have to overload the __constructor()
-         * */
-        $class_methods = get_class_methods($this);
-
-        foreach ($class_methods as $method_name) {
-            if (strpos($method_name, 'build') !== false) {
-                $this->$method_name();
-            }
-        }
     }
 
-    function getClassName(string $classname) : string
+    function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
         return $pos;
     }
 
-    public function getNamespace(string $namespaces) : void
+    public function getNamespace(string $namespaces): void
     {
         $namespaces = explode('\\', $namespaces);
 
@@ -81,7 +59,7 @@ class Controller implements ViewInterface
         $this->packNamespace = $pack;
     }
 
-    public function getModel(string $model, string $pack = '') : object
+    public function getModel(string $model, string $pack = ''): object
     {
         if($pack === '') $pack = $this->packNamespace;
 
@@ -97,7 +75,7 @@ class Controller implements ViewInterface
     }
 
     // View Methods shortcut
-    function setTemplate(string $design, string $pack = '') : void
+    function setTemplate(string $design, string $pack = ''): void
     {
         $this->view->setTemplate($design, $pack);
     }
