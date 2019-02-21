@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+if (!$loader = include __DIR__ . '/../vendor/autoload.php') {
+    die('You must set up the project dependencies.');
+}
+
+$console = new \Prim\Console('Prim\Console', [], $argv);
+$console->run();
