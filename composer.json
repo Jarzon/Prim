@@ -15,6 +15,7 @@
     "issues": "https://github.com/jarzon/prim/issues",
     "source": "https://github.com/jarzon/prim"
   },
+  "bin": ["bin/prim"],
   "autoload": {
     "psr-4": {"Prim\\": "src/"}
   },
