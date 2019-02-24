@@ -49,7 +49,7 @@ class Command
 
     public function getSignature()
     {
-        return $this->getName();
+        return $this->getName() . ' - ' . $this->getDescription();
     }
 
     public function exec()

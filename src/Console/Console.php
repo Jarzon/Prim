@@ -55,7 +55,7 @@ class Console extends Application
 
     function getCommand($name = null) {
         if($name === null) {
-            $name = $this->command;
+            $name = $this->input->getCommand();
         }
 
         if(!isset($this->commands[$name])) {

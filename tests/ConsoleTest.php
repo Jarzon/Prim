@@ -20,7 +20,9 @@ class ConsoleTest extends TestCase
 
         $container = new Container([], $conf);
 
-        $console = new Console($container, $conf, ['cmd', 'what']);
+        $argv = ['cmd', 'what'];
+
+        $console = new Console($container, $conf);
 
         $this->assertIsObject($console->container);
 
@@ -34,7 +36,11 @@ class ConsoleTest extends TestCase
     {
         $console->addCommand(new Command());
 
-        $this->assertEquals("test\r\n", $console->listCommands());
+        ob_start();
+            $console->listCommands();
+        $output = ob_get_clean();
+
+        $this->assertEquals("test - this is a test command\n", $output);
     }
 
     /**
@@ -50,7 +56,9 @@ class ConsoleTest extends TestCase
 
         $container = new Container([], $conf);
 
-        $console = new Console($container, $conf, ['prim', 'unsetCommand']);
+        $argv = ['prim', 'unsetCommand'];
+
+        $console = new Console($container, $conf);
 
         $this->assertIsObject($console->container);
 
@@ -71,7 +79,9 @@ class ConsoleTest extends TestCase
 
         $container = new Container([], $conf);
 
-        $console = new Console($container, $conf, ['prim', 'test', 'what']);
+        $argv = ['prim', 'test', 'what'];
+
+        $console = new Console($container, $conf);
 
         $this->assertIsObject($console->container);
 
