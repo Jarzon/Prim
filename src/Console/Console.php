@@ -1,18 +1,17 @@
 <?php
-namespace Prim;
+namespace Prim\Console;
+
+use Prim\Application;
 
 class Console extends Application
 {
     protected $options = [];
     protected $commands = [];
 
-    protected $execSource = '';
-    protected $command = '';
-    protected $flags = [];
-    protected $parameters = [];
-    protected $arguments = [];
+    protected $input;
+    protected $output;
 
-    public function __construct($container, array $options = [], $argv = [])
+    public function __construct($container, array $options = [], $input = null, $output = null)
     {
         $options = [
             'disableRouter' => true,
@@ -21,41 +20,30 @@ class Console extends Application
 
         parent::__construct($container, $options);
 
-        include("{$this->options['root']}app/config/commands.php");
+        if($input === null) {
+            $input = new Input();
+        }
 
-        $this->setCommandArguments($argv);
+        if($output === null) {
+            $output = new Output();
+        }
+
+        $this->input = $input;
+        $this->output = $output;
+
+        include("{$this->options['root']}app/config/commands.php");
     }
 
     function run()
     {
         // Didnt supply any command then list help
-        if($this->command === null) {
+        if($this->command === '') {
             $this->listCommands();
 
             return;
         }
 
         $this->getCommand()->exec($this->arguments);
-    }
-
-    function setCommandArguments($argv)
-    {
-        $this->execSource = array_shift($argv);
-
-        $this->command = array_shift($argv);
-
-        foreach ($argv as $arg) {
-            // flag
-            if(strpos($arg, '--') !== false) {
-                $this->flags[] = $arg;
-            }
-            // option
-            else if(strpos($arg, '-') !== false) {
-                $this->parameters[] = $arg;
-            } else {
-                $this->arguments[] = $arg;
-            }
-        }
     }
 
     function addCommand($command)
@@ -79,12 +67,8 @@ class Console extends Application
 
     function listCommands()
     {
-        $output = '';
-
         foreach ($this->commands as $command) {
-            $output .= "{$command->getSignature()}\r\n";
+            $this->output->writeLine($command->getSignature());
         }
-
-        return $output;
     }
 }

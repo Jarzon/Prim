@@ -1,10 +1,27 @@
 <?php
-namespace Prim;
+namespace Prim\Console;
 
 class Command
 {
     protected $name;
     protected $desc;
+
+    protected $input;
+    protected $output;
+
+    public function __construct($input = null, $output = null)
+    {
+        if($input === null) {
+            $input = new Input();
+        }
+
+        if ($output === null) {
+            $output = new Output();
+        }
+
+        $this->input = $input;
+        $this->output = $output;
+    }
 
     protected function setName(string $name)
     {

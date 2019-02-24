@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Mocks;
 
-class Command extends \Prim\Command
+class Command extends \Prim\Console\Command
 {
     public $works = false;
 

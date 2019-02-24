@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Prim\Console;
+use Prim\Console\Console;
 use Tests\Mocks\Command;
 use Tests\Mocks\Container;
 
