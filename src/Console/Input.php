@@ -24,16 +24,47 @@ class Input
         $this->command = array_shift($argv);
 
         foreach ($argv as $arg) {
-            // flag
             if(strpos($arg, '--') !== false) {
-                $this->flags[] = $arg;
+                $arg = str_replace('--', '', $arg);
+
+                $e = explode("=", $arg);
+                if(count($e) == 2) {
+                    $this->parameters[$e[0]] = $e[1];
+                } else {
+                    $this->flags[] = $arg;
+                }
             }
-            // option
-            else if(strpos($arg, '-') !== false) {
-                $this->parameters[] = $arg;
-            } else {
+            else {
                 $this->arguments[] = $arg;
             }
         }
+    }
+
+    public function getArguments()
+    {
+        return $this->arguments;
+    }
+
+    public function getArgument(int $number)
+    {
+        return $this->arguments[$number];
+    }
+
+    public function getFlag($name)
+    {
+        if(isset($this->flags[$name])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getParameter($name)
+    {
+        if(!isset($this->flags[$name])) {
+            return false;
+        }
+
+        return $this->flags[$name];
     }
 }
