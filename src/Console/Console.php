@@ -37,13 +37,13 @@ class Console extends Application
     function run()
     {
         // Didnt supply any command then list help
-        if($this->command === '') {
+        if($this->input->getCommand() === '') {
             $this->listCommands();
 
             return;
         }
 
-        $this->getCommand()->exec($this->arguments);
+        $this->getCommand()->exec();
     }
 
     function addCommand($command)

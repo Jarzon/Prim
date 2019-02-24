@@ -40,6 +40,11 @@ class Input
         }
     }
 
+    public function getCommand(): string
+    {
+        return $this->command;
+    }
+
     public function getArguments()
     {
         return $this->arguments;
