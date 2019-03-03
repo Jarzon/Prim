@@ -4,41 +4,63 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Prim\Console\Console;
-use Tests\Mocks\Command;
-use Tests\Mocks\Container;
+use org\bovigo\vfs\{vfsStream, vfsStreamDirectory};
+
+use Prim\Console\{Console, Input, Output};
+use Tests\Mocks\{Command, Container};
 
 class ConsoleTest extends TestCase
 {
+    /**
+     * @var  vfsStreamDirectory
+     */
+    private $root;
+
+    public function setUp()
+    {
+        $structure = [
+            'app' => [
+              'config' => [
+                  'commands.php' => ''
+              ]
+            ],
+            'stdin' => 'command --flag --param=value firstArg secondArg',
+            'stdout' => '',
+        ];
+
+        $this->root = vfsStream::setup('root', null, $structure);
+    }
+
     public function testConstruct()
     {
         $conf = [
             'db_enable' => false,
             'project_name' => 'Tests',
-            'root' => __DIR__ . '/'
+            'root' => vfsStream::url('root/')
         ];
+
+        $input = new Input(vfsStream::url('root/stdin'));
+        $output = new Output(vfsStream::url('root/stdout'));
 
         $container = new Container([], $conf);
 
-        $argv = ['cmd', 'what'];
-
-        $console = new Console($container, $conf);
+        $console = new Console($container, $conf, $input, $output);
 
         $this->assertIsObject($console->container);
 
-        return $console;
+        return [$console, $input, $output];
     }
 
     /**
      * @depends testConstruct
      */
-    public function testAddCommand(Console $console)
+    public function testAddCommand(array $objects)
     {
+        list($console, $input, $output) = $objects;
+
         $console->addCommand(new Command());
 
-        ob_start();
-            $console->listCommands();
-        $output = ob_get_clean();
+        $console->listCommands();
 
         $this->assertEquals("test - this is a test command\n", $output);
     }
@@ -55,8 +77,6 @@ class ConsoleTest extends TestCase
         ];
 
         $container = new Container([], $conf);
-
-        $argv = ['prim', 'unsetCommand'];
 
         $console = new Console($container, $conf);
 
@@ -79,8 +99,6 @@ class ConsoleTest extends TestCase
 
         $container = new Container([], $conf);
 
-        $argv = ['prim', 'test', 'what'];
-
         $console = new Console($container, $conf);
 
         $this->assertIsObject($console->container);
@@ -93,10 +111,4 @@ class ConsoleTest extends TestCase
 
         $this->assertEquals(true, $command->works);
     }
-
-    // test parameters
-
-    // test flags
-
-    // test arguments
 }

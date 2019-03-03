@@ -10,15 +10,25 @@ class Input
     protected $parameters = [];
     protected $arguments = [];
 
-    public function __construct()
+    public function __construct($stdin = null)
     {
-        global $argv;
+        if($stdin === null) {
+            $stdin = 'php://stdin';
+        }
 
-        $this->setCommandArguments($argv);
+        $stdin = fopen($stdin, 'r');
+
+        $args = fgets($stdin);
+
+        $this->setCommandArguments($args);
+
+        fclose($stdin);
     }
 
-    public function setCommandArguments($argv)
+    public function setCommandArguments(string $argv)
     {
+        $argv = explode(' ', trim($argv));
+
         $this->execSource = array_shift($argv);
 
         $this->command = array_shift($argv);
