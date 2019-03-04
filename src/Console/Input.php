@@ -50,7 +50,7 @@ class Input
         }
     }
 
-    public function getCommand(): string
+    public function getCommand(): ?string
     {
         return $this->command;
     }

@@ -1,9 +1,7 @@
 <?php
 namespace Prim\Console;
 
-use Prim\Application;
-
-class Console extends Application
+class Console
 {
     protected $options = [];
     protected $commands = [];
@@ -11,14 +9,23 @@ class Console extends Application
     protected $input;
     protected $output;
 
-    public function __construct($container, array $options = [], $input = null, $output = null)
+    public function __construct(array $options = [], $input = null, $output = null)
     {
-        $options = [
-            'disableRouter' => true,
-            'disableCustomErrorHandler' => true
-        ] + $options;
+        $this->options = $options += [
+            'root' => '',
+            'project_name' => '',
+            'debug' => false,
+            'environment' => 'dev',
 
-        parent::__construct($container, $options);
+            'db_enable' => false,
+            'db_type' => 'mysql',
+            'db_name' => $options['project_name']?? '',
+            'db_host' => '127.0.0.1',
+            'db_user' => 'root',
+            'db_password' => '',
+            'db_charset' => 'utf8',
+            'db_options' => []
+        ];
 
         if($input === null) {
             $input = new Input();
@@ -37,7 +44,7 @@ class Console extends Application
     function run()
     {
         // Didnt supply any command then list help
-        if($this->input->getCommand() === '') {
+        if($this->input->getCommand() == '') {
             $this->listCommands();
 
             return;

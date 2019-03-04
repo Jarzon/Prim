@@ -24,8 +24,10 @@ class ConsoleTest extends TestCase
                   'commands.php' => ''
               ]
             ],
-            'stdin' => 'command --flag --param=value firstArg secondArg',
+            'stdin' => 'prim test --flag --param=value firstArg secondArg',
             'stdout' => '',
+            'WrongCommandStdin' => 'prim nope',
+            'EmptyStdin' => 'prim',
         ];
 
         $this->root = vfsStream::setup('root', null, $structure);
@@ -42,11 +44,9 @@ class ConsoleTest extends TestCase
         $input = new Input(vfsStream::url('root/stdin'));
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $container = new Container([], $conf);
+        $console = new Console($conf, $input, $output);
 
-        $console = new Console($container, $conf, $input, $output);
-
-        $this->assertIsObject($console->container);
+        $this->assertIsObject($console);
 
         return [$console, $input, $output];
     }
@@ -58,11 +58,11 @@ class ConsoleTest extends TestCase
     {
         list($console, $input, $output) = $objects;
 
-        $console->addCommand(new Command());
+        $console->addCommand(new Command($input, $output));
 
         $console->listCommands();
 
-        $this->assertEquals("test - this is a test command\n", $output);
+        $this->assertEquals("test - this is a test command", $output->getLastLine());
     }
 
     /**
@@ -76,39 +76,35 @@ class ConsoleTest extends TestCase
             'root' => __DIR__ . '/'
         ];
 
-        $container = new Container([], $conf);
+        $input = new Input(vfsStream::url('root/WrongCommandStdin'));
+        $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($container, $conf);
+        $console = new Console($conf, $input, $output);
 
-        $this->assertIsObject($console->container);
+        $this->assertIsObject($console);
 
-        $console->addCommand(new Command());
+        $console->addCommand(new Command($input, $output));
 
         $console->run();
-
-        $this->assertEquals("test\r\n", $console->listCommands());
     }
 
-    public function testRun()
+    public function testRunWithoutCommand()
     {
         $conf = [
             'db_enable' => false,
             'project_name' => 'Tests',
-            'root' => __DIR__ . '/'
+            'root' => vfsStream::url('root/')
         ];
 
-        $container = new Container([], $conf);
+        $input = new Input(vfsStream::url('root/EmptyStdin'));
+        $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($container, $conf);
+        $console = new Console($conf, $input, $output);
 
-        $this->assertIsObject($console->container);
-
-        $command = new Command();
-
-        $console->addCommand($command);
+        $console->addCommand(new Command($input, $output));
 
         $console->run();
 
-        $this->assertEquals(true, $command->works);
+        $this->assertEquals("test - this is a test command", $output->getLastLine());
     }
 }

@@ -3,7 +3,8 @@ namespace Prim\Console;
 
 class Output
 {
-    public $stdout;
+    protected $stdout;
+    protected $lastLine = '';
 
     public function __construct($stdout = null)
     {
@@ -18,8 +19,15 @@ class Output
     {
         $stdout = fopen($this->stdout, 'w');
 
-        fputs($stdout, "$output\n");
+        $this->lastLine = $output;
+
+        fputs($stdout, $output . PHP_EOL);
 
         fclose($stdout);
+    }
+
+    public function getLastLine()
+    {
+        return $this->lastLine;
     }
 }
