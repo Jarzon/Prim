@@ -19,7 +19,7 @@ class InputTest extends TestCase
     public function setUp()
     {
         $structure = [
-            'stdin' => 'command --flag --param=value firstArg secondArg',
+            'stdin' => 'bin/prim command --flag --param=value firstArg secondArg',
         ];
 
         $this->root = vfsStream::setup('root', null, $structure);
@@ -37,14 +37,48 @@ class InputTest extends TestCase
     /**
      * @depends testConstruct
      */
+    public function testGetUnsetArgument(Input $input)
+    {
+        $this->assertEquals(null, $input->getArgument(2));
+    }
+
+    /**
+     * @depends testConstruct
+     */
     public function testGetArgument(Input $input)
     {
         $this->assertEquals("firstArg", $input->getArgument(0));
     }
 
-    // test parameters
+    /**
+     * @depends testConstruct
+     */
+    public function testGetUnsetParameter(Input $input)
+    {
+        $this->assertEquals(null, $input->getParameter('noparam'));
+    }
 
-    // test flags
+    /**
+     * @depends testConstruct
+     */
+    public function testGetParameter(Input $input)
+    {
+        $this->assertEquals('value', $input->getParameter('param'));
+    }
 
-    // test arguments
+    /**
+     * @depends testConstruct
+     */
+    public function testGetUnsetFlag(Input $input)
+    {
+        $this->assertEquals(false, $input->getFlag('noflag'));
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testGetFlag(Input $input)
+    {
+        $this->assertEquals(true, $input->getFlag('flag'), 'Input->getFlag should return true whem flag exist.');
+    }
 }

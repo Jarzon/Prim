@@ -25,28 +25,33 @@ class Input
         fclose($stdin);
     }
 
-    public function setCommandArguments(string $argv)
+    public function setCommandArguments(string $args)
     {
-        $argv = explode(' ', trim($argv));
+        $args = explode(' ', trim($args));
 
-        $this->execSource = array_shift($argv);
+        $this->execSource = array_shift($args);
 
-        $this->command = array_shift($argv);
+        $this->command = array_shift($args);
 
-        foreach ($argv as $arg) {
-            if(strpos($arg, '--') !== false) {
-                $arg = str_replace('--', '', $arg);
+        foreach ($args as $arg) {
 
-                $e = explode("=", $arg);
-                if(count($e) == 2) {
-                    $this->parameters[$e[0]] = $e[1];
-                } else {
-                    $this->flags[] = $arg;
-                }
-            }
-            else {
+            if(strpos($arg, '--') === false) {
                 $this->arguments[] = $arg;
+
+                continue;
             }
+
+            $arg = str_replace('--', '', $arg);
+
+            if(strpos($arg, '=') !== false) {
+                $e = explode('=', $arg);
+
+                $this->parameters[$e[0]] = $e[1];
+
+                continue;
+            }
+
+            $this->flags[] = $arg;
         }
     }
 
@@ -62,12 +67,16 @@ class Input
 
     public function getArgument(int $number)
     {
+        if(!isset($this->arguments[$number])) {
+            return null;
+        }
+
         return $this->arguments[$number];
     }
 
     public function getFlag($name)
     {
-        if(isset($this->flags[$name])) {
+        if(in_array($name, $this->flags)) {
             return true;
         }
 
@@ -76,10 +85,10 @@ class Input
 
     public function getParameter($name)
     {
-        if(!isset($this->flags[$name])) {
-            return false;
+        if(!isset($this->parameters[$name])) {
+            return null;
         }
 
-        return $this->flags[$name];
+        return $this->parameters[$name];
     }
 }
