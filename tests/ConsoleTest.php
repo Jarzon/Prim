@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\{vfsStream, vfsStreamDirectory};
 
 use Prim\Console\{Console, Input, Output};
-use Tests\Mocks\{Command, Container};
+use Tests\Mocks\Command;
 
 class ConsoleTest extends TestCase
 {
@@ -24,10 +24,8 @@ class ConsoleTest extends TestCase
                   'commands.php' => ''
               ]
             ],
-            'stdin' => 'prim test --flag --param=value firstArg secondArg',
             'stdout' => '',
             'WrongCommandStdin' => 'prim nope',
-            'EmptyStdin' => 'prim',
         ];
 
         $this->root = vfsStream::setup('root', null, $structure);
@@ -41,7 +39,7 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
-        $input = new Input(vfsStream::url('root/stdin'));
+        $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));
 
         $console = new Console($conf, $input, $output);
@@ -76,7 +74,7 @@ class ConsoleTest extends TestCase
             'root' => __DIR__ . '/'
         ];
 
-        $input = new Input(vfsStream::url('root/WrongCommandStdin'));
+        $input = new Input(['bin/prim', 'nope'], vfsStream::url('root/WrongCommandStdin'));
         $output = new Output(vfsStream::url('root/stdout'));
 
         $console = new Console($conf, $input, $output);
@@ -96,7 +94,7 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
-        $input = new Input(vfsStream::url('root/EmptyStdin'));
+        $input = new Input(['bin/prim']);
         $output = new Output(vfsStream::url('root/stdout'));
 
         $console = new Console($conf, $input, $output);

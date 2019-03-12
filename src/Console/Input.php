@@ -10,27 +10,21 @@ class Input
     protected $parameters = [];
     protected $arguments = [];
 
-    public function __construct($stdin = null)
+    public function __construct($argv, $stdin = null)
     {
         if($stdin === null) {
             $stdin = 'php://stdin';
         }
 
-        $stdin = fopen($stdin, 'r');
+        $this->stdin = $stdin;
 
-        $args = fgets($stdin);
-
-        $this->setCommandArguments($args);
-
-        fclose($stdin);
+        $this->setCommandArguments($argv);
     }
 
-    public function setCommandArguments(string $args)
+    public function setCommandArguments(array $args)
     {
-        $args = explode(' ', trim($args));
 
         $this->execSource = array_shift($args);
-
         $this->command = array_shift($args);
 
         foreach ($args as $arg) {
@@ -90,5 +84,16 @@ class Input
         }
 
         return $this->parameters[$name];
+    }
+
+    public function read()
+    {
+        $stdin = fopen($this->stdin, 'r');
+
+        $input = fgets($stdin);
+
+        fclose($stdin);
+
+        return $input;
     }
 }

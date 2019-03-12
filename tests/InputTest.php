@@ -19,7 +19,7 @@ class InputTest extends TestCase
     public function setUp()
     {
         $structure = [
-            'stdin' => 'bin/prim command --flag --param=value firstArg secondArg',
+            'stdin' => 'input',
         ];
 
         $this->root = vfsStream::setup('root', null, $structure);
@@ -27,7 +27,7 @@ class InputTest extends TestCase
 
     public function testConstruct()
     {
-        $input = new Input(vfsStream::url('root/stdin'));
+        $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg'], vfsStream::url('root/stdin'));
 
         $this->assertIsObject($input);
 

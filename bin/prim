@@ -4,5 +4,7 @@ if (!$loader = include __DIR__ . '/../../../autoload.php') {
     die('You must set up the project dependencies.');
 }
 
-$console = new \Prim\Console\Console([]);
+$input = new \Prim\Console\Input($argv);
+
+$console = new \Prim\Console\Console([], $input);
 $console->run();
