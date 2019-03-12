@@ -5,9 +5,9 @@ class Command extends \Prim\Console\Command
 {
     public $works = false;
 
-    public function __construct($input = null, $output = null)
+    public function __construct($console, $input = null, $output = null)
     {
-        parent::__construct($input, $output);
+        parent::__construct($console, $input, $output);
 
         $this
             ->setName('test')

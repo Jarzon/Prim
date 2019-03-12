@@ -78,4 +78,14 @@ class Console
             $this->output->writeLine($command->getSignature());
         }
     }
+
+    public  function getInput()
+    {
+        return $this->input;
+    }
+
+    public  function getOutput()
+    {
+        return $this->output;
+    }
 }

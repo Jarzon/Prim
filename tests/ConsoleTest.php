@@ -46,21 +46,19 @@ class ConsoleTest extends TestCase
 
         $this->assertIsObject($console);
 
-        return [$console, $input, $output];
+        return $console;
     }
 
     /**
      * @depends testConstruct
      */
-    public function testAddCommand(array $objects)
+    public function testAddCommand(Console $console)
     {
-        list($console, $input, $output) = $objects;
-
-        $console->addCommand(new Command($input, $output));
+        $console->addCommand(new Command($console));
 
         $console->listCommands();
 
-        $this->assertEquals("test - this is a test command", $output->getLastLine());
+        $this->assertEquals("test - this is a test command", $console->getOutput()->getLastLine());
     }
 
     /**
@@ -81,7 +79,7 @@ class ConsoleTest extends TestCase
 
         $this->assertIsObject($console);
 
-        $console->addCommand(new Command($input, $output));
+        $console->addCommand(new Command($console));
 
         $console->run();
     }
@@ -99,7 +97,7 @@ class ConsoleTest extends TestCase
 
         $console = new Console($conf, $input, $output);
 
-        $console->addCommand(new Command($input, $output));
+        $console->addCommand(new Command($console));
 
         $console->run();
 
