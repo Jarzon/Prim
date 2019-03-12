@@ -54,7 +54,7 @@ class ConsoleTest extends TestCase
      */
     public function testAddCommand(Console $console)
     {
-        $console->addCommand(new Command($console));
+        $console->addCommand( Command::class);
 
         $console->listCommands();
 
@@ -79,7 +79,7 @@ class ConsoleTest extends TestCase
 
         $this->assertIsObject($console);
 
-        $console->addCommand(new Command($console));
+        $console->addCommand( Command::class);
 
         $console->run();
     }
@@ -97,7 +97,7 @@ class ConsoleTest extends TestCase
 
         $console = new Console($conf, $input, $output);
 
-        $console->addCommand(new Command($console));
+        $console->addCommand(Command::class);
 
         $console->run();
 

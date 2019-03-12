@@ -53,8 +53,10 @@ class Console
         $this->getCommand()->exec();
     }
 
-    function addCommand($command)
+    function addCommand(string $command)
     {
+        $command = new $command($this);
+
         $name = $command->getName();
 
         $this->commands[$name] = $command;
