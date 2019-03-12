@@ -90,4 +90,9 @@ class Console
     {
         return $this->output;
     }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
 }
