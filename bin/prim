@@ -1,10 +1,20 @@
 #!/usr/bin/env php
 <?php
-if (!$loader = include __DIR__ . '/../../../autoload.php') {
+$root = dirname(__DIR__, 4) . DIRECTORY_SEPARATOR;
+
+if (!$loader = include $root. 'vendor/autoload.php') {
     die('You must set up the project dependencies.');
 }
 
+$config = [
+    'root' => $root,
+    'app' => "{$root}app/"
+];
+
+$config = (include("{$config['app']}config/config.php")) + $config;
+
 $input = new \Prim\Console\Input($argv);
 
-$console = new \Prim\Console\Console([], $input);
+$console = new \Prim\Console\Console($config, $input);
+
 $console->run();
