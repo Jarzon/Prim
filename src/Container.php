@@ -21,7 +21,16 @@ class Container
         ];
 
         $this->options = $options += [
-            'root' => ''
+            'root' => '',
+
+            'db_enable' => false,
+            'db_type' => 'mysql',
+            'db_name' => $options['project_name']?? '',
+            'db_host' => '127.0.0.1',
+            'db_user' => 'root',
+            'db_password' => '',
+            'db_charset' => 'utf8',
+            'db_options' => [],
         ];
     }
 
@@ -150,13 +159,21 @@ class Container
     /**
      * @return \PDO
      */
-    public function getPDO(string $type = '', string $host = '', string $name = '', string $user = '', string $pass = '', array $options = [], string $charset = 'utf8'): object
+    public function getPDO(): object
     {
-        $obj = 'pdo';
-
         if(!$this->options['db_enable']) {
             throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
         }
+
+        $obj = 'pdo';
+
+        $type = $this->options['db_type'];
+        $host = $this->options['db_host'];
+        $name = $this->options['db_name'];
+        $user = $this->options['db_user'];
+        $pass = $this->options['db_password'];
+        $options = $this->options['db_options'];
+        $charset = $this->options['db_charset'];
 
         $args = "$type:host=$host;dbname=$name";
 

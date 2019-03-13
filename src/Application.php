@@ -18,15 +18,6 @@ class Application
             'debug' => false,
             'environment' => 'dev',
 
-            'db_enable' => false,
-            'db_type' => 'mysql',
-            'db_name' => $options['project_name']?? '',
-            'db_host' => '127.0.0.1',
-            'db_user' => 'root',
-            'db_password' => '',
-            'db_charset' => 'utf8',
-            'db_options' => [],
-
             'disableRouter' => false,
             'disableCustomErrorHandler' => false
         ];
@@ -36,8 +27,6 @@ class Application
         if(!$this->options['disableCustomErrorHandler']) {
             $this->setErrorHandlers();
         }
-
-        $this->openDatabaseConnection($options);
 
         if(!$this->options['disableRouter']) {
             $router = $container->getRouter();
@@ -50,13 +39,6 @@ class Application
         register_shutdown_function( [$this, 'checkFatal'] );
         set_error_handler( [$this, 'logError'] );
         set_exception_handler( [$this, 'logException'] );
-    }
-
-    public function openDatabaseConnection(array $options): void
-    {
-        if($options['db_enable']) {
-            $this->db = $this->container->getPDO($options['db_type'], $options['db_host'], $options['db_name'], $options['db_user'], $options['db_password'], $options['db_options'], $options['db_charset']);
-        }
     }
 
     /**
