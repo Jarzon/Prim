@@ -1,11 +1,9 @@
 <?php
 namespace Prim;
 
-use \PDO;
-
 class Application
 {
-    public $container;
+    protected $container;
 
     protected $options = [];
 
@@ -95,5 +93,10 @@ class Application
     public function logError(int $num, string $str, string $file, int $line, $context = null): void
     {
         $this->logException(new \ErrorException( $str, 0, $num, $file, $line ));
+    }
+
+    public function getContainer()
+    {
+        return $this->container;
     }
 }

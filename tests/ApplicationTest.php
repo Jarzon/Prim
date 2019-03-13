@@ -22,7 +22,7 @@ class ApplicationTest extends TestCase
 
         $app = new Application($container, $conf);
 
-        $this->assertIsObject($app->container);
+        $this->assertIsObject($app->getContainer());
 
         return $app;
     }

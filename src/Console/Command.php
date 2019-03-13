@@ -6,20 +6,20 @@ class Command
     protected $name;
     protected $desc;
 
-    protected $console;
+    protected $options;
     protected $input;
     protected $output;
 
-    public function __construct($console, $input = null, $output = null)
+    public function __construct($options, Input $input = null, Output $output = null)
     {
-        $this->console = $console;
+        $this->options = $options;
 
         if($input === null) {
-            $input = $console->getInput();
+            $input = new Input($_SERVER['argv']);
         }
 
-        if ($output === null) {
-            $output = $console->getOutput();
+        if($output === null) {
+            $input = new Output();
         }
 
         $this->input = $input;

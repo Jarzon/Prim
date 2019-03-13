@@ -55,7 +55,7 @@ class Console
 
     function addCommand(string $command)
     {
-        $command = new $command($this);
+        $command = new $command($this->options, $this->input, $this->output);
 
         $name = $command->getName();
 
