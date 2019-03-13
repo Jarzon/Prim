@@ -90,7 +90,7 @@ class Input
     {
         $stdin = fopen($this->stdin, 'r');
 
-        $input = fgets($stdin);
+        $input = trim(fgets($stdin));
 
         fclose($stdin);
 
