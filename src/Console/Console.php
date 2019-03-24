@@ -12,19 +12,8 @@ class Console
     public function __construct(array $options = [], $input = null, $output = null)
     {
         $this->options = $options += [
-            'root' => '',
-            'project_name' => '',
-            'debug' => false,
-            'environment' => 'dev',
-
-            'db_enable' => false,
-            'db_type' => 'mysql',
-            'db_name' => $options['project_name']?? '',
-            'db_host' => '127.0.0.1',
-            'db_user' => 'root',
-            'db_password' => '',
-            'db_charset' => 'utf8',
-            'db_options' => []
+            'root' => '/',
+            'environment' => 'dev'
         ];
 
         if($input === null) {

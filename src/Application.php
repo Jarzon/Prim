@@ -13,11 +13,7 @@ class Application
     public function __construct($container, array $options = [])
     {
         $this->options = $options += [
-            'root' => '',
-            'project_name' => '',
             'debug' => false,
-            'environment' => 'dev',
-
             'disableRouter' => false,
             'disableCustomErrorHandler' => false
         ];

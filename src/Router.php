@@ -21,6 +21,7 @@ class Router
 
         $this->options = $options += [
             'root' => '',
+            'project_name' => '',
             'router_query_string' => true,
             'server' => $_SERVER
         ];

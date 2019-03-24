@@ -21,9 +21,7 @@ class Controller implements ViewInterface
         $this->container = $container;
 
         $this->options = $options += [
-            'root' => '/root/',
-            'project_name' => '',
-            'db_enable' => false
+            'root' => '/root/'
         ];
 
         $this->getNamespace(get_class($this));
