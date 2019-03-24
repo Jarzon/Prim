@@ -59,21 +59,6 @@ class Controller implements ViewInterface
         $this->packNamespace = $pack;
     }
 
-    public function getModel(string $model, string $pack = ''): object
-    {
-        if($pack === '') $pack = $this->packNamespace;
-
-        $modelNamespace = "$pack\\Model\\$model";
-
-        if(class_exists("$this->projectNamespace\\$modelNamespace")) {
-            $modelNamespace = "$this->projectNamespace\\$modelNamespace";
-        } else if(!class_exists($modelNamespace)) {
-            throw new \Exception("Can't find model: $modelNamespace");
-        }
-
-        return $this->container->getModel($modelNamespace);
-    }
-
     // View Methods shortcut
     function setTemplate(string $design, string $pack = ''): void
     {
