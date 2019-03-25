@@ -88,7 +88,7 @@ class Router
         return array_sum(array_map("count", $this->routes));
     }
 
-    function getRoutes(string $pack, string $routeFile = 'routing.php'): void
+    function getRoutes(string $pack, string $routeFile = 'routing.php')
     {
         $included = false;
 
@@ -109,6 +109,8 @@ class Router
         }
 
         if(!$included) throw new \Exception("Can't find routes file $routeFile in $pack");
+
+        return $this;
     }
 
     function get(string $route, string $controller, string $method): void

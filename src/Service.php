@@ -42,7 +42,7 @@ class Service
         return $inject;
     }
 
-    function getServices(string $pack, string $serviceFile = 'services.php'): void
+    function getServices(string $pack, string $serviceFile = 'services.php')
     {
         if($vendorFile = $this->packList->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorFile/config/$serviceFile";
@@ -59,6 +59,8 @@ class Service
         if(!$services) throw new \Exception("Can't find services file $serviceFile in $pack");
 
         $this->addServices($services);
+
+        return $this;
     }
 
     function addServices(array $services)
