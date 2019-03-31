@@ -41,11 +41,11 @@ class Container
             return self::$shared[$name];
         }
 
-        $services = $this->getService()->getServicesInjection($name);
+        $class = $this->parameters["$name.class"];
+
+        $services = $this->getService()->getServicesInjection($class);
 
         if($services) $args = array_merge($args, $services);
-
-        $class = $this->parameters["$name.class"];
 
         $obj = new $class(...$args);
 
@@ -94,6 +94,8 @@ class Container
         $class = $this->parameters["$name.class"];
 
         $obj = new $class($this, $this->getPackList(), $this->options);
+
+        $obj->loadServices();
 
         return self::$shared[$name] = $obj;
     }

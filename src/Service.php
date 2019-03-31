@@ -10,7 +10,7 @@ class Service
     protected $packList;
 
     protected $options = [];
-    public $services = [];
+    protected $services = [];
 
     public function __construct($container, $packList, array $options = [])
     {
@@ -20,26 +20,47 @@ class Service
         $this->options = $options += [
             'root' => ''
         ];
+    }
 
+    function loadServices() {
         include("{$this->options['root']}app/config/services.php");
     }
 
     function getServicesInjection($obj)
     {
-        $inject = [];
+        $injections = [];
 
-        // TODO: Add glob injection in services
+        if(strpos($obj, '\\') !== false) {
+            $namespaces = explode('\\', $obj);
 
-        if(!isset($this->services[$obj])) {
-            return false;
+            foreach ($namespaces as &$namespace) {
+                if($namespace !== $this->options['project_name'] && $namespace !== '') {
+                    $namespace = "($namespace|\*)";
+                }
+            }
+
+            $namespaces = implode('\\\\', $namespaces);
+
+            $injections = array_merge($injections, $this->preg_grep_keys("/^{$namespaces}$/", $this->services));
+        }
+        else if(isset($this->services[$obj])) {
+            // Exact match
+            $injections[] = $this->services[$obj];
         }
 
-        $services = $this->services[$obj]($this->container);
-        foreach ($services as $service) {
-            $inject[] = $service;
+        $inject = [];
+
+        foreach ($injections as $callback) {
+            $services = $callback($this->container);
+
+            $inject = array_merge($inject, $services);
         }
 
         return $inject;
+    }
+
+    protected function preg_grep_keys($pattern, $input, $flags = 0) {
+        return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
     }
 
     function getServices(string $pack, string $serviceFile = 'services.php')

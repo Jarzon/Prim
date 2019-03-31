@@ -4,53 +4,59 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 
 use Prim\Container;
 use Prim\Service;
 
 class ServiceTest extends TestCase
 {
-    /**
-     * @var  vfsStreamDirectory
-     */
-    private $root;
-
-    public function setUp()
-    {
-        $routes = <<<'EOD'
-    <?php $this->addServices(['aClass' => (object)[]]);
-EOD;
-
-        $structure = [
-            'app' => [
-                'config' => [
-                    'services.php' => $routes,
-                ]
-            ]
-        ];
-
-        $this->root = vfsStream::setup('root', null, $structure);
-    }
 
     public function testConstructor()
     {
-        $conf = [
-            'root' => vfsStream::url('root/'),
-            'environment' => 'dev',
-            'router_query_string' => false,
-            'server' => [
-                'REQUEST_METHOD' => 'GET',
-                'REQUEST_URI' => '/'
-            ]
-        ];
+        $conf = ['project_name' => 'Project'];
 
-        $container = new Container(['errorController.class' => '\Tests\Mocks\Controller'], $conf);
+        $container = new Container([], []);
 
         $service = new Service($container, $container->getPackList(), $conf);
 
-        $this->assertEquals(['aClass' => (object)[]], $service->services);
+        $service->addServices([
+            'aClass' => function() {
+                return [];
+            },
+            '\Project\*\Controller\*' => function() {
+                return ['globInjection'];
+            },
+            '\Project\aPack\Controller\ControllerClass' => function() {
+                return ['directInjection'];
+            },
+            '\aPack\Controller\ControllerClass' => function() {
+                return ['subPackInjection'];
+            },
+        ]);
+
+        $this->assertEquals([], $service->getServicesInjection('aClass'));
+
+        return $service;
+    }
+
+    /**
+     * @depends testConstructor
+     */
+    public function testGetServicesInjection($service)
+    {
+        $this->assertEquals(['globInjection', 'directInjection'], $service->getServicesInjection('\Project\aPack\Controller\ControllerClass'));
+
+        $this->assertEquals(['subPackInjection'], $service->getServicesInjection('\aPack\Controller\ControllerClass'));
+
+        return $service;
+    }
+
+    /**
+     * @depends testConstructor
+     */
+    public function testGetServicesVendorPack($service)
+    {
+        $this->assertEquals([], $service->getServicesInjection('aPack\Controller\ControllerClass'));
 
         return $service;
     }
