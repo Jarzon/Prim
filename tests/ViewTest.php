@@ -6,8 +6,8 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
-
-use Prim\Container;
+use Prim\View;
+use Tests\Mocks\Container;
 
 class ViewTest extends TestCase
 {
@@ -37,12 +37,7 @@ EOD;
 
     public function testViewConstruct()
     {
-        $container = new Container([
-            'pdo.class' => '\Tests\Mocks\PDO'
-        ], [
-            'root' => vfsStream::url('root').'/'
-        ]);
-        $view = $container->getView();
+        $view = new View(new Container([], []), ['root' => vfsStream::url('root').'/']);
 
         $this->assertEquals(1, $this->count($view->vars()));
 

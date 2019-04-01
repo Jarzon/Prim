@@ -23,6 +23,8 @@ class Container
         $this->options = $options += [
             'root' => '',
 
+            'disable_services_injection' => false,
+
             'db_enable' => false,
             'db_type' => 'mysql',
             'db_name' => $options['project_name']?? '',
@@ -43,9 +45,11 @@ class Container
 
         $class = $this->parameters["$name.class"];
 
-        $services = $this->getService()->getServicesInjection($class);
+        if(!$this->options['disable_services_injection']) {
+            $services = $this->getService()->getServicesInjection($class);
 
-        if($services) $args = array_merge($args, $services);
+            if($services) $args = array_merge($args, $services);
+        }
 
         $obj = new $class(...$args);
 
@@ -95,7 +99,9 @@ class Container
 
         $obj = new $class($this, $this->getPackList(), $this->options);
 
-        $obj->loadServices();
+        if(!$this->options['disable_services_injection']) {
+            $obj->loadServices();
+        }
 
         return self::$shared[$name] = $obj;
     }

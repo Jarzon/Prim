@@ -7,8 +7,8 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 
-use Prim\Container;
-use Prim\Router;
+use Tests\Mocks\Container;
+use Tests\Mocks\Router;
 
 class RouterTest extends TestCase
 {
@@ -47,7 +47,7 @@ EOD;
             ]
         ];
 
-        $router = new Router(new Container(['errorController.class' => '\Tests\Mocks\Controller'], $conf), $conf);
+        $router = new Router(new Container([], []), $conf);
 
         $this->assertEquals(2, $router->getRoutesCount());
 
@@ -57,7 +57,7 @@ EOD;
     /**
      * @depends testRouterConstruct
      */
-    public function testDispatchRoute($router)
+    public function testDispatchRoute(Router $router)
     {
         $controller = $router->dispatchRoute();
 

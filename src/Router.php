@@ -2,6 +2,8 @@
 
 namespace Prim;
 
+use FastRoute\Dispatcher;
+
 class Router
 {
     /** @var \FastRoute\RouteCollector */
@@ -26,7 +28,7 @@ class Router
             'server' => $_SERVER
         ];
 
-        include("{$this->options['root']}app/config/routing.php");
+        $this->loadRoutes();
 
         $this->dispatcher = \FastRoute\CachedDispatcher(function(\FastRoute\RouteCollector $router) {
             $this->buildRoutes($router);
@@ -35,6 +37,11 @@ class Router
             'cacheFile' => "{$this->options['root']}/app/cache/route.cache",
             'cacheDisabled' => ($this->options['environment'] === 'dev'),
         ]);
+    }
+
+    public function loadRoutes()
+    {
+        include("{$this->options['root']}app/config/routing.php");
     }
 
     function dispatchRoute(): object
@@ -48,33 +55,20 @@ class Router
 
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
 
-        $controller = $this->container->getErrorController();
-
         switch ($routeInfo[0]) {
-            case \FastRoute\Dispatcher::NOT_FOUND:
-                echo $controller->handleError(404);
+            case Dispatcher::NOT_FOUND:
+                echo $this->container->getErrorController()->handleError(404);
                 break;
-            case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+            case Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                echo $controller->handleError(405, $allowedMethods);
+                echo $this->container->getErrorController()->handleError(405, $allowedMethods);
                 break;
-            case \FastRoute\Dispatcher::FOUND:
+            case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
                 $vars = array_values($routeInfo[2]);
-
-                list($pack, $controller) = explode('\\', $handler[0]);
-
                 $method = $handler[1];
 
-                $controllerNamespace = "$pack\\Controller\\$controller";
-
-                if(class_exists("{$this->options['project_name']}\\$controllerNamespace")) {
-                    $controllerNamespace = "{$this->options['project_name']}\\$controllerNamespace";
-                } else if(!class_exists($controllerNamespace)) {
-                    throw new \Exception("Can't find controller: $controllerNamespace");
-                }
-
-                $controller = $this->container->getController($controllerNamespace);
+                $controller = $this->getController($handler[0]);
 
                 $controller->$method(...$vars);
                 break;
@@ -83,7 +77,27 @@ class Router
         return $controller;
     }
 
-    function getRoutesCount(): int
+    protected function getController(string $controller): object
+    {
+        list($pack, $controller) = explode('\\', $controller);
+
+        $controllerNamespace = "$pack\\Controller\\$controller";
+
+        if(class_exists("{$this->options['project_name']}\\$controllerNamespace")) {
+            $controllerNamespace = "{$this->options['project_name']}\\$controllerNamespace";
+        } else if(!class_exists($controllerNamespace)) {
+            throw new \Exception("Can't find controller: $controllerNamespace");
+        }
+
+        return $this->fetchControllerFromContainer($controllerNamespace);
+    }
+
+    protected function fetchControllerFromContainer(string $controller): object
+    {
+        return $this->container->getController($controller);
+    }
+
+    public function getRoutesCount(): int
     {
         return array_sum(array_map("count", $this->routes));
     }

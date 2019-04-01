@@ -6,18 +6,15 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Prim\Controller;
 use Tests\Mocks\Container;
+use Tests\Mocks\View;
 
 class ControllerTest extends TestCase
 {
     public function testControllerConstruct()
     {
-        $container = new Container([
-            'view.class' => '\Tests\Mocks\View',
-            'router.class' => '\\Prim\\Router',
-            'pdo.class' => '\Tests\Mocks\PDO'
-        ], ['root' => 'vfs://root/']);
+        $container = new Container([], []);
+        $view = new View($container, []);
 
-        $view = $container->getView();
         $controller = new Controller($view, $container, []);
 
         $this->assertEquals('Prim', $controller->projectNamespace);
