@@ -44,7 +44,7 @@ class Router
         include("{$this->options['root']}app/config/routing.php");
     }
 
-    function dispatchRoute(): object
+    function dispatchRoute(): ?object
     {
         $httpMethod = $this->options['server']['REQUEST_METHOD'];
         $uri = $this->options['server']['REQUEST_URI'];
@@ -74,7 +74,7 @@ class Router
                 break;
         }
 
-        return $controller;
+        return $controller?? null;
     }
 
     protected function getController(string $controller): object
