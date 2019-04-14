@@ -15,7 +15,7 @@ class ControllerTest extends TestCase
         $container = new Container([], []);
         $view = new View($container, []);
 
-        $controller = new Controller($view, $container, []);
+        $controller = new Controller($view, []);
 
         $this->assertEquals('Prim', $controller->projectNamespace);
         $this->assertEquals('', $controller->packNamespace);

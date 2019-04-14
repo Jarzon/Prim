@@ -13,12 +13,10 @@ class Controller implements ViewInterface
 
     /**
      * @param View $view
-     * @param Container $container
      */
-    function __construct($view, Container $container, array $options = [])
+    function __construct($view, array $options = [])
     {
         $this->view = $view;
-        $this->container = $container;
 
         $this->options = $options += [
             'root' => '/root/'
