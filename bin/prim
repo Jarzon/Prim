@@ -13,8 +13,12 @@ $config = [
 
 $config = (include("{$config['app']}config/config.php")) + $config;
 
-$input = new \Prim\Console\Input($argv);
+$container = new Prim\Container(include("{$config['app']}config/container.php"), $config);
 
-$console = new \Prim\Console\Console($config, $input);
+$console = $container->get('console');
 
 $console->run();
+
+//$input = new \Prim\Console\Input($argv);
+//
+// new \Prim\Console\Console($config, $input);

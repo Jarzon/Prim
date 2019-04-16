@@ -12,14 +12,15 @@ class Service
     protected $options = [];
     protected $services = [];
 
-    public function __construct($container, $packList, array $options = [])
+    public function __construct($container, array $options = [], $packList = null)
     {
         $this->container = $container;
-        $this->packList = $packList;
 
         $this->options = $options += [
             'root' => ''
         ];
+
+        $this->packList = $packList ?: new PackList($this->options['root']);
     }
 
     function loadServices() {

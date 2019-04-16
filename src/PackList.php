@@ -5,15 +5,23 @@ class PackList
 {
     protected $vendorPacksList;
     protected $composer;
-    protected $options = [];
+    protected $root = '/';
 
-    public function __construct(\Composer\Autoload\ClassLoader $composer, array $options = [])
+    public function __construct(string $root, \Composer\Autoload\ClassLoader $composer = null)
     {
+        if($composer === null) {
+            $composer = "{$root}vendor/autoload.php";
+
+            if(!file_exists($composer)) {
+                throw new \Exception("Couldn't get composer");
+            }
+
+            $composer = require $composer;
+        }
+
         $this->composer = $composer;
 
-        $this->options = $options += [
-            'root' => ''
-        ];
+        $this->root = $root;
 
         $this->vendorPacksList = $this->getComposerPacks();
     }
@@ -37,7 +45,7 @@ class PackList
             if(strpos($key, 'Pack') !== false) {
                 // Remove the root path and then composer relative path part
                 // (e.g. C:\apache\htdocs\project\vendor/composer/../ExpPack => vendor/composer/../ExpPack => vendor/ExpPack)
-                $pack = str_replace('composer/../', '', str_replace($this->options['root'], '', $item[0]));
+                $pack = str_replace('composer/../', '', str_replace($this->root, '', $item[0]));
 
                 $packs[substr($key, 0, -1)] = $pack;
             }

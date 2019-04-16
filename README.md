@@ -25,9 +25,9 @@ Install Gulp and Prim Gulp for the project Assets.
 
 ## Basic Configuration
 
-Copy app/config/config.php.dist to app/config/config.php
+Edit app/config/config.php with your own preferences.
 
-Copy phinx.yml.dist to phinx.yml
+To use database migration edit phinx.yml.
 
 ## Run the application
 
