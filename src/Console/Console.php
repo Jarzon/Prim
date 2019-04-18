@@ -17,7 +17,8 @@ class Console
         ];
 
         if($input === null) {
-            $input = new Input();
+            global $argv;
+            $input = new Input($argv);
         }
 
         if($output === null) {

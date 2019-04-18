@@ -18,7 +18,7 @@ class ApplicationTest extends TestCase
             'db_enable' => false
         ];
 
-        $container = new Container([], $conf);
+        $container = new Container($conf, []);
 
         $app = new Application($container, $conf);
 

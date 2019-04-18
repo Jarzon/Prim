@@ -113,7 +113,7 @@ class View implements ViewInterface
             return $localViewFile;
         }
 
-        if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
+        if($vendorPath = $this->container->get('packlist')->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorPath/view/$view.php";
 
             if(file_exists($vendorFile)) {

@@ -6,6 +6,16 @@ A Framework I use to learn and toy with.
 
 Base project skeleton: https://github.com/Jarzon/PrimBase
 
+## Features
+
+- Router based on [FastRoute](https://github.com/nikic/FastRoute)
+- Static Container with [Prim\Container](https://github.com/Jarzon/Prim/blob/master/src/Container.php)
+- PHP view templating with [Prim\View](https://github.com/Jarzon/Prim/blob/master/src/View.php)
+- Assets management with Gulp using [PrimGulp](https://github.com/Jarzon/PrimGulp)
+- Database migrations with [CakePHP/Phinx](https://github.com/cakephp/phinx)
+- Debug and error report with [PrimPack](https://github.com/Jarzon/PrimPack)
+- [Console commands](https://github.com/Jarzon/Prim/blob/master/src/Console/Console.php)
+
 ## Installation
 
 Using composer:

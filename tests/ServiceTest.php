@@ -17,7 +17,7 @@ class ServiceTest extends TestCase
 
         $container = new Container([], []);
 
-        $service = new Service($container, $container->getPackList(), $conf);
+        $service = new Service($container, $conf);
 
         $service->addServices([
             'aClass' => function() {

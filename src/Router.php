@@ -106,7 +106,7 @@ class Router
     {
         $included = false;
 
-        if($vendorPath = $this->container->getPackList()->getVendorPath($pack)) {
+        if($vendorPath = $this->container->get('packlist')->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorPath/config/$routeFile";
 
             if(file_exists($vendorFile)) {
