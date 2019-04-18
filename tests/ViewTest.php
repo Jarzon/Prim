@@ -37,7 +37,14 @@ EOD;
 
     public function testViewConstruct()
     {
-        $view = new View(new Container([], []), ['root' => vfsStream::url('root').'/']);
+        $conf = [
+            'project_name' => 'test',
+            'root' => vfsStream::url('root').'/'
+        ];
+
+        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+
+        $view = new View(new Container([], [], $serviceMock), $conf);
 
         $this->assertEquals(1, $this->count($view->vars()));
 

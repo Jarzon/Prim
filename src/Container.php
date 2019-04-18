@@ -170,4 +170,33 @@ class Container
 
         return $this->get($modelNamespace);
     }
+
+    public function form(string $form): object
+    {
+        list($pack, $form) = explode('\\', $form);
+
+        $modelNamespace = "$pack\\Form\\$form";
+
+        $localNamespace = "{$this->options['project_name']}\\$modelNamespace";
+
+        if(class_exists($localNamespace)) {
+            $modelNamespace = $localNamespace;
+        } else if(!class_exists($modelNamespace)) {
+            throw new \Exception("Can't find form: $modelNamespace");
+        }
+
+        return $this->getForm($modelNamespace);
+    }
+
+    public function getForm(string $name): object
+    {
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $this->setParameter($name, $name);
+
+        return $this->init($name);
+    }
 }

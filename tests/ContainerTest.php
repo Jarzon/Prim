@@ -22,13 +22,31 @@ class Test {
 
 class ContainerTest extends TestCase
 {
-    public function testRegister()
+    public function testConstructor()
     {
+        $conf = [
+            'project_name' => 'test',
+            'pdo.class' => '\Tests\Mocks\PDO',
+            'service.class' => '\Tests\Mocks\Service'
+        ];
+
+        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+
         $container = new Container([], [
             'pdo.class' => '\Tests\Mocks\PDO',
             'service.class' => '\Tests\Mocks\Service'
-        ]);
+        ], $serviceMock);
 
+        $this->assertIsObject($container);
+
+        return $container;
+    }
+
+    /**
+     * @depends testConstructor
+     */
+    public function testRegister(Container $container)
+    {
         $container->register('test', \Tests\Test::class, function($container) {
             $test = $container->init('test', [$container]);
 
@@ -39,18 +57,5 @@ class ContainerTest extends TestCase
 
         $this->assertIsObject($container->get('test'));
         $this->assertTrue($container->get('test')->configured);
-    }
-
-    public function testOpenDatabaseConnection()
-    {
-        $container = new Container([
-            'db_enable' => true,
-            'disable_services_injection' => true
-        ], [
-            'pdo.class' => '\Tests\Mocks\PDO',
-            'service.class' => '\Tests\Mocks\Service'
-        ]);
-
-        $this->assertIsObject($container->get('pdo'));
     }
 }
