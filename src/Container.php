@@ -1,6 +1,8 @@
 <?php
 namespace Prim;
 
+use Prim\Console\Console;
+
 class Container
 {
     protected $serviceInjections = [];
@@ -33,15 +35,16 @@ class Container
         $this->service = $service ?: new Service($this, $this->options);
 
         $this
-            ->register('application', 'Prim\Application', [$this, $options])
-            ->register('view', 'Prim\View', [$this, $options])
-            ->register('router', 'Prim\Router', [$this, $options])
-            ->register('pdo', 'PDO', function (Container $container) use($options) {
+            ->register('application', Application::class, [$this, $options])
+            ->register('console', Console::class, [$this, $options])
+            ->register('view', View::class, [$this, $options])
+            ->register('router', Router::class, [$this, $options])
+            ->register('pdo', \PDO::class, function (Container $container) use($options) {
                 if(!$this->options['db_enable']) {
                     throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
                 }
 
-                $container->init('pdo', [
+                return $container->init('pdo', [
                     "{$options['db_type']}:host={$options['db_host']};dbname={$options['db_name']}" . ($options['db_type'] !== 'pgsql'? ";charset={$options['db_charset']}": ''),
                     $options['db_user'],
                     $options['db_password'],
@@ -64,12 +67,16 @@ class Container
 
     public function init(string $name, $args): object
     {
+        if(!is_array($args)) {
+            $args = (array)$args;
+        }
+
         $class = $this->parameters[$name];
 
         if(!$this->options['disable_services_injection']) {
             $services = $this->service->getServicesInjection($class);
 
-            if($services) $args = array_merge((array)$args, $services);
+            if($services) $args = array_merge($args, $services);
         }
 
         $obj = new $class(...$args);
@@ -168,7 +175,7 @@ class Container
             throw new \Exception("Can't find model: $modelNamespace");
         }
 
-        return $this->get($modelNamespace);
+        return $this->getModel($modelNamespace);
     }
 
     public function form(string $form): object
@@ -197,6 +204,18 @@ class Container
 
         $this->setParameter($name, $name);
 
-        return $this->init($name);
+        return $this->init($name, []);
+    }
+
+    public function getCommand(string $name, ...$args): object
+    {
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $this->setParameter($name, $name);
+
+        return $this->init($name, array_merge([$this->options], $args));
     }
 }

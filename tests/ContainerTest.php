@@ -8,11 +8,13 @@ use Tests\Mocks\Container;
 
 class Test {
     public $configured = false;
+    public $nothing = false;
     private $view;
 
-    public function __construct($view)
+    public function __construct($view, $nothing = false)
     {
         $this->view = $view;
+        $this->nothing = $nothing;
     }
 
     public function setConfig() {
@@ -25,7 +27,7 @@ class ContainerTest extends TestCase
     public function testConstructor()
     {
         $conf = [
-            'project_name' => 'test',
+            'project_name' => 'Tests',
             'pdo.class' => '\Tests\Mocks\PDO',
             'service.class' => '\Tests\Mocks\Service'
         ];
@@ -47,7 +49,7 @@ class ContainerTest extends TestCase
      */
     public function testRegister(Container $container)
     {
-        $container->register('test', \Tests\Test::class, function($container) {
+        $container->register('test', \Tests\Test::class, function(Container $container) {
             $test = $container->init('test', [$container]);
 
             $test->setConfig();
@@ -57,5 +59,6 @@ class ContainerTest extends TestCase
 
         $this->assertIsObject($container->get('test'));
         $this->assertTrue($container->get('test')->configured);
+        $this->assertFalse($container->get('test')->nothing);
     }
 }
