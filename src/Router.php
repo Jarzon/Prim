@@ -57,11 +57,11 @@ class Router
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
-                echo $this->container->getErrorController()->handleError(404);
+                echo $this->container->get('errorController')->handleError(404);
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
                 $allowedMethods = $routeInfo[1];
-                echo $this->container->getErrorController()->handleError(405, $allowedMethods);
+                echo $this->container->get('errorController')->handleError(405, $allowedMethods);
                 break;
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
