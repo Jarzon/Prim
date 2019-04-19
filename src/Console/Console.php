@@ -1,33 +1,35 @@
 <?php
 namespace Prim\Console;
 
+use Prim\Container;
+
 class Console
 {
-    protected $options = [];
+    protected $root = '\\';
     protected $commands = [];
 
+    protected $container;
     protected $input;
     protected $output;
 
-    public function __construct(array $options = [], $input = null, $output = null)
+    public function __construct(Container $container, string $root, $input = null, $output = null)
     {
-        $this->options = $options += [
-            'root' => '/',
-            'environment' => 'dev'
-        ];
+        $this->root = $root;
 
         if($input === null) {
-            $input = new Input();
+            global $argv;
+            $input = new Input($argv);
         }
 
         if($output === null) {
             $output = new Output();
         }
 
+        $this->container = $container;
         $this->input = $input;
         $this->output = $output;
 
-        include("{$this->options['root']}app/config/commands.php");
+        include("{$this->root}app/config/commands.php");
     }
 
     function run()
@@ -44,7 +46,7 @@ class Console
 
     function addCommand(string $command)
     {
-        $command = new $command($this->options, $this->input, $this->output);
+        $command = $this->container->getCommand($command, $this->input, $this->output);
 
         $name = $command->getName();
 
@@ -78,10 +80,5 @@ class Console
     public  function getOutput()
     {
         return $this->output;
-    }
-
-    public function getOptions()
-    {
-        return $this->options;
     }
 }

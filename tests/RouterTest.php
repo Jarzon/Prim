@@ -47,7 +47,9 @@ EOD;
             ]
         ];
 
-        $router = new Router(new Container([], []), $conf);
+        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+
+        $router = new Router(new Container([], [], $serviceMock), $conf);
 
         $this->assertEquals(2, $router->getRoutesCount());
 

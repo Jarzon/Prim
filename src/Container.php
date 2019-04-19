@@ -1,27 +1,24 @@
 <?php
 namespace Prim;
 
+use Prim\Console\Console;
+
 class Container
 {
+    protected $serviceInjections = [];
+
     protected $parameters = [];
     protected $options = [];
 
+    protected $service;
+
     static protected $shared = [];
 
-    public function __construct(array $parameters = [], array $options = [])
+    public function __construct(array $options = [], $parameters = null, $service = null)
     {
-        $this->parameters = $parameters += [
-            'application.class' => 'Prim\Application',
-            'view.class' => 'Prim\View',
-            'router.class' => 'Prim\Router',
-            'pdo.class' => 'PDO',
-            'packList.class' => 'Prim\PackList',
-            'errorController.class' => 'PrimPack\Controller\Error',
-            'service.class' => 'Prim\Service'
-        ];
-
         $this->options = $options += [
             'root' => '',
+            'project_name' => '',
 
             'disable_services_injection' => false,
 
@@ -34,19 +31,50 @@ class Container
             'db_charset' => 'utf8',
             'db_options' => [],
         ];
+
+        $this->service = $service ?: new Service($this, $this->options);
+
+        $this
+            ->register('application', Application::class, [$this, $options])
+            ->register('console', Console::class, [$this, $options])
+            ->register('view', View::class, [$this, $options])
+            ->register('router', Router::class, [$this, $options])
+            ->register('pdo', \PDO::class, function (Container $container) use($options) {
+                if(!$this->options['db_enable']) {
+                    throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
+                }
+
+                return $container->init('pdo', [
+                    "{$options['db_type']}:host={$options['db_host']};dbname={$options['db_name']}" . ($options['db_type'] !== 'pgsql'? ";charset={$options['db_charset']}": ''),
+                    $options['db_user'],
+                    $options['db_password'],
+                    $options['db_options']
+                ]);
+            })
+            ->register('errorController', 'PrimPack\Controller\Error', [$this->get('view'), $options])
+            ->setObj('packlist', $this->service->getPackList());
+
+        if($parameters !== null) {
+            $this->parameters += $parameters;
+        } else {
+            $this->loadConfig();
+        }
     }
 
-    protected function init(string $name, ...$args): object
+    function loadConfig() {
+        include("{$this->options['root']}app/config/container.php");
+    }
+
+    public function init(string $name, $args): object
     {
-        if (isset(self::$shared[$name]))
-        {
-            return self::$shared[$name];
+        if(!is_array($args)) {
+            $args = (array)$args;
         }
 
-        $class = $this->parameters["$name.class"];
+        $class = $this->parameters[$name];
 
         if(!$this->options['disable_services_injection']) {
-            $services = $this->getService()->getServicesInjection($class);
+            $services = $this->service->getServicesInjection($class);
 
             if($services) $args = array_merge($args, $services);
         }
@@ -56,95 +84,81 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
-    protected function setDefaultParameter(string $obj, string $class): void
+    protected function setParameter(string $obj, string $class)
     {
-        if(!isset($this->parameters["$obj.class"])) {
-            $this->parameters["$obj.class"] = $class;
-        }
+        $this->parameters[$obj] = $class;
+
+        return $this;
     }
 
-    /**
-     * @return Application
-     */
-    public function getApplication(): object
+    public function get($name)
     {
-        $obj = 'application';
-
-        return $this->init($obj, $this, $this->options);
-    }
-
-    /**
-     * @return Router
-     */
-    public function getRouter(): object
-    {
-        $obj = 'router';
-
-        return $this->init($obj, $this, $this->options);
-    }
-
-    /**
-     * @return Service
-     */
-    public function getService(): object
-    {
-        $name = 'service';
-
         if (isset(self::$shared[$name]))
         {
             return self::$shared[$name];
         }
 
-        $class = $this->parameters["$name.class"];
+        if(isset($this->parameters[$name])) {
+            $params = [];
 
-        $obj = new $class($this, $this->getPackList(), $this->options);
+            if(isset($this->serviceInjections[$name])) {
+                if(is_callable($this->serviceInjections[$name])) {
+                    return $this->serviceInjections[$name]($this);
+                } else {
+                    $params = $this->serviceInjections[$name];
+                }
+            }
 
-        if(!$this->options['disable_services_injection']) {
-            $obj->loadServices();
+            return $this->init($name, $params);
         }
 
-        return self::$shared[$name] = $obj;
+        throw new \Exception("Can't find service $name");
     }
 
-
-    /**
-     * @return View
-     */
-    public function getView(): object
+    public function register($name, string $location, $params = null)
     {
-        $obj = 'view';
+        $this->setParameter($name, $location);
 
-        return $this->init($obj, $this, $this->options);
+        if($params) $this->serviceInjections[$name] = $params;
+
+        return $this;
     }
 
-    /**
-     * @return Controller
-     */
-    public function getController(string $obj): object
+    public function setObj($name, $obj)
     {
-        if(!isset($this->parameters["$obj.class"])) {
-            $this->parameters["$obj.class"] = $obj;
-        }
+        self::$shared[$name] = $obj;
 
-        return $this->init($obj, $this->getView(), $this, $this->options);
-    }
-
-    /**
-     * @return Controller
-     */
-    public function getErrorController(): object
-    {
-        return $this->getController('errorController');
+        return $this;
     }
 
     /**
      * @return Model
      */
-    public function getModel(string $obj): object
+    public function getController(string $name): object
     {
-        $this->parameters["$obj.class"] = $obj;
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
 
-        return $this->init($obj, $this->getPDO(), $this->options);
+        $this->setParameter($name, $name);
+
+        return $this->init($name, [$this->get('view'), $this->options]);
+    }
+
+    /**
+     * @return Model
+     */
+    public function getModel(string $name): object
+    {
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $this->setParameter($name, $name);
+
+        return $this->init($name, [$this->get('pdo'), $this->options]);
     }
 
     public function model(string $model): object
@@ -164,73 +178,44 @@ class Container
         return $this->getModel($modelNamespace);
     }
 
-    /**
-     * @return \PDO
-     */
-    public function getPDO(): object
+    public function form(string $form): object
     {
-        if(!$this->options['db_enable']) {
-            throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
+        list($pack, $form) = explode('\\', $form);
+
+        $modelNamespace = "$pack\\Form\\$form";
+
+        $localNamespace = "{$this->options['project_name']}\\$modelNamespace";
+
+        if(class_exists($localNamespace)) {
+            $modelNamespace = $localNamespace;
+        } else if(!class_exists($modelNamespace)) {
+            throw new \Exception("Can't find form: $modelNamespace");
         }
 
-        $obj = 'pdo';
-
-        $type = $this->options['db_type'];
-        $host = $this->options['db_host'];
-        $name = $this->options['db_name'];
-        $user = $this->options['db_user'];
-        $pass = $this->options['db_password'];
-        $options = $this->options['db_options'];
-        $charset = $this->options['db_charset'];
-
-        $args = "$type:host=$host;dbname=$name";
-
-        if($type !== 'pgsql') {
-            $args .= ";charset=$charset";
-        } else {
-            $options += [\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES $charset"];
-        }
-
-        return $this->init($obj, $args, $user, $pass, $options);
+        return $this->getForm($modelNamespace);
     }
 
-    /**
-     * @return \Composer\Autoload\ClassLoader
-     */
-    public function getComposer(): object
+    public function getForm(string $name): object
     {
-        $name = 'composer.class';
-
         if (isset(self::$shared[$name]))
         {
             return self::$shared[$name];
         }
 
-        $composer = "{$this->options['root']}vendor/autoload.php";
+        $this->setParameter($name, $name);
 
-        if(!file_exists($composer)) {
-            throw new \Exception("Couldn't get composer");
-        }
-
-        return self::$shared[$name] = require $composer;
+        return $this->init($name, []);
     }
 
-    /**
-     * @return PackList
-     */
-    public function getPackList(): object
+    public function getCommand(string $name, ...$args): object
     {
-        $name = 'packList';
-
         if (isset(self::$shared[$name]))
         {
             return self::$shared[$name];
         }
 
-        $class = $this->parameters["$name.class"];
+        $this->setParameter($name, $name);
 
-        $obj = new $class($this->getComposer(), $this->options);
-
-        return self::$shared[$name] = $obj;
+        return $this->init($name, array_merge([$this->options], $args));
     }
 }

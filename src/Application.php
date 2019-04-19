@@ -7,10 +7,7 @@ class Application
 
     protected $options = [];
 
-    /**
-     * @param Container $container
-     */
-    public function __construct($container, array $options = [])
+    public function __construct(Container $container, array $options = [])
     {
         $this->options = $options += [
             'debug' => false,
@@ -25,7 +22,7 @@ class Application
         }
 
         if(!$this->options['disableRouter']) {
-            $router = $container->getRouter();
+            $router = $container->get('router');
             $router->dispatchRoute();
         }
     }
@@ -43,12 +40,12 @@ class Application
     public function logException($e): void
     {
         if ($this->options['debug'] == true) {
-            echo $this->container->getErrorController()->debug($e);
+            echo $this->container->get('errorController')->debug($e);
         }
         else {
             $errorCode = 500;
 
-            echo $this->container->getErrorController()->handleError($errorCode, '', $e);
+            echo $this->container->get('errorController')->handleError($errorCode, '', $e);
         }
 
         exit;

@@ -8,6 +8,7 @@ use org\bovigo\vfs\{vfsStream, vfsStreamDirectory};
 
 use Prim\Console\{Console, Input, Output};
 use Tests\Mocks\Command;
+use Tests\Mocks\Container;
 
 class ConsoleTest extends TestCase
 {
@@ -39,10 +40,14 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
+        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+
+        $container = new Container($conf, [], $serviceMock);
+
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($conf, $input, $output);
+        $console = new Console($container, $conf['root'], $input, $output);
 
         $this->assertIsObject($console);
 
@@ -72,10 +77,14 @@ class ConsoleTest extends TestCase
             'root' => __DIR__ . '/'
         ];
 
+        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+
+        $container = new Container($conf, [], $serviceMock);
+
         $input = new Input(['bin/prim', 'nope'], vfsStream::url('root/WrongCommandStdin'));
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($conf, $input, $output);
+        $console = new Console($container, $conf['root'], $input, $output);
 
         $this->assertIsObject($console);
 
@@ -92,10 +101,14 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
+        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+
+        $container = new Container($conf, [], $serviceMock);
+
         $input = new Input(['bin/prim']);
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($conf, $input, $output);
+        $console = new Console($container, $conf['root'], $input, $output);
 
         $console->addCommand(Command::class);
 

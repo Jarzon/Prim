@@ -12,10 +12,12 @@ class ControllerTest extends TestCase
 {
     public function testControllerConstruct()
     {
-        $container = new Container([], []);
+        $serviceMock = new \Tests\Mocks\Service(null, ['project_name' => 'test']);
+
+        $container = new Container([], [], $serviceMock);
         $view = new View($container, []);
 
-        $controller = new Controller($view, $container, []);
+        $controller = new Controller($view, []);
 
         $this->assertEquals('Prim', $controller->projectNamespace);
         $this->assertEquals('', $controller->packNamespace);
