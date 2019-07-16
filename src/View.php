@@ -17,10 +17,7 @@ class View implements ViewInterface
     protected $section = 'default';
     protected $sectionPush = false;
 
-    /**
-     * @param Container $container
-     */
-    public function __construct($container, array $options = [])
+    public function __construct(Container $container, array $options = [])
     {
         $this->container = $container;
 
@@ -34,38 +31,38 @@ class View implements ViewInterface
         });
     }
 
-    function setPack(string $pack): void
+    public function setPack(string $pack): void
     {
         $this->pack = $pack;
     }
 
-    function setTemplate(string $name, string $pack): void
+    public function setTemplate(string $name, string $pack): void
     {
         $this->templateName = $name;
         $this->templatePack = $pack;
     }
 
-    function design(string $view, string $packDirectory = '', array $vars = []): void
+    public function design(string $view, string $packDirectory = '', array $vars = []): void
     {
         $this->renderTemplate($view, $packDirectory, $vars, true, true);
     }
 
-    function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true): void
+    public function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true): void
     {
         $this->renderTemplate($view, $packDirectory, $vars, $template, false);
     }
 
-    function escape(?string $string): string
+    public function escape(?string $string): string
     {
         return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
-    function registerFunction(string $name, \Closure $closure)
+    public function registerFunction(string $name, \Closure $closure): void
     {
         if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
     }
 
-    function vars(array $vars = []): array
+    public function vars(array $vars = []): array
     {
         if(!empty($vars)) {
             $this->vars = $vars + $this->vars;
@@ -74,7 +71,7 @@ class View implements ViewInterface
         return $this->vars;
     }
 
-    function renderTemplate(string $view, string $packDirectory = '', array $vars = [], bool $template = true, bool $default = false): void
+    public function renderTemplate(string $view, string $packDirectory = '', array $vars = [], bool $template = true, bool $default = false): void
     {
         $this->vars($vars);
         unset($vars);
@@ -124,19 +121,19 @@ class View implements ViewInterface
         throw new \Exception("Can't find view $view in $pack");
     }
 
-    function push(string $section)
+    public function push(string $section)
     {
         $this->start($section);
         $this->sectionPush = true;
     }
 
-    function start(string $section)
+    public function start(string $section)
     {
         $this->section = $section;
         ob_start();
     }
 
-    function end()
+    public function end()
     {
         if($this->sectionPush) $this->sections[$this->section] .= ob_get_clean();
         else $this->sections[$this->section] = ob_get_clean();
@@ -145,7 +142,7 @@ class View implements ViewInterface
         $this->section = 'default';
     }
 
-    function section(string $section): string
+    public function section(string $section): string
     {
         return $this->sections[$section]?? '';
     }
@@ -164,19 +161,19 @@ class View implements ViewInterface
         $this->renderTemplate($name, $pack, $vars, false, false);
     }
 
-    function addVar(string $name, $var): void
+    public function addVar(string $name, $var): void
     {
         $this->vars[$name] = $var;
     }
 
-    function addVars(array $vars): void
+    public function addVars(array $vars): void
     {
         foreach($vars as $var) {
             $this->addVar($var[0], $var[1]);
         }
     }
 
-    function fileHash(string $name): string
+    public function fileHash(string $name): string
     {
         $path = $this->getFilePath($name, $algo = 'fnv1a32');
 
@@ -187,7 +184,7 @@ class View implements ViewInterface
         return $name;
     }
 
-    function fileCache(string $name): string
+    public function fileCache(string $name): string
     {
         $path = $this->getFilePath($name);
 
@@ -198,17 +195,17 @@ class View implements ViewInterface
         return $name;
     }
 
-    function getFilePath(string $name): string
+    public function getFilePath(string $name): string
     {
         return "{$this->options['root']}public/$name";
     }
 
-    function messageExist(): bool
+    public function messageExist(): bool
     {
         return isset($_SESSION['_flashMessage']);
     }
 
-    function getMessage(bool $canBeDeleted = true): array
+    public function getMessage(bool $canBeDeleted = true): array
     {
         $message = $_SESSION['_flashMessage']?? [];
 

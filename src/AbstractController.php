@@ -1,7 +1,7 @@
 <?php
 namespace Prim;
 
-abstract class AbstractController implements ViewInterface
+abstract class AbstractController
 {
     public $db;
     public $view;
@@ -27,7 +27,7 @@ abstract class AbstractController implements ViewInterface
         $this->view->setPack($this->packNamespace);
     }
 
-    function getClassName(string $classname): string
+    public function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
         return $pos;
@@ -56,37 +56,37 @@ abstract class AbstractController implements ViewInterface
     }
 
     // View Methods shortcut
-    function setTemplate(string $design, string $pack = ''): void
+    public function setTemplate(string $design, string $pack = ''): void
     {
         $this->view->setTemplate($design, $pack);
     }
 
-    function design(string $view, string $pack = '', array $vars = [])
+    public function design(string $view, string $pack = '', array $vars = [])
     {
         $this->view->design($view, $pack, $vars);
     }
 
-    function render(string $view, string $pack = '', array $vars = [], bool $template = true)
+    public function render(string $view, string $pack = '', array $vars = [], bool $template = true)
     {
         $this->view->render($view, $pack, $vars, $template);
     }
 
-    function addVar(string $name, $var)
+    public function addVar(string $name, $var)
     {
         $this->view->addVar($name, $var);
     }
 
-    function addVars(array $vars)
+    public function addVars(array $vars)
     {
         $this->view->addVars($vars);
     }
 
-    function message(string $type, $message)
+    public function message(string $type, $message)
     {
         $_SESSION['_flashMessage'] = [$type, $message];
     }
 
-    function redirect(string $uri)
+    public function redirect(string $uri)
     {
         header("location: $uri");
         exit;

@@ -17,7 +17,7 @@ class Model
         ];
     }
 
-    function getClassName(string $classname): string
+    public function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
         return $pos;

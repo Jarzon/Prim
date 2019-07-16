@@ -2,13 +2,14 @@
 
 namespace Prim;
 
-use FastRoute\Dispatcher;
+use FastRoute\{Dispatcher, RouteCollector};
+use \Exception;
 
 class Router
 {
-    /** @var \FastRoute\RouteCollector */
+    /** @var RouteCollector */
     public $router;
-    /** @var \FastRoute\Dispatcher */
+    /** @var Dispatcher */
     public $dispatcher;
     /** @var Container */
     protected $container;
@@ -30,7 +31,7 @@ class Router
 
         $this->loadRoutes();
 
-        $this->dispatcher = \FastRoute\CachedDispatcher(function(\FastRoute\RouteCollector $router) {
+        $this->dispatcher = \FastRoute\CachedDispatcher(function(RouteCollector $router) {
             $this->buildRoutes($router);
             $this->router = $router;
         }, [
@@ -86,7 +87,7 @@ class Router
         if(class_exists("{$this->options['project_name']}\\$controllerNamespace")) {
             $controllerNamespace = "{$this->options['project_name']}\\$controllerNamespace";
         } else if(!class_exists($controllerNamespace)) {
-            throw new \Exception("Can't find controller: $controllerNamespace");
+            throw new Exception("Can't find controller: $controllerNamespace");
         }
 
         return $this->fetchControllerFromContainer($controllerNamespace);
@@ -122,7 +123,7 @@ class Router
             include($localFile);
         }
 
-        if(!$included) throw new \Exception("Can't find routes file $routeFile in $pack");
+        if(!$included) throw new Exception("Can't find routes file $routeFile in $pack");
 
         return $this;
     }
