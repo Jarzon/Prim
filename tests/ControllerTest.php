@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Prim\Controller;
 use Tests\Mocks\Container;
+use Tests\Mocks\Controller;
 use Tests\Mocks\View;
 
 class ControllerTest extends TestCase
@@ -19,7 +19,7 @@ class ControllerTest extends TestCase
 
         $controller = new Controller($view, []);
 
-        $this->assertEquals('Prim', $controller->projectNamespace);
+        $this->assertEquals('Tests', $controller->projectNamespace);
         $this->assertEquals('', $controller->packNamespace);
 
         return $controller;

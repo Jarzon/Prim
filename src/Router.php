@@ -127,36 +127,46 @@ class Router
         return $this;
     }
 
-    function get(string $route, string $controller, string $method): void
+    function get(string $route, string $controller, string $method): Router
     {
         $this->addRoute(['GET'], $route, $controller, $method);
+
+        return $this;
     }
 
-    function post(string $route, string $controller, string $method): void
+    function post(string $route, string $controller, string $method): Router
     {
         $this->addRoute(['POST'], $route, $controller, $method);
+
+        return $this;
     }
 
-    function both(string $route, string $controller, string $method): void
+    function both(string $route, string $controller, string $method): Router
     {
         $this->addRoute(['GET', 'POST'], $route, $controller, $method);
+
+        return $this;
     }
 
-    function addRoute(array $type, string $route, string $controller, string $method): void
+    function addRoute(array $type, string $route, string $controller, string $method): Router
     {
         $route = $this->currentGroupPrefix . $route;
 
         foreach($type as $t) {
             $this->routes[$route][$t] = [$controller, $method];
         }
+
+        return $this;
     }
 
-    function addGroup(string $prefix, callable $callback): void
+    function addGroup(string $prefix, callable $callback): Router
     {
         $previousGroupPrefix = $this->currentGroupPrefix;
         $this->currentGroupPrefix = $previousGroupPrefix . $prefix;
         $callback($this);
         $this->currentGroupPrefix = $previousGroupPrefix;
+
+        return $this;
     }
 
     function removeRoute(string $route): void

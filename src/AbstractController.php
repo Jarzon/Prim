@@ -1,7 +1,7 @@
 <?php
 namespace Prim;
 
-class Controller implements ViewInterface
+abstract class AbstractController implements ViewInterface
 {
     public $db;
     public $view;

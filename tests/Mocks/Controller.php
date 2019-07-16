@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Mocks;
 
-class Controller extends \Prim\Controller
+class Controller extends \Prim\AbstractController
 {
     public function debug() {
 
