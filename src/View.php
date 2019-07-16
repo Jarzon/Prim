@@ -175,10 +175,10 @@ class View implements ViewInterface
 
     public function fileHash(string $name): string
     {
-        $path = $this->getFilePath($name, $algo = 'fnv1a32');
+        $path = $this->getFilePath($name);
 
         if(file_exists($path)) {
-            $name .= '?v=' . hash_file($algo, $path);
+            $name .= '?v=' . hash_file('fnv1a32', $path);
         }
 
         return $name;

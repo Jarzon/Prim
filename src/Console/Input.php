@@ -10,6 +10,8 @@ class Input
     protected $parameters = [];
     protected $arguments = [];
 
+    protected $stdin;
+
     public function __construct($argv, $stdin = null)
     {
         if($stdin === null) {
