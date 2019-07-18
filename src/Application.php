@@ -1,5 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim;
+
+use ErrorException;
 
 class Application
 {
@@ -67,7 +69,7 @@ class Application
      */
     public function logError(int $num, string $str, string $file, int $line, $context = null): void
     {
-        $this->logException(new \ErrorException( $str, 0, $num, $file, $line ));
+        $this->logException(new ErrorException( $str, 0, $num, $file, $line ));
     }
 
     public function getContainer()

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim;
 
 class View implements ViewInterface

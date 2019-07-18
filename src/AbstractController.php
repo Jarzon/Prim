@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim;
 
 abstract class AbstractController
@@ -30,7 +30,7 @@ abstract class AbstractController
     public function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
-        return $pos;
+        return '';
     }
 
     public function getNamespace(string $namespaces): void

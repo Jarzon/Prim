@@ -1,5 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim\Console;
+
+use Exception;
 
 class Command
 {
@@ -57,6 +59,6 @@ class Command
 
     public function exec()
     {
-        throw new \Exception("Unimplemented command exec method.");
+        throw new Exception("Unimplemented command exec method.");
     }
 }

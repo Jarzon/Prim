@@ -1,5 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim;
+
+use Exception;
 
 class Model
 {
@@ -20,7 +22,7 @@ class Model
     public function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
-        return $pos;
+        return '';
     }
 
     public function setOption($name, $value)
@@ -53,7 +55,7 @@ class Model
 
         $valuesString = var_export($values, true);
 
-        throw new \Exception("Model->update() on $table table failed.<br>
+        throw new Exception("Model->update() on $table table failed.<br>
         Query: $query<br>
         Params: $valuesString");
     }
@@ -74,7 +76,7 @@ class Model
 
         $valuesString = var_export($data, true);
 
-        throw new \Exception("Model->insert() on $table table failed.<br>
+        throw new Exception("Model->insert() on $table table failed.<br>
         Query: $query<br>
         Params: $valuesString");
     }

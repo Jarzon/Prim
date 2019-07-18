@@ -1,6 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim\Console;
 
+use Exception;
 use Prim\Container;
 
 class Console
@@ -59,7 +60,7 @@ class Console
         }
 
         if(!isset($this->commands[$name])) {
-            throw new \Exception("$name command doesn't exist");
+            throw new Exception("$name command doesn't exist");
         }
 
         return $this->commands[$name];

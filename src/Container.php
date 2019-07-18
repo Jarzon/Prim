@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim;
 
+use Exception;
+use PDO;
 use Prim\Console\Console;
 
 class Container
@@ -39,9 +41,9 @@ class Container
             ->register('console', Console::class, [$this, $options['root']])
             ->register('view', View::class, [$this, $options])
             ->register('router', Router::class, [$this, $options])
-            ->register('pdo', \PDO::class, function (Container $container) use($options) {
+            ->register('pdo', PDO::class, function (Container $container) use($options) {
                 if(!$this->options['db_enable']) {
-                    throw new \Exception('The database is disabled in the configuration file but a service try to access it!');
+                    throw new Exception('The database is disabled in the configuration file but a service try to access it!');
                 }
 
                 return $container->init('pdo', [
@@ -112,7 +114,7 @@ class Container
             return $this->init($name, $params);
         }
 
-        throw new \Exception("Can't find service $name");
+        throw new Exception("Can't find service $name");
     }
 
     public function register($name, string $location, $params = null)
@@ -172,7 +174,7 @@ class Container
         if(class_exists($localNamespace)) {
             $modelNamespace = $localNamespace;
         } else if(!class_exists($modelNamespace)) {
-            throw new \Exception("Can't find model: $modelNamespace");
+            throw new Exception("Can't find model: $modelNamespace");
         }
 
         return $this->getModel($modelNamespace);
@@ -189,7 +191,7 @@ class Container
         if(class_exists($localNamespace)) {
             $modelNamespace = $localNamespace;
         } else if(!class_exists($modelNamespace)) {
-            throw new \Exception("Can't find form: $modelNamespace");
+            throw new Exception("Can't find form: $modelNamespace");
         }
 
         return $this->getForm($modelNamespace);

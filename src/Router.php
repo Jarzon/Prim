@@ -1,7 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Prim;
 
+use function FastRoute\CachedDispatcher;
 use FastRoute\{Dispatcher, RouteCollector};
 use \Exception;
 
@@ -31,7 +32,7 @@ class Router
 
         $this->loadRoutes();
 
-        $this->dispatcher = \FastRoute\CachedDispatcher(function(RouteCollector $router) {
+        $this->dispatcher = CachedDispatcher(function(RouteCollector $router) {
             $this->buildRoutes($router);
             $this->router = $router;
         }, [
@@ -175,7 +176,7 @@ class Router
         if(isset($this->routes[$route])) unset($this->routes[$route]);
     }
 
-    function buildRoutes($router): void
+    function buildRoutes(RouteCollector $router): void
     {
         foreach($this->routes as $uri => $types) {
             foreach($types as $type => $params) {

@@ -11,4 +11,9 @@ class PDOStatement extends \PDOStatement
     public function execute($bound_input_params = NULL) {
         return true;
     }
+
+    public function rowCount()
+    {
+        return 1;
+    }
 }

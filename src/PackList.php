@@ -1,5 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 namespace Prim;
+
+use Composer\Autoload\ClassLoader;
+use Exception;
 
 class PackList
 {
@@ -7,13 +10,13 @@ class PackList
     protected $composer;
     protected $root = '/';
 
-    public function __construct(string $root, \Composer\Autoload\ClassLoader $composer = null)
+    public function __construct(string $root, ClassLoader $composer = null)
     {
         if($composer === null) {
             $composer = "{$root}vendor/autoload.php";
 
             if(!file_exists($composer)) {
-                throw new \Exception("Couldn't get composer");
+                throw new Exception("Couldn't get composer");
             }
 
             $composer = require $composer;
