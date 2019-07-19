@@ -36,10 +36,12 @@ class Container
 
         $this->service = $service ?: new Service($this, $this->options);
 
+        $packslist = $this->service->getPackList();
+
         $this
             ->register('application', Application::class, [$this, $options])
             ->register('console', Console::class, [$this, $options['root']])
-            ->register('view', View::class, [$this, $options])
+            ->register('view', View::class, [$packslist, $options])
             ->register('router', Router::class, [$this, $options])
             ->register('pdo', PDO::class, function (Container $container) use($options) {
                 if(!$this->options['db_enable']) {
@@ -53,8 +55,10 @@ class Container
                     $options['db_options']
                 ]);
             })
-            ->register('errorController', 'PrimPack\Controller\Error', [$this->get('view'), $options])
-            ->setObj('packlist', $this->service->getPackList());
+            ->register('errorController', 'PrimPack\Controller\Error', function(Container $dic) use($options) {
+                return [$dic->get('view'), $options];
+            })
+            ->setObj('packlist', $packslist);
 
         if($parameters !== null) {
             $this->parameters += $parameters;

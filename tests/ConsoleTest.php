@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\{vfsStream, vfsStreamDirectory};
 
 use Prim\Console\{Console, Input, Output};
+use Prim\Service;
 use Tests\Mocks\Command;
 use Tests\Mocks\Container;
 
@@ -39,9 +40,9 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
-        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+        $service = $this->createMock(Service::class);
 
-        $container = new Container($conf, [], $serviceMock);
+        $container = new Container($conf, [], $service);
 
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));
@@ -76,9 +77,9 @@ class ConsoleTest extends TestCase
             'root' => __DIR__ . '/'
         ];
 
-        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+        $service = $this->createMock(Service::class);
 
-        $container = new Container($conf, [], $serviceMock);
+        $container = new Container($conf, [], $service);
 
         $input = new Input(['bin/prim', 'nope'], vfsStream::url('root/WrongCommandStdin'));
         $output = new Output(vfsStream::url('root/stdout'));
@@ -100,9 +101,9 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
-        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+        $service = $this->createMock(Service::class);
 
-        $container = new Container($conf, [], $serviceMock);
+        $container = new Container($conf, [], $service);
 
         $input = new Input(['bin/prim']);
         $output = new Output(vfsStream::url('root/stdout'));

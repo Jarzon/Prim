@@ -3,6 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prim\Service;
 use Tests\Mocks\Container;
 
 class Test {
@@ -31,12 +32,12 @@ class ContainerTest extends TestCase
             'service.class' => '\Tests\Mocks\Service'
         ];
 
-        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+        $service = $this->createMock(Service::class);
 
-        $container = new Container([], [
+        $container = new Container($conf, [
             'pdo.class' => '\Tests\Mocks\PDO',
             'service.class' => '\Tests\Mocks\Service'
-        ], $serviceMock);
+        ], $service);
 
         $this->assertIsObject($container);
 

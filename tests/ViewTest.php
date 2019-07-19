@@ -5,8 +5,9 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use Prim\PackList;
 use Prim\View;
-use Tests\Mocks\Container;
+use Tests\Mocks\Composer;
 
 class ViewTest extends TestCase
 {
@@ -41,9 +42,9 @@ EOD;
             'root' => vfsStream::url('root').'/'
         ];
 
-        $serviceMock = new \Tests\Mocks\Service(null, $conf);
+        $packList = new PackList(vfsStream::url('root'), new Composer());
 
-        $view = new View(new Container([], [], $serviceMock), $conf);
+        $view = new View($packList, $conf);
 
         $this->assertEquals(1, $this->count($view->vars()));
 
@@ -53,7 +54,7 @@ EOD;
     /**
      * @depends testViewConstruct
      */
-    public function testBasicRender($view)
+    public function testBasicRender(View $view)
     {
         $view->start('default');
         $view->render('test', 'BasePack', [], false);
@@ -66,7 +67,7 @@ EOD;
      * @depends testViewConstruct
      * @expectedException \Exception
      */
-    public function testMissingView($view)
+    public function testMissingView(View $view)
     {
         $view->render('aViewThatDontExist', 'BasePack', [], false);
     }

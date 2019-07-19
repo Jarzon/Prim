@@ -1,9 +1,12 @@
 <?php declare(strict_types=1);
 namespace Prim;
 
+use Closure;
+use Exception;
+
 class View implements ViewInterface
 {
-    protected $container;
+    protected $packList;
 
     protected $options = [];
 
@@ -17,9 +20,9 @@ class View implements ViewInterface
     protected $section = 'default';
     protected $sectionPush = false;
 
-    public function __construct(Container $container, array $options = [])
+    public function __construct(PackList $packList, array $options = [])
     {
-        $this->container = $container;
+        $this->packList = $packList;
 
         $this->options = $options += [
             'root' => ''
@@ -57,7 +60,7 @@ class View implements ViewInterface
         return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE);
     }
 
-    public function registerFunction(string $name, \Closure $closure): void
+    public function registerFunction(string $name, Closure $closure): void
     {
         if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
     }
@@ -89,7 +92,7 @@ class View implements ViewInterface
             include($this->getViewFilePath($packDirectory, $view));
 
             if($default) $this->end();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             while (ob_get_level() > $level) {
                 ob_end_clean();
             }
@@ -110,7 +113,7 @@ class View implements ViewInterface
             return $localViewFile;
         }
 
-        if($vendorPath = $this->container->get('packlist')->getVendorPath($pack)) {
+        if($vendorPath = $this->packList->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorPath/view/$view.php";
 
             if(file_exists($vendorFile)) {
@@ -118,7 +121,7 @@ class View implements ViewInterface
             }
         }
 
-        throw new \Exception("Can't find view $view in $pack");
+        throw new Exception("Can't find view $view in $pack");
     }
 
     public function push(string $section)

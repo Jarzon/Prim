@@ -38,7 +38,7 @@ class ServiceTest extends TestCase
     /**
      * @depends testConstructor
      */
-    public function testGetServicesInjection($service)
+    public function testGetServicesInjection(Service $service)
     {
         $this->assertEquals(['globInjection', 'directInjection'], $service->getServicesInjection('\Project\aPack\Controller\ControllerClass'));
 
@@ -50,7 +50,7 @@ class ServiceTest extends TestCase
     /**
      * @depends testConstructor
      */
-    public function testGetServicesVendorPack($service)
+    public function testGetServicesVendorPack(Service $service)
     {
         $this->assertEquals([], $service->getServicesInjection('aPack\Controller\ControllerClass'));
 

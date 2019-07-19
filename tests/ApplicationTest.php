@@ -4,7 +4,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use Prim\Application;
-use Tests\Mocks\Container;
+use Prim\Container;
 
 class ApplicationTest extends TestCase
 {
@@ -18,9 +18,7 @@ class ApplicationTest extends TestCase
             'db_enable' => false
         ];
 
-        $serviceMock = new \Tests\Mocks\Service(null, $conf);
-
-        $container = new Container($conf, [], $serviceMock);
+        $container = $this->createMock(Container::class);
 
         $app = new Application($container, $conf);
 

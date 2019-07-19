@@ -3,18 +3,14 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Tests\Mocks\Container;
+use Prim\View;
 use Tests\Mocks\Controller;
-use Tests\Mocks\View;
 
 class ControllerTest extends TestCase
 {
     public function testControllerConstruct()
     {
-        $serviceMock = new \Tests\Mocks\Service(null, ['project_name' => 'test']);
-
-        $container = new Container([], [], $serviceMock);
-        $view = new View($container, []);
+        $view = $this->createMock(View::class);
 
         $controller = new Controller($view, []);
 
