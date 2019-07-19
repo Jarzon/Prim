@@ -3,6 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prim\PackList;
 use Prim\Service;
 use Tests\Mocks\Container;
 
@@ -26,17 +27,17 @@ class ContainerTest extends TestCase
 {
     public function testConstructor()
     {
-        $conf = [
-            'project_name' => 'Tests',
-            'pdo.class' => '\Tests\Mocks\PDO',
-            'service.class' => '\Tests\Mocks\Service'
-        ];
-
         $service = $this->createMock(Service::class);
+        $packlist = $this->createMock(PackList::class);
 
-        $container = new Container($conf, [
-            'pdo.class' => '\Tests\Mocks\PDO',
-            'service.class' => '\Tests\Mocks\Service'
+        $service
+            ->method('getPackList')
+            ->willReturn($packlist);
+
+        $container = new Container([
+            'project_name' => 'Tests'
+        ], [
+            'errorController' => \Tests\Mocks\Controller::class
         ], $service);
 
         $this->assertIsObject($container);
@@ -60,5 +61,15 @@ class ContainerTest extends TestCase
         $this->assertIsObject($container->get('test'));
         $this->assertTrue($container->get('test')->configured);
         $this->assertFalse($container->get('test')->nothing);
+    }
+
+    /**
+     * @depends testConstructor
+     */
+    public function testErrorController(Container $container)
+    {
+        $errorController = $container->get('errorController');
+
+        $this->assertIsObject($errorController);
     }
 }

@@ -61,7 +61,7 @@ class Container
             ->setObj('packlist', $packslist);
 
         if($parameters !== null) {
-            $this->parameters += $parameters;
+            $this->parameters = array_merge($this->parameters, $parameters);
         } else {
             $this->loadConfig();
         }
