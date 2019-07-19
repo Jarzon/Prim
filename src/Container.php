@@ -43,12 +43,12 @@ class Container
             ->register('console', Console::class, [$this, $options['root']])
             ->register('view', View::class, [$packslist, $options])
             ->register('router', Router::class, [$this, $options])
-            ->register('pdo', PDO::class, function (Container $container) use($options) {
+            ->register('pdo', PDO::class, function (Container $dic) use($options) {
                 if(!$this->options['db_enable']) {
                     throw new Exception('The database is disabled in the configuration file but a service try to access it!');
                 }
 
-                return $container->init('pdo', [
+                return $dic->init('pdo', [
                     "{$options['db_type']}:host={$options['db_host']};dbname={$options['db_name']}" . ($options['db_type'] !== 'pgsql'? ";charset={$options['db_charset']}": ''),
                     $options['db_user'],
                     $options['db_password'],
@@ -56,7 +56,7 @@ class Container
                 ]);
             })
             ->register('errorController', 'PrimPack\Controller\Error', function(Container $dic) use($options) {
-                return [$dic->get('view'), $options];
+                return $dic->init('errorController', [$dic->get('view'), $options]);
             })
             ->setObj('packlist', $packslist);
 
