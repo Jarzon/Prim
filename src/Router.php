@@ -70,7 +70,25 @@ class Router
                 $vars = array_values($routeInfo[2]);
                 $method = $handler[1];
 
-                $controller = $this->getController($handler[0]);
+                $controllerNamespace = $this->getControllerNamespace($handler[0]);
+
+                if(!empty($vars)) {
+                    $reflector = new \ReflectionClass($controllerNamespace);
+
+                    $parameters = $reflector->getMethod($method)->getParameters();
+
+                    //Loop through each parameter and get the type
+                    foreach($parameters as $key => $param)
+                    {
+                        if($type = $param->getType()) {
+                            if($type->getName() === 'int') {
+                                $vars[$key] = (int)$vars[($key)];
+                            }
+                        }
+                    }
+                }
+
+                $controller = $this->fetchControllerFromContainer($controllerNamespace);
 
                 $controller->$method(...$vars);
                 break;
@@ -79,7 +97,7 @@ class Router
         return $controller?? null;
     }
 
-    protected function getController(string $controller): object
+    protected function getControllerNamespace(string $controller): string
     {
         list($pack, $controller) = explode('\\', $controller);
 
@@ -91,7 +109,7 @@ class Router
             throw new Exception("Can't find controller: $controllerNamespace");
         }
 
-        return $this->fetchControllerFromContainer($controllerNamespace);
+        return $controllerNamespace;
     }
 
     protected function fetchControllerFromContainer(string $controller): object

@@ -19,7 +19,7 @@ class RouterTest extends TestCase
     public function setUp()
     {
         $routes = <<<'EOD'
-    <?php $this->both('/', 'Pack\Controller', 'aMethod');
+    <?php $this->both('/{id:\d+}', 'Pack\Controller', 'aMethod');
 EOD;
 
         $structure = [
@@ -42,7 +42,7 @@ EOD;
             'router_query_string' => false,
             'server' => [
                 'REQUEST_METHOD' => 'GET',
-                'REQUEST_URI' => '/'
+                'REQUEST_URI' => '/1'
             ]
         ];
 
