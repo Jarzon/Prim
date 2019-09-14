@@ -13,16 +13,6 @@ Using composer:
     composer create-project Jarzon/PrimBase ProjectName
 ```
 
-Install PHP dependencies using composer install.
-```bash
-    composer install
-```
-
-Install Gulp and Prim Gulp for the project Assets.
-```bash
-    npm update
-```
-
 ## Basic Configuration
 
 Edit app/config/config.php with your own preferences.
