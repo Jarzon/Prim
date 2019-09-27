@@ -81,12 +81,12 @@ abstract class AbstractController
         $this->view->addVars($vars);
     }
 
-    public function message(string $type, $message)
+    public function message(string $type, string $message, $args = []): void
     {
-        $_SESSION['_flashMessage'] = [$type, $message];
+        $_SESSION['_flashMessage'] = [$type, $message, $args];
     }
 
-    public function redirect(string $uri)
+    public function redirect(string $uri): void
     {
         header("location: $uri");
         exit;
