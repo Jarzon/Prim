@@ -67,8 +67,13 @@ class Container
         }
     }
 
-    function loadConfig() {
+    private function loadConfig() {
         include("{$this->options['root']}app/config/container.php");
+    }
+
+    protected function getService()
+    {
+
     }
 
     public function init(string $name, $args): object
