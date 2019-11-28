@@ -4,7 +4,7 @@ namespace Prim\Console;
 class Input
 {
     protected string $execSource = '';
-    protected string $command = '';
+    protected ?string $command = '';
 
     protected array $flags = [];
     protected array $parameters = [];
