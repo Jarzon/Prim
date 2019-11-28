@@ -71,9 +71,29 @@ class Container
         include("{$this->options['root']}app/config/container.php");
     }
 
-    protected function getService()
+    function registerConfig(string $pack, string $routeFile = 'container.php')
     {
+        $included = false;
 
+        if($vendorPath = $this->get('packlist')->getVendorPath($pack)) {
+            $vendorFile = "{$this->options['root']}$vendorPath/config/$routeFile";
+
+            if(file_exists($vendorFile)) {
+                $included = true;
+                include($vendorFile);
+            }
+        }
+
+        $localFile = "{$this->options['root']}src/$pack/config/$routeFile";
+
+        if(file_exists($localFile)) {
+            $included = true;
+            include($localFile);
+        }
+
+        if(!$included) throw new Exception("Can't find container config file $routeFile in $pack");
+
+        return $this;
     }
 
     public function init(string $name, $args): object
