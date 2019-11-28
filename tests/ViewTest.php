@@ -16,7 +16,7 @@ class ViewTest extends TestCase
      */
     private $root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $view = <<<'EOD'
 static page
@@ -65,10 +65,11 @@ EOD;
 
     /**
      * @depends testViewConstruct
-     * @expectedException \Exception
      */
     public function testMissingView(View $view)
     {
+        $this->expectException(\Exception::class);
+
         $view->render('aViewThatDontExist', 'BasePack', [], false);
     }
 }

@@ -17,7 +17,7 @@ class ConsoleTest extends TestCase
      */
     private $root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $structure = [
             'app' => [
@@ -66,11 +66,10 @@ class ConsoleTest extends TestCase
         $this->assertEquals("test - this is a test command", $console->getOutput()->getLastLine());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testRunNotExistingCommand()
     {
+        $this->expectException(\Exception::class);
+
         $conf = [
             'db_enable' => false,
             'project_name' => 'Tests',

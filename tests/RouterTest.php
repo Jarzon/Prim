@@ -16,7 +16,7 @@ class RouterTest extends TestCase
      */
     private $root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $routes = <<<'EOD'
     <?php $this->both('/{id:\d+}', 'Pack\Controller', 'aMethod');

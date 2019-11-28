@@ -15,7 +15,7 @@ class InputTest extends TestCase
      */
     private $root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $structure = [
             'stdin' => 'input',
