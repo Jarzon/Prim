@@ -25,7 +25,7 @@ class Model
         return '';
     }
 
-    public function setOption($name, $value)
+    public function setOption($name, $value): void
     {
         $this->options[$name] = $value;
     }
