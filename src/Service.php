@@ -70,7 +70,7 @@ class Service
         return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
     }
 
-    function getServices(string $pack, string $serviceFile = 'services.php')
+    function registerServices(string $pack, string $serviceFile = 'services.php')
     {
         if($vendorFile = $this->packList->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorFile/config/$serviceFile";
