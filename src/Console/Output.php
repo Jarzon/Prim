@@ -3,8 +3,8 @@ namespace Prim\Console;
 
 class Output
 {
-    protected $stdout;
-    protected $lastLine = '';
+    protected string $stdout;
+    protected string $lastLine = '';
 
     public function __construct($stdout = null)
     {

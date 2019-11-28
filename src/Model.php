@@ -6,7 +6,7 @@ use Exception;
 class Model
 {
     public $db;
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * @param \PDO $db

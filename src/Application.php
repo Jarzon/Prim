@@ -5,9 +5,8 @@ use ErrorException;
 
 class Application
 {
-    protected $container;
-
-    protected $options = [];
+    protected Container $container;
+    protected array $options = [];
 
     public function __construct(Container $container, array $options = [])
     {

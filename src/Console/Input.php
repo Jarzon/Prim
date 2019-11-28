@@ -3,14 +3,14 @@ namespace Prim\Console;
 
 class Input
 {
-    protected $execSource = '';
-    protected $command = '';
+    protected string $execSource = '';
+    protected string $command = '';
 
-    protected $flags = [];
-    protected $parameters = [];
-    protected $arguments = [];
+    protected array $flags = [];
+    protected array $parameters = [];
+    protected array $arguments = [];
 
-    protected $stdin;
+    protected string $stdin;
 
     public function __construct($argv, $stdin = null)
     {

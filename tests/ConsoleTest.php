@@ -3,12 +3,12 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prim\Container;
 use org\bovigo\vfs\{vfsStream, vfsStreamDirectory};
 
 use Prim\Console\{Console, Input, Output};
 use Prim\Service;
 use Tests\Mocks\Command;
-use Tests\Mocks\Container;
 
 class ConsoleTest extends TestCase
 {
@@ -40,9 +40,7 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
-        $service = $this->createMock(Service::class);
-
-        $container = new Container($conf, [], $service);
+        $container = $this->createMock(Container::class);
 
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));

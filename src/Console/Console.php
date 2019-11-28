@@ -6,14 +6,14 @@ use Prim\Container;
 
 class Console
 {
-    protected $root = '\\';
-    protected $commands = [];
+    protected string $root = '\\';
+    protected array $commands = [];
 
-    protected $container;
-    protected $input;
-    protected $output;
+    protected Container $container;
+    protected Input $input;
+    protected Output $output;
 
-    public function __construct(Container $container, string $root, $input = null, $output = null)
+    public function __construct(Container $container, string $root, Input $input = null, Output $output = null)
     {
         $this->root = $root;
 

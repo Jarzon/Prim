@@ -4,6 +4,8 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 
+use Prim\Container;
+use Prim\PackList;
 use Prim\Service;
 
 class ServiceTest extends TestCase
@@ -13,7 +15,10 @@ class ServiceTest extends TestCase
     {
         $conf = ['project_name' => 'Project'];
 
-        $service = new Service(null, $conf, null, []);
+        $container = $this->createMock(Container::class);
+        $packList = $this->createMock(PackList::class);
+
+        $service = new Service($container, $conf, $packList, []);
 
         $service->addServices([
             'aClass' => function() {

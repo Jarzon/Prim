@@ -3,18 +3,13 @@ namespace Prim;
 
 abstract class AbstractController
 {
-    public $db;
-    public $view;
-    public $container;
-    public $projectNamespace = '';
-    public $packNamespace = '';
+    public View $view;
+    public string $projectNamespace = '';
+    public string $packNamespace = '';
 
-    protected $options = [];
+    protected array $options = [];
 
-    /**
-     * @param View $view
-     */
-    function __construct($view, array $options = [])
+    function __construct(View $view, array $options = [])
     {
         $this->view = $view;
 

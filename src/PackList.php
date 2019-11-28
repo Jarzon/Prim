@@ -6,9 +6,9 @@ use Exception;
 
 class PackList
 {
-    protected $vendorPacksList;
-    protected $composer;
-    protected $root = '/';
+    protected array $vendorPacksList;
+    protected ClassLoader $composer;
+    protected string $root = '/';
 
     public function __construct(string $root, ClassLoader $composer = null)
     {

@@ -7,16 +7,16 @@ use Prim\Console\Console;
 
 class Container
 {
-    protected $serviceInjections = [];
+    protected array $serviceInjections = [];
 
-    protected $parameters = [];
-    protected $options = [];
+    protected array $parameters = [];
+    protected array $options = [];
 
-    protected $service;
+    protected Service $service;
 
-    static protected $shared = [];
+    static protected array $shared = [];
 
-    public function __construct(array $options = [], $parameters = null, $service = null)
+    public function __construct(array $options = [], $parameters = null, ?Service $service = null)
     {
         $this->options = $options += [
             'root' => '',
@@ -162,9 +162,6 @@ class Container
         return $this;
     }
 
-    /**
-     * @return Model
-     */
     public function getController(string $name): object
     {
         if (isset(self::$shared[$name]))

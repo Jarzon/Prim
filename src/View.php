@@ -6,19 +6,19 @@ use Exception;
 
 class View implements ViewInterface
 {
-    protected $packList;
+    protected PackList $packList;
 
-    protected $options = [];
+    protected array $options = [];
 
-    protected $templateName = 'design';
-    protected $templatePack = 'BasePack';
-    protected $pack = '';
+    protected string $templateName = 'design';
+    protected string $templatePack = 'BasePack';
+    protected string $pack = '';
 
-    protected $vars = [];
+    protected array $vars = [];
 
-    protected $sections = [];
-    protected $section = 'default';
-    protected $sectionPush = false;
+    protected array $sections = [];
+    protected string $section = 'default';
+    protected bool $sectionPush = false;
 
     public function __construct(PackList $packList, array $options = [])
     {

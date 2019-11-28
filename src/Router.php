@@ -8,18 +8,15 @@ use \Exception;
 
 class Router
 {
-    /** @var RouteCollector */
-    public $router;
-    /** @var Dispatcher */
-    public $dispatcher;
-    /** @var Container */
-    protected $container;
+    public RouteCollector $router;
+    public Dispatcher $dispatcher;
+    public Container $container;
 
-    protected $options = [];
-    protected $routes = [];
-    protected $currentGroupPrefix = '';
+    protected array $options = [];
+    protected array $routes = [];
+    protected string $currentGroupPrefix = '';
 
-    public function __construct($container, array $options = [])
+    public function __construct(Container $container, array $options = [])
     {
         $this->container = $container;
 

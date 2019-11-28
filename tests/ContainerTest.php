@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Prim\PackList;
 use Prim\Service;
 use Tests\Mocks\Container;
+use Tests\Pack\Controller\Controller;
 
 class Test {
     public $configured = false;
@@ -34,10 +35,12 @@ class ContainerTest extends TestCase
             ->method('getPackList')
             ->willReturn($packlist);
 
+        $controller = $this->createMock(Controller::class);
+
         $container = new Container([
             'project_name' => 'Tests'
         ], [
-            'errorController' => \Tests\Mocks\Controller::class
+            'errorController' => $controller
         ], $service);
 
         $this->assertIsObject($container);

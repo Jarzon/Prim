@@ -5,12 +5,12 @@ use Exception;
 
 class Command
 {
-    protected $name;
-    protected $desc;
+    protected string $name;
+    protected string $desc;
 
-    protected $options;
-    protected $input;
-    protected $output;
+    protected array $options = [];
+    protected Input $input;
+    protected Output $output;
 
     public function __construct($options, Input $input = null, Output $output = null)
     {

@@ -4,15 +4,13 @@ namespace Prim;
 
 class Service
 {
-    /** @var Container */
-    protected $container;
-    /** @var PackList */
-    protected $packList;
+    protected Container $container;
+    protected PackList $packList;
 
     protected $options = [];
     protected $services = [];
 
-    public function __construct($container, array $options = [], $packList = null, $services = null)
+    public function __construct(Container $container, array $options = [], $packList = null, $services = null)
     {
         $this->container = $container;
 
@@ -33,7 +31,7 @@ class Service
         include("{$this->options['root']}app/config/services.php");
     }
 
-    function getServicesInjection($obj)
+    function getServicesInjection(string $obj)
     {
         $injections = [];
 
