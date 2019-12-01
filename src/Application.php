@@ -58,7 +58,7 @@ class Application
     public function checkFatal(): void
     {
         $error = error_get_last();
-        if (!empty($error) && $error['type'] == E_ERROR) {
+        if (!empty($error)) {
             $this->logError($error['type'], $error['message'], $error['file'], $error['line']);
         }
     }

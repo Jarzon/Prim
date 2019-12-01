@@ -80,12 +80,4 @@ class Model
         Query: $query<br>
         Params: $valuesString");
     }
-
-    protected function convertDate(array &$data, $index, string $format = 'Y-m-d'): void
-    {
-        if(!empty($data[$index])) {
-            $data[$index] = str_replace('/', '-', $data[$index]);
-            $data[$index] = date($format, strtotime($data[$index]));
-        }
-    }
 }
