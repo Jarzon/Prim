@@ -10,7 +10,7 @@ class Container
     protected array $serviceInjections = [];
 
     protected array $parameters = [];
-    protected array $options = [];
+    public array $options = [];
 
     protected Service $service;
 
