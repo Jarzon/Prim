@@ -31,7 +31,8 @@ class Service
         include("{$this->options['root']}app/config/services.php");
     }
 
-    function getServicesInjection(string $obj)
+    /** @param string|object $obj */
+    function getServicesInjection($obj)
     {
         $injections = [];
 

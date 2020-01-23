@@ -3,9 +3,9 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prim\Container;
 use Prim\PackList;
 use Prim\Service;
-use Tests\Mocks\Container;
 use Tests\Pack\Controller\Controller;
 
 class Test {

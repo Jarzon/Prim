@@ -45,7 +45,7 @@ class ConsoleTest extends TestCase
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($container, $conf['root'], $input, $output);
+        $console = new Console($container, $conf['root'], $input, $output, []);
 
         $this->assertIsObject($console);
 

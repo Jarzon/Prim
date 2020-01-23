@@ -13,7 +13,7 @@ class Console
     protected Input $input;
     protected Output $output;
 
-    public function __construct(Container $container, string $root, Input $input = null, Output $output = null)
+    public function __construct(Container $container, string $root, Input $input = null, Output $output = null, array $commands = null)
     {
         $this->root = $root;
 
@@ -30,7 +30,7 @@ class Console
         $this->input = $input;
         $this->output = $output;
 
-        include("{$this->root}app/config/commands.php");
+        if($commands === null) include("{$this->root}app/config/commands.php");
     }
 
     function run()
@@ -45,13 +45,11 @@ class Console
         $this->getCommand()->exec();
     }
 
-    function addCommand(string $command)
+    function addCommand(string $commandName)
     {
-        $command = $this->container->getCommand($command, $this->input, $this->output);
+        $command = $this->container->getCommand($commandName, $this->input, $this->output);
 
-        $name = $command->getName();
-
-        $this->commands[$name] = $command;
+        $this->commands[$command->name] = $command;
     }
 
     function getCommand($name = null) {

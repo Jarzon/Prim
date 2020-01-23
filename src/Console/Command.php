@@ -5,8 +5,8 @@ use Exception;
 
 class Command
 {
-    protected string $name;
-    protected string $desc;
+    public string $name;
+    public string $description;
 
     protected array $options = [];
     protected Input $input;
@@ -35,26 +35,16 @@ class Command
         return $this;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
     protected function setDescription(string $desc)
     {
-        $this->desc = $desc;
+        $this->description = $desc;
 
         return $this;
     }
 
-    public function getDescription()
-    {
-        return $this->desc;
-    }
-
     public function getSignature()
     {
-        return $this->getName() . ' - ' . $this->getDescription();
+        return $this->name . ' - ' . $this->description;
     }
 
     public function exec()

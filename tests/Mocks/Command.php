@@ -3,7 +3,7 @@ namespace Tests\Mocks;
 
 class Command extends \Prim\Console\Command
 {
-    public $works = false;
+    public bool $works = false;
 
     public function __construct($console, $input = null, $output = null)
     {

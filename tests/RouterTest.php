@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 
-use Tests\Mocks\Container;
+use Prim\Container;
 use Tests\Mocks\Router;
 
 class RouterTest extends TestCase
