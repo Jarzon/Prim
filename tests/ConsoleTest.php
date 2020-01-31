@@ -40,7 +40,8 @@ class ConsoleTest extends TestCase
             'root' => vfsStream::url('root/')
         ];
 
-        $container = $this->createMock(Container::class);
+        $service = $this->createMock(Service::class);
+        $container = new Container($conf, [], $service);
 
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));
@@ -82,8 +83,6 @@ class ConsoleTest extends TestCase
         $output = new Output(vfsStream::url('root/stdout'));
 
         $console = new Console($container, $conf['root'], $input, $output);
-
-        $this->assertIsObject($console);
 
         $console->addCommand( Command::class);
 
