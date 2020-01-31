@@ -176,6 +176,11 @@ class View implements ViewInterface
         }
     }
 
+    public function getVars()
+    {
+        return $this->vars;
+    }
+
     public function fileHash(string $name): string
     {
         $path = $this->getFilePath($name);
