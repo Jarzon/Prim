@@ -21,7 +21,7 @@ class Command
         }
 
         if($output === null) {
-            $input = new Output();
+            $output = new Output();
         }
 
         $this->input = $input;
