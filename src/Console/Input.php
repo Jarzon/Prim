@@ -92,7 +92,13 @@ class Input
     {
         $stdin = fopen($this->stdin, 'r');
 
-        $input = trim(fgets($stdin));
+        $read = fgets($stdin);
+
+        if(!$read) {
+            throw new \Exception("Can't read stdin stream: {$this->stdin}");
+        }
+
+        $input = trim($read);
 
         fclose($stdin);
 
