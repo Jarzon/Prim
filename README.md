@@ -11,6 +11,7 @@ Base project skeleton: https://github.com/Jarzon/PrimBase
 Using composer:
 ```bash
     composer create-project Jarzon/PrimBase ProjectName
+    cd ProjectName && composer update
 ```
 
 ## Basic Configuration
@@ -22,6 +23,7 @@ To use database migration edit phinx.yml.
 ## Run the application
 
 ```bash
+bash /var/www/redak/gulp.sh
 cd public
 php -S localhost:8000
 ```
