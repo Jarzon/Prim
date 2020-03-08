@@ -65,6 +65,11 @@ class View implements ViewInterface
         if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
     }
 
+    public function registerGlobalVariable(string $name, $var): void
+    {
+        if(!isset($this->vars[$name])) $this->vars[$name] = $var;
+    }
+
     public function vars(array $vars = []): array
     {
         if(!empty($vars)) {
