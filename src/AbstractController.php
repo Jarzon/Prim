@@ -22,6 +22,20 @@ abstract class AbstractController
         $this->view->setPack($this->packNamespace);
     }
 
+    protected function cacheStaticPage(string $pageName, callable $pageCodeCallback)
+    {
+        $cachedFile = "{$this->options['root']}/public/$pageName";
+
+        if(file_exists($cachedFile)) {
+            echo file_get_contents($cachedFile);
+            exit;
+        }
+
+        $pageCodeCallback();
+
+        file_put_contents($cachedFile, preg_replace('~^([ \t\n]+)~m', '', ob_get_contents()));
+    }
+
     public function getClassName(string $classname): string
     {
         if ($pos = strrpos($classname, '\\')) return lcfirst(substr($classname, $pos + 1));
