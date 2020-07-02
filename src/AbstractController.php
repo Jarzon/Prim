@@ -33,7 +33,7 @@ abstract class AbstractController
 
         $pageCodeCallback();
 
-        file_put_contents($cachedFile, preg_replace('~^([ \t\n]+)~m', '', ob_get_contents()));
+        if($this->options['environment'] !== 'prod') file_put_contents($cachedFile, preg_replace('~^([ \t\n]+)~m', '', ob_get_contents()));
     }
 
     public function getClassName(string $classname): string
