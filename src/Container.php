@@ -206,6 +206,35 @@ class Container
         return $this->getModel($modelNamespace);
     }
 
+    public function getEntity(string $name): object
+    {
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $this->setParameter($name, $name);
+
+        return $this->init($name, []);
+    }
+
+    public function entity(string $entity): object
+    {
+        list($pack, $entity) = explode('\\', $entity);
+
+        $entityNamespace = "$pack\\Entity\\$entity";
+
+        $localNamespace = "{$this->options['project_name']}\\$entityNamespace";
+
+        if(class_exists($localNamespace)) {
+            $entityNamespace = $localNamespace;
+        } else if(!class_exists($entityNamespace)) {
+            throw new Exception("Can't find model: $entityNamespace");
+        }
+
+        return $this->getModel($entityNamespace);
+    }
+
     public function form(string $form): object
     {
         list($pack, $form) = explode('\\', $form);
