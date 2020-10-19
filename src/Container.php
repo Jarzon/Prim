@@ -232,7 +232,7 @@ class Container
             throw new Exception("Can't find model: $entityNamespace");
         }
 
-        return $this->getModel($entityNamespace);
+        return $this->getEntity($entityNamespace);
     }
 
     public function form(string $form): object
