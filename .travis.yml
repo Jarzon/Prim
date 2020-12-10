@@ -1,4 +1,5 @@
 language: php
+dist: xenial
 install: composer update
 php:
   - '8.0'
