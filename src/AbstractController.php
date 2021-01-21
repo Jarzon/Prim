@@ -22,7 +22,7 @@ abstract class AbstractController
         $this->view->setPack($this->packNamespace);
     }
 
-    protected function cacheStaticPage(string $pageName, callable $pageCodeCallback)
+    protected function cacheStaticPage(string $pageName, callable $pageCodeCallback): void
     {
         $cachedFile = "{$this->options['root']}/public/$pageName";
 
@@ -33,7 +33,9 @@ abstract class AbstractController
 
         $pageCodeCallback();
 
-        if($this->options['environment'] !== 'prod') file_put_contents($cachedFile, preg_replace('~^([ \t\n]+)~m', '', ob_get_contents()));
+        if($this->options['environment'] !== 'prod') {
+            file_put_contents($cachedFile, preg_replace('~^([ \t\n]+)~m', '', ob_get_contents()));
+        }
     }
 
     public function getClassName(string $classname): string
@@ -70,22 +72,22 @@ abstract class AbstractController
         $this->view->setTemplate($design, $pack);
     }
 
-    public function design(string $view, string $pack = '', array $vars = [])
+    public function design(string $view, string $pack = '', array $vars = []): void
     {
         $this->view->design($view, $pack, $vars);
     }
 
-    public function render(string $view, string $pack = '', array $vars = [], bool $template = true)
+    public function render(string $view, string $pack = '', array $vars = [], bool $template = true): void
     {
         $this->view->render($view, $pack, $vars, $template);
     }
 
-    public function addVar(string $name, $var)
+    public function addVar(string $name, $var): void
     {
         $this->view->addVar($name, $var);
     }
 
-    public function addVars(array $vars)
+    public function addVars(array $vars): void
     {
         $this->view->addVars($vars);
     }

@@ -31,7 +31,7 @@ class Application
     public function setErrorHandlers(): void
     {
         register_shutdown_function( [$this, 'checkFatal'] );
-        set_error_handler( [$this, 'logError'] );
+        set_error_handler( [$this, 'logError'] ); /** @phpstan-ignore-line */
         set_exception_handler( [$this, 'logException'] );
     }
 
