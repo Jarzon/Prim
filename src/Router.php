@@ -81,8 +81,9 @@ class Router
                     foreach($parameters as $key => $param)
                     {
                         if($type = $param->getType()) {
-                            if($type->getName() === 'int') {
-                                $vars[$key] = (int)$vars[($key)];
+                            $type = $type->getName();
+                            if(in_array($type, ['int', 'float', 'bool'])) {
+                                settype($vars[($key)], $type);
                             }
                         }
                     }
