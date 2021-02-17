@@ -80,8 +80,7 @@ class Router
                     //Loop through each parameter and get the type
                     foreach($parameters as $key => $param)
                     {
-                        if($type = $param->getType()) {
-                            $type = $type->getName();
+                        if($type = (string)$param->getType()) {
                             if(in_array($type, ['int', 'float', 'bool'])) {
                                 settype($vars[($key)], $type);
                             }
