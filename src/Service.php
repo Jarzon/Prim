@@ -7,10 +7,10 @@ class Service
     protected Container $container;
     protected PackList $packList;
 
-    protected $options = [];
-    protected $services = [];
+    protected array $options = [];
+    protected array $services = [];
 
-    public function __construct(Container $container, array $options = [], $packList = null, $services = null)
+    public function __construct(Container $container, array $options = [], PackList $packList = null, array $services = null)
     {
         $this->container = $container;
 
@@ -31,12 +31,11 @@ class Service
         include("{$this->options['root']}app/config/services.php");
     }
 
-    /** @param string|object $obj */
-    function getServicesInjection($obj)
+    function getServicesInjection(string|object $obj): array
     {
         $injections = [];
 
-        if(strpos($obj, '\\') !== false) {
+        if(str_contains($obj, '\\')) {
             $namespaces = explode('\\', $obj);
 
             foreach ($namespaces as &$namespace) {
@@ -65,46 +64,50 @@ class Service
         return $inject;
     }
 
-    protected function preg_grep_keys($pattern, $input, $flags = 0) {
+    protected function preg_grep_keys($pattern, $input, $flags = 0): array
+    {
         return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
     }
 
-    function registerServices(string $pack, string $serviceFile = 'services.php')
+    function registerServices(string $pack, string $serviceFile = 'services.php'): Service
     {
         if($vendorFile = $this->packList->getVendorPath($pack)) {
             $vendorFile = "{$this->options['root']}$vendorFile/config/$serviceFile";
         }
 
         $localFile = "{$this->options['root']}src/$pack/config/$serviceFile";
+        $services = [];
 
         foreach ([$vendorFile, $localFile] as $file) {
-            if($services = $this->fetchConfigFile($file)) {
-                continue;
+            if($newServices = $this->fetchConfigFile($file)) {
+                $services += $newServices;
             }
         }
 
-        if(!$services) throw new \Exception("Can't find services file $serviceFile in $pack");
+        if(!$services) {
+            throw new \Exception("Can't find services files $serviceFile for $pack");
+        }
 
         $this->addServices($services);
 
         return $this;
     }
 
-    function addServices(array $services)
+    function addServices(array $services): void
     {
         $this->services += $services;
     }
 
-    function fetchConfigFile(string $file): ?array
+    function fetchConfigFile(string $file): array|false
     {
         if(file_exists($file)) {
             return include($file);
         }
 
-        return null;
+        return false;
     }
 
-    function getPackList()
+    function getPackList(): PackList
     {
         return $this->packList;
     }

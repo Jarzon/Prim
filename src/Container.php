@@ -67,33 +67,40 @@ class Container
         }
     }
 
-    private function loadConfig() {
+    private function loadConfig(): void
+    {
         include("{$this->options['root']}app/config/container.php");
     }
 
-    function registerConfig(string $pack, string $routeFile = 'container.php')
+    function registerConfig(string $pack, string $configFile = 'container.php'): Container
     {
-        $included = false;
+        if($vendorFile = $this->get('packlist')->getVendorPath($pack)) {
+            $vendorFile = "{$this->options['root']}$vendorFile/config/$configFile";
+        }
 
-        if($vendorPath = $this->get('packlist')->getVendorPath($pack)) {
-            $vendorFile = "{$this->options['root']}$vendorPath/config/$routeFile";
+        $localFile = "{$this->options['root']}src/$pack/config/$configFile";
 
-            if(file_exists($vendorFile)) {
-                $included = true;
-                include($vendorFile);
+        $noContainer = true;
+        foreach ([$vendorFile, $localFile] as $file) {
+            if($this->fetchConfigFile($file)) {
+                $noContainer = false;
+                break;
             }
         }
 
-        $localFile = "{$this->options['root']}src/$pack/config/$routeFile";
-
-        if(file_exists($localFile)) {
-            $included = true;
-            include($localFile);
-        }
-
-        if(!$included) throw new Exception("Can't find container config file $routeFile in $pack");
+        if($noContainer) throw new \Exception("Can't find container config files $configFile for $pack");
 
         return $this;
+    }
+
+    protected function fetchConfigFile(string $file): bool
+    {
+        if(file_exists($file)) {
+            include($file);
+            return true;
+        }
+
+        return false;
     }
 
     public function init(string $name, $args): object
@@ -146,7 +153,7 @@ class Container
         throw new Exception("Can't find service $name");
     }
 
-    public function register($name, string $location, $params = null)
+    public function register($name, string $location, $params = null): Container
     {
         $this->setParameter($name, $location);
 
@@ -155,7 +162,7 @@ class Container
         return $this;
     }
 
-    public function setObj($name, $obj)
+    public function setObj($name, $obj): Container
     {
         self::$shared[$name] = $obj;
 
