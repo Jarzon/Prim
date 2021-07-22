@@ -38,7 +38,8 @@ class ContainerTest extends TestCase
         $controller = $this->createMock(Controller::class);
 
         $container = new Container([
-            'project_name' => 'Tests'
+            'project_name' => 'Tests',
+            'app' => __DIR__ . '/app/'
         ], [
             'errorController' => $controller
         ], $service);

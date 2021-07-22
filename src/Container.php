@@ -18,6 +18,15 @@ class Container
 
     public function __construct(array $options = [], $parameters = null, ?Service $service = null)
     {
+        $projectConfig = include("{$options['app']}config/config.php");
+
+        if($projectConfig === false) {
+            echo 'Missing project config file';
+            exit;
+        }
+
+        $options = $projectConfig + $options;
+
         $this->options = $options += [
             'root' => '',
             'project_name' => '',

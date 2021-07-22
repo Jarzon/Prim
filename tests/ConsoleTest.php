@@ -22,6 +22,7 @@ class ConsoleTest extends TestCase
         $structure = [
             'app' => [
               'config' => [
+                  'config.php' => '<?php return [];',
                   'commands.php' => ''
               ]
             ],
@@ -36,6 +37,7 @@ class ConsoleTest extends TestCase
     {
         $conf = [
             'db_enable' => false,
+            'app' => vfsStream::url('root/app/'),
             'project_name' => 'Tests',
             'root' => vfsStream::url('root/')
         ];
@@ -71,6 +73,7 @@ class ConsoleTest extends TestCase
 
         $conf = [
             'db_enable' => false,
+            'app' => vfsStream::url('root/app/'),
             'project_name' => 'Tests',
             'root' => __DIR__ . '/'
         ];
@@ -93,6 +96,7 @@ class ConsoleTest extends TestCase
     {
         $conf = [
             'db_enable' => false,
+            'app' => vfsStream::url('root/app/'),
             'project_name' => 'Tests',
             'root' => vfsStream::url('root/')
         ];
