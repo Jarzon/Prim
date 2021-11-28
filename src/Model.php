@@ -2,16 +2,15 @@
 namespace Prim;
 
 use Exception;
+use PrimPack\Service\PDO;
+use PrimPack\Service\PDOStatement;
 
 class Model
 {
-    public $db;
+    public PDO $db;
     protected array $options = [];
 
-    /**
-     * @param \PDO $db
-     */
-    function __construct($db, array $options = [])
+    function __construct(PDO $db, array $options = [])
     {
         $this->db = $db;
         $this->options = $options += [
@@ -30,8 +29,7 @@ class Model
         $this->options[$name] = $value;
     }
 
-    /** @return \PDOStatement */
-    public function prepare(string $statement, array $driver_options = []): object
+    public function prepare(string $statement, array $driver_options = []): PDOStatement
     {
         return $this->db->prepare($statement, $driver_options);
     }
