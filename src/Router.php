@@ -50,7 +50,7 @@ class Router
         $uri = $this->options['server']['REQUEST_URI'];
 
         if($this->options['router_query_string']) {
-            $uri = parse_url($uri, PHP_URL_PATH);
+            $uri = parse_url($uri, PHP_URL_PATH) ?: '';
         }
 
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
