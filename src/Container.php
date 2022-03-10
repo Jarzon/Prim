@@ -251,6 +251,35 @@ class Container
         return $this->getEntity($entityNamespace);
     }
 
+    public function service(string $model): object
+    {
+        list($pack, $model) = explode('\\', $model);
+
+        $modelNamespace = "$pack\\Service\\$model";
+
+        $localNamespace = "{$this->options['project_name']}\\$modelNamespace";
+
+        if(class_exists($localNamespace)) {
+            $modelNamespace = $localNamespace;
+        } else if(!class_exists($modelNamespace)) {
+            throw new Exception("Can't find service: $modelNamespace");
+        }
+
+        return $this->getService($modelNamespace);
+    }
+
+    public function getService(string $name): object
+    {
+        if (isset(self::$shared[$name]))
+        {
+            return self::$shared[$name];
+        }
+
+        $this->setParameter($name, $name);
+
+        return $this->init($name, []);
+    }
+
     public function form(string $form): object
     {
         list($pack, $form) = explode('\\', $form);
