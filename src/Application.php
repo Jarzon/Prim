@@ -49,7 +49,11 @@ class Application
             echo $this->container->get('errorController')->handleError($errorCode, '', $e);
         }
 
-        exit;
+        if(get_class($e) === 'ErrorException') {
+            throw $e;
+        } else {
+            exit;
+        }
     }
 
     /**

@@ -262,7 +262,7 @@ class Container
         if(class_exists($localNamespace)) {
             $modelNamespace = $localNamespace;
         } else if(!class_exists($modelNamespace)) {
-            throw new Exception("Can't find service: $modelNamespace");
+            throw new Exception("Can't find model: $modelNamespace");
         }
 
         return $this->getService($modelNamespace);
