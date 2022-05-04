@@ -53,6 +53,11 @@ class Router
             $uri = parse_url($uri, PHP_URL_PATH) ?: '';
         }
 
+        if($uri === null) {
+            echo $this->container->get('errorController')->handleError(400);
+            exit;
+        }
+
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
 
         $this->currentRoute = $routeInfo;
