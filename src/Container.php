@@ -57,8 +57,17 @@ class Container
                     throw new Exception('The database is disabled in the configuration file but a service try to access it!');
                 }
 
+                $path = "{$options['db_type']}:";
+
+                if($options['db_type'] !== 'sqlite') {
+                    $path .= "host={$options['db_host']};dbname={$options['db_name']}";
+                }
+                if($options['db_type'] !== 'pgsql') {
+                    $path .= ";charset={$options['db_charset']}";
+                }
+
                 return $dic->init('pdo', [
-                    "{$options['db_type']}:host={$options['db_host']};dbname={$options['db_name']}" . ($options['db_type'] !== 'pgsql'? ";charset={$options['db_charset']}": ''),
+                    $path,
                     $options['db_user'],
                     $options['db_password'],
                     $options['db_options']
