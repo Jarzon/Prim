@@ -61,6 +61,8 @@ class Container
 
                 if($options['db_type'] !== 'sqlite') {
                     $path .= "host={$options['db_host']};dbname={$options['db_name']}";
+                } else {
+                    $path .= "{$options['db_name']}";
                 }
                 if($options['db_type'] !== 'pgsql') {
                     $path .= ";charset={$options['db_charset']}";
