@@ -64,7 +64,7 @@ class Container
                 } else {
                     $path .= "{$options['db_name']}";
                 }
-                if($options['db_type'] !== 'pgsql') {
+                if($options['db_type'] === 'mysql') {
                     $path .= ";charset={$options['db_charset']}";
                 }
 
