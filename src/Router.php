@@ -85,8 +85,9 @@ class Router
                     //Loop through each parameter and get the type
                     foreach($parameters as $key => $param)
                     {
+                        if(!isset($vars[($key)])) continue;
                         // default value
-                        if($vars[($key)] === '') {
+                        if($vars[($key)] === '' && $param->isDefaultValueAvailable()) {
                             $vars[($key)] = $param->getDefaultValue();
                         }
                         else if($type = (string)$param->getType()) {
