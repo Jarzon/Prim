@@ -14,7 +14,7 @@ class Command extends \Prim\Console\Command
             ->setDescription('this is a test command');
     }
 
-    public function exec()
+    public function exec(): void
     {
         $this->works = true;
     }

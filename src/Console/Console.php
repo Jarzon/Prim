@@ -2,6 +2,7 @@
 namespace Prim\Console;
 
 use Exception;
+use Hoa\Stream\IStream\Out;
 use Prim\Container;
 
 class Console
@@ -33,7 +34,7 @@ class Console
         if($commands === null) include("{$this->root}app/config/commands.php");
     }
 
-    function run()
+    function run(): void
     {
         // Didnt supply any command then list help
         if($this->input->getCommand() == '') {
@@ -45,14 +46,15 @@ class Console
         $this->getCommand()->exec();
     }
 
-    function addCommand(string $commandName)
+    function addCommand(string $commandName): void
     {
         $command = $this->container->getCommand($commandName, $this->input, $this->output);
 
         $this->commands[$command->name] = $command;
     }
 
-    function getCommand($name = null) {
+    function getCommand(string $name = null): mixed
+    {
         if($name === null) {
             $name = $this->input->getCommand();
         }
@@ -64,19 +66,19 @@ class Console
         return $this->commands[$name];
     }
 
-    function listCommands()
+    function listCommands(): void
     {
         foreach ($this->commands as $command) {
             $this->output->writeLine($command->getSignature());
         }
     }
 
-    public  function getInput()
+    public  function getInput(): Input
     {
         return $this->input;
     }
 
-    public  function getOutput()
+    public  function getOutput(): Output
     {
         return $this->output;
     }

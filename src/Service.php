@@ -4,16 +4,13 @@ namespace Prim;
 
 class Service
 {
-    protected Container $container;
     protected PackList $packList;
 
     protected array $options = [];
     protected array $services = [];
 
-    public function __construct(Container $container, array $options = [], PackList $packList = null, array $services = null)
+    public function __construct(protected Container $container, array $options = [], PackList $packList = null, array $services = null)
     {
-        $this->container = $container;
-
         $this->options = $options += [
             'root' => ''
         ];
@@ -27,7 +24,8 @@ class Service
         }
     }
 
-    function loadServices() {
+    function loadServices(): void
+    {
         include("{$this->options['root']}app/config/services.php");
     }
 
@@ -64,7 +62,7 @@ class Service
         return $inject;
     }
 
-    protected function preg_grep_keys($pattern, $input, $flags = 0): array
+    protected function preg_grep_keys(string $pattern, array $input, int $flags = 0): array
     {
         return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
     }

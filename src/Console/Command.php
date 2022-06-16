@@ -12,7 +12,7 @@ class Command
     protected Input $input;
     protected Output $output;
 
-    public function __construct($options, Input $input = null, Output $output = null)
+    public function __construct(array $options, Input $input = null, Output $output = null)
     {
         $this->options = $options;
 
@@ -28,26 +28,26 @@ class Command
         $this->output = $output;
     }
 
-    protected function setName(string $name)
+    protected function setName(string $name): Command
     {
         $this->name = $name;
 
         return $this;
     }
 
-    protected function setDescription(string $desc)
+    protected function setDescription(string $desc): Command
     {
         $this->description = $desc;
 
         return $this;
     }
 
-    public function getSignature()
+    public function getSignature(): string
     {
         return $this->name . ' - ' . $this->description;
     }
 
-    public function exec()
+    public function exec(): void
     {
         throw new Exception("Unimplemented command exec method.");
     }

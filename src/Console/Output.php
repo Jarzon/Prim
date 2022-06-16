@@ -6,7 +6,7 @@ class Output
     protected string $stdout;
     protected string $lastLine = '';
 
-    public function __construct($stdout = null)
+    public function __construct(string|null $stdout = null)
     {
         if($stdout === null) {
             $stdout = 'php://stdout';
@@ -15,7 +15,7 @@ class Output
         $this->stdout = $stdout;
     }
 
-    public function writeLine(string $output)
+    public function writeLine(string $output): void
     {
         $stdout = fopen($this->stdout, 'w');
 
@@ -26,7 +26,7 @@ class Output
         fclose($stdout);
     }
 
-    public function getLastLine()
+    public function getLastLine(): string
     {
         return $this->lastLine;
     }

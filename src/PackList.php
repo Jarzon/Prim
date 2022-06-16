@@ -45,7 +45,7 @@ class PackList
         $packs = [];
 
         foreach ($prefixes as $key => $item) {
-            if(strpos($key, 'Pack') !== false) {
+            if(str_contains($key, 'Pack')) {
                 // Remove the root path and then composer relative path part
                 // (e.g. C:\apache\htdocs\project\vendor/composer/../ExpPack => vendor/composer/../ExpPack => vendor/ExpPack)
                 $pack = str_replace('composer/../', '', str_replace($this->root, '', $item[0]));

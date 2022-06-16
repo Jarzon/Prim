@@ -3,16 +3,13 @@ namespace Prim;
 
 abstract class AbstractController
 {
-    public View $view;
     public string $projectNamespace = '';
     public string $packNamespace = '';
 
     protected array $options = [];
 
-    function __construct(View $view, array $options = [])
+    function __construct(public View $view, array $options = [])
     {
-        $this->view = $view;
-
         $this->options = $options += [
             'root' => '/root/'
         ];
@@ -82,7 +79,7 @@ abstract class AbstractController
         $this->view->render($view, $pack, $vars, $template);
     }
 
-    public function addVar(string $name, $var): void
+    public function addVar(string $name, mixed $var): void
     {
         $this->view->addVar($name, $var);
     }
@@ -92,7 +89,7 @@ abstract class AbstractController
         $this->view->addVars($vars);
     }
 
-    public function message(string $type, string $message, ...$args): void
+    public function message(string $type, string $message, array ...$args): void
     {
         $_SESSION['_flashMessage'] = [$type, $message, $args];
     }

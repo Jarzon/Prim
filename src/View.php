@@ -6,8 +6,6 @@ use Exception;
 
 class View implements ViewInterface
 {
-    protected PackList $packList;
-
     protected array $options = [];
 
     protected string $templateName = 'design';
@@ -20,10 +18,8 @@ class View implements ViewInterface
     protected string $section = 'default';
     protected bool $sectionPush = false;
 
-    public function __construct(PackList $packList, array $options = [])
+    public function __construct(protected PackList $packList, array $options = [])
     {
-        $this->packList = $packList;
-
         $this->options = $options += [
             'root' => ''
         ];
@@ -39,20 +35,20 @@ class View implements ViewInterface
         $this->pack = $pack;
     }
 
-    public function setTemplate(string $name, string $pack): void
+    public function setTemplate(string $design, string $pack): void
     {
-        $this->templateName = $name;
+        $this->templateName = $design;
         $this->templatePack = $pack;
     }
 
-    public function design(string $view, string $packDirectory = '', array $vars = []): void
+    public function design(string $view, string $pack = '', array $vars = []): void
     {
-        $this->renderTemplate($view, $packDirectory, $vars, true, true);
+        $this->renderTemplate($view, $pack, $vars, true, true);
     }
 
-    public function render(string $view, string $packDirectory = '', array $vars = [], bool $template = true): void
+    public function render(string $view, string $pack = '', array $vars = [], bool $template = true): void
     {
-        $this->renderTemplate($view, $packDirectory, $vars, $template, false);
+        $this->renderTemplate($view, $pack, $vars, $template, false);
     }
 
     public function escape(?string $string): string
@@ -65,7 +61,7 @@ class View implements ViewInterface
         if(!isset($this->vars[$name])) $this->vars[$name] = $closure;
     }
 
-    public function registerGlobalVariable(string $name, $var): void
+    public function registerGlobalVariable(string $name, mixed $var): void
     {
         if(!isset($this->vars[$name])) $this->vars[$name] = $var;
     }
@@ -129,19 +125,19 @@ class View implements ViewInterface
         throw new Exception("Can't find view $view in $pack");
     }
 
-    public function push(string $section)
+    public function push(string $section): void
     {
         $this->start($section);
         $this->sectionPush = true;
     }
 
-    public function start(string $section)
+    public function start(string $section): void
     {
         $this->section = $section;
         ob_start();
     }
 
-    public function end()
+    public function end(): void
     {
         if($this->sectionPush) $this->sections[$this->section] .= ob_get_clean();
         else $this->sections[$this->section] = ob_get_clean();
@@ -169,7 +165,7 @@ class View implements ViewInterface
         $this->renderTemplate($name, $pack, $vars, false, false);
     }
 
-    public function addVar(string $name, $var): void
+    public function addVar(string $name, mixed $var): void
     {
         $this->vars[$name] = $var;
     }
@@ -181,7 +177,7 @@ class View implements ViewInterface
         }
     }
 
-    public function getVars()
+    public function getVars(): array
     {
         return $this->vars;
     }

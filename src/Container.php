@@ -4,6 +4,8 @@ namespace Prim;
 use Exception;
 use PDO;
 use Prim\Console\Console;
+use Prim\Console\Input;
+use Prim\Console\Output;
 
 class Container
 {
@@ -16,7 +18,7 @@ class Container
 
     static protected array $shared = [];
 
-    public function __construct(array $options = [], $parameters = null, ?Service $service = null)
+    public function __construct(array $options = [], array|null $parameters = null, Service|null $service = null)
     {
         $projectConfig = include("{$options['app']}config/config.php");
 
@@ -123,7 +125,7 @@ class Container
         return false;
     }
 
-    public function init(string $name, $args): object
+    public function init(string $name, mixed $args): object
     {
         if(!is_array($args)) {
             $args = (array)$args;
@@ -142,14 +144,14 @@ class Container
         return self::$shared[$name] = $obj;
     }
 
-    protected function setParameter(string $obj, string $class)
+    protected function setParameter(string $obj, string $class): Container
     {
         $this->parameters[$obj] = $class;
 
         return $this;
     }
 
-    public function get($name)
+    public function get(string $name): object
     {
         if (isset(self::$shared[$name]))
         {
@@ -173,7 +175,7 @@ class Container
         throw new Exception("Can't find service $name");
     }
 
-    public function register($name, string $location, $params = null): Container
+    public function register(string $name, string $location, array|callable|null $params = null): Container
     {
         $this->setParameter($name, $location);
 
@@ -182,7 +184,7 @@ class Container
         return $this;
     }
 
-    public function setObj($name, $obj): Container
+    public function setObj(string $name, object $obj): Container
     {
         self::$shared[$name] = $obj;
 
@@ -218,7 +220,7 @@ class Container
 
     public function model(string $model): object
     {
-        list($pack, $model) = explode('\\', $model);
+        [$pack, $model] = explode('\\', $model);
 
         $modelNamespace = "$pack\\Model\\$model";
 
@@ -247,7 +249,7 @@ class Container
 
     public function entity(string $entity): object
     {
-        list($pack, $entity) = explode('\\', $entity);
+        [$pack, $entity] = explode('\\', $entity);
 
         $entityNamespace = "$pack\\Entity\\$entity";
 
@@ -264,7 +266,7 @@ class Container
 
     public function service(string $model): object
     {
-        list($pack, $model) = explode('\\', $model);
+        [$pack, $model] = explode('\\', $model);
 
         $modelNamespace = "$pack\\Service\\$model";
 
@@ -293,7 +295,7 @@ class Container
 
     public function form(string $form): object
     {
-        list($pack, $form) = explode('\\', $form);
+        [$pack, $form] = explode('\\', $form);
 
         $modelNamespace = "$pack\\Form\\$form";
 
@@ -320,7 +322,7 @@ class Container
         return $this->init($name, []);
     }
 
-    public function getCommand(string $name, ...$args): object
+    public function getCommand(string $name, Input|Output ...$args): object
     {
         if (isset(self::$shared[$name]))
         {

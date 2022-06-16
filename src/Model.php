@@ -7,15 +7,15 @@ use PrimPack\Service\PDOStatement;
 
 class Model
 {
+    /* @phpstan-ignore-next-line */
     public PDO $db;
     protected array $options = [];
 
+    /* @phpstan-ignore-next-line */
     function __construct(PDO $db, array $options = [])
     {
         $this->db = $db;
-        $this->options = $options += [
-
-        ];
+        $this->options = $options += [];
     }
 
     public function getClassName(string $classname): string
@@ -24,13 +24,15 @@ class Model
         return '';
     }
 
-    public function setOption($name, $value): void
+    public function setOption(string $name, mixed $value): void
     {
         $this->options[$name] = $value;
     }
 
+    /* @phpstan-ignore-next-line */
     public function prepare(string $statement, array $driver_options = []): PDOStatement
     {
+        /* @phpstan-ignore-next-line */
         return $this->db->prepare($statement, $driver_options);
     }
 
@@ -47,7 +49,9 @@ class Model
 
         $statement = $this->prepare($query);
 
+        /* @phpstan-ignore-next-line */
         if($statement->execute($values)) {
+            /* @phpstan-ignore-next-line */
             return $statement->rowCount();
         }
 
@@ -68,7 +72,9 @@ class Model
 
         $statement = $this->prepare($query);
 
+        /* @phpstan-ignore-next-line */
         if($statement->execute($values)) {
+            /* @phpstan-ignore-next-line */
             return (int) $this->db->lastInsertId();
         }
 

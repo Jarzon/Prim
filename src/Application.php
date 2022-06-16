@@ -5,18 +5,15 @@ use ErrorException;
 
 class Application
 {
-    protected Container $container;
     protected array $options = [];
 
-    public function __construct(Container $container, array $options = [])
+    public function __construct(protected Container $container, array $options = [])
     {
         $this->options = $options += [
             'debug' => false,
             'disableRouter' => false,
             'disableCustomErrorHandler' => false
         ];
-
-        $this->container = $container;
 
         if(!$this->options['disableCustomErrorHandler']) {
             $this->setErrorHandlers();
@@ -32,15 +29,15 @@ class Application
     {
         register_shutdown_function( [$this, 'checkFatal'] );
         set_error_handler( [$this, 'logError'] ); /** @phpstan-ignore-line */
-        set_exception_handler( [$this, 'logException'] );
+        set_exception_handler( [$this, 'logException'] ); /** @phpstan-ignore-line */
     }
 
     /**
      * Uncaught exception handler.
      */
-    public function logException($e): void
+    public function logException(\Exception $e): void
     {
-        if ($this->options['debug'] == true) {
+        if ($this->options['debug'] === true) {
             echo $this->container->get('errorController')->debug($e);
         }
         else {
@@ -70,12 +67,12 @@ class Application
     /**
      * Error handler, passes flow over the exception logger with new ErrorException.
      */
-    public function logError(int $num, string $str, string $file, int $line, $context = null): void
+    public function logError(int $num, string $str, string $file, int $line): void
     {
         $this->logException(new ErrorException( $str, 0, $num, $file, $line ));
     }
 
-    public function getContainer()
+    public function getContainer(): Container
     {
         return $this->container;
     }

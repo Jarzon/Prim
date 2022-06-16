@@ -10,17 +10,14 @@ class Router
 {
     public RouteCollector $router;
     public Dispatcher $dispatcher;
-    public Container $container;
 
     protected array $options = [];
     protected array $routes = [];
     protected string $currentGroupPrefix = '';
     public array $currentRoute = [];
 
-    public function __construct(Container $container, array $options = [])
+    public function __construct(public Container $container, array $options = [])
     {
-        $this->container = $container;
-
         $this->options = $options += [
             'root' => '',
             'project_name' => '',
@@ -39,7 +36,7 @@ class Router
         ]);
     }
 
-    public function loadRoutes()
+    public function loadRoutes(): void
     {
         include("{$this->options['root']}app/config/routing.php");
     }
@@ -132,7 +129,7 @@ class Router
         return array_sum(array_map("count", $this->routes));
     }
 
-    function registerRoutes(string $pack, string $routeFile = 'routing.php')
+    function registerRoutes(string $pack, string $routeFile = 'routing.php'): Router
     {
         $included = false;
 

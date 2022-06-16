@@ -12,7 +12,7 @@ class Input
 
     protected string $stdin;
 
-    public function __construct($argv, $stdin = null)
+    public function __construct(array $argv, string|null $stdin = null)
     {
         if($stdin === null) {
             $stdin = 'php://stdin';
@@ -23,7 +23,7 @@ class Input
         $this->setCommandArguments($argv);
     }
 
-    public function setCommandArguments(array $args)
+    public function setCommandArguments(array $args): void
     {
 
         $this->execSource = array_shift($args);
@@ -31,7 +31,7 @@ class Input
 
         foreach ($args as $arg) {
 
-            if(strpos($arg, '--') === false) {
+            if(!str_contains($arg, '--')) {
                 $this->arguments[] = $arg;
 
                 continue;
@@ -39,7 +39,7 @@ class Input
 
             $arg = str_replace('--', '', $arg);
 
-            if(strpos($arg, '=') !== false) {
+            if(str_contains($arg, '=')) {
                 $e = explode('=', $arg);
 
                 $this->parameters[$e[0]] = $e[1];
@@ -56,12 +56,12 @@ class Input
         return $this->command;
     }
 
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
 
-    public function getArgument(int $number)
+    public function getArgument(int $number): mixed
     {
         if(!isset($this->arguments[$number])) {
             return null;
@@ -70,7 +70,7 @@ class Input
         return $this->arguments[$number];
     }
 
-    public function getFlag($name)
+    public function getFlag(string $name): bool
     {
         if(in_array($name, $this->flags)) {
             return true;
@@ -79,7 +79,7 @@ class Input
         return false;
     }
 
-    public function getParameter($name)
+    public function getParameter(string $name): mixed
     {
         if(!isset($this->parameters[$name])) {
             return null;
@@ -88,7 +88,7 @@ class Input
         return $this->parameters[$name];
     }
 
-    public function read()
+    public function read(): string
     {
         $stdin = fopen($this->stdin, 'r');
 
