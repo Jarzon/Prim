@@ -89,7 +89,7 @@ abstract class AbstractController
         $this->view->addVars($vars);
     }
 
-    public function message(string $type, string $message, array ...$args): void
+    public function message(string $type, string $message, string|int|float ...$args): void
     {
         $_SESSION['_flashMessage'] = [$type, $message, $args];
     }
