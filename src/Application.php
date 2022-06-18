@@ -29,13 +29,13 @@ class Application
     {
         register_shutdown_function( [$this, 'checkFatal'] );
         set_error_handler( [$this, 'logError'] ); /** @phpstan-ignore-line */
-        set_exception_handler( [$this, 'logException'] ); /** @phpstan-ignore-line */
+        set_exception_handler( [$this, 'logException'] );
     }
 
     /**
      * Uncaught exception handler.
      */
-    public function logException(\Exception $e): void
+    public function logException(\Throwable $e): void
     {
         if ($this->options['debug'] === true) {
             echo $this->container->get('errorController')->debug($e);
