@@ -38,7 +38,7 @@ class Router
 
     public function getCurrentController(): string|false
     {
-        return isset($this->currentRoute[1]) && $this->currentRoute[1][0];
+        return $this->currentRoute[1][0] ?? false;
     }
 
     public function loadRoutes(): void
