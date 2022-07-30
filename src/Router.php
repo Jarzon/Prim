@@ -36,6 +36,11 @@ class Router
         ]);
     }
 
+    public function getCurrentController(): string|false
+    {
+        return isset($this->currentRoute[1]) && $this->currentRoute[1][0];
+    }
+
     public function loadRoutes(): void
     {
         include("{$this->options['root']}app/config/routing.php");
