@@ -11,8 +11,6 @@ $config = [
     'app' => "{$root}app/"
 ];
 
-$config += (include("{$config['app']}config/config.php"));
-
 $commandConfigFile = "{$config['app']}config/config_command.php";
 
 if(file_exists($commandConfigFile)) {

@@ -27,7 +27,7 @@ class Container
             exit;
         }
 
-        $options = $projectConfig + $options;
+        $options += $projectConfig;
 
         $this->options = $options += [
             'root' => '',
