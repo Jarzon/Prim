@@ -11,13 +11,13 @@ $config = [
     'app' => "{$root}app/"
 ];
 
+$config += (include("{$config['app']}config/config.php"));
+
 $commandConfigFile = "{$config['app']}config/config_command.php";
 
 if(file_exists($commandConfigFile)) {
-    $config += include($commandConfigFile);
+    $config = array_merge($config, include($commandConfigFile));
 }
-
-$config += (include("{$config['app']}config/config.php"));
 
 $container = new Prim\Container($config);
 
