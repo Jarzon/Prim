@@ -6,6 +6,7 @@ use ErrorException;
 class Application
 {
     protected array $options = [];
+    protected bool $errorReported = false;
 
     public function __construct(protected Container $container, array $options = [])
     {
@@ -37,6 +38,9 @@ class Application
      */
     public function logException(\Throwable $e): void
     {
+        if($this->errorReported) return;
+        $this->errorReported = true;
+
         if ($this->options['debug'] === true) {
             echo $this->container->get('errorController')->debug($e);
         }
