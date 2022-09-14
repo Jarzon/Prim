@@ -15,6 +15,7 @@ class Router
     protected array $routes = [];
     protected string $currentGroupPrefix = '';
     public array $currentRoute = [];
+    public string $currentUri = '';
 
     public function __construct(public Container $container, array $options = [])
     {
@@ -63,6 +64,7 @@ class Router
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
 
         $this->currentRoute = $routeInfo;
+        $this->currentUri = $uri;
 
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
