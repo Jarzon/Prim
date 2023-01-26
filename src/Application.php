@@ -47,7 +47,7 @@ class Application
         else {
             $errorCode = 500;
 
-            echo $this->container->get('errorController')->handleError($errorCode, '', $e);
+            echo $this->container->get('errorController')->handleError($errorCode, [], $e);
         }
 
         if(get_class($e) === 'ErrorException') {
