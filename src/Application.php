@@ -41,6 +41,13 @@ class Application
         if($this->errorReported) return;
         $this->errorReported = true;
 
+        if(get_class($e) === 'PDOException' && ($e->getCode() === 1045 || $e->getCode() === 2002)) {
+            $this->container
+                ->get('view')
+                ->render('errors/503', 'PrimPack', $this->options['debug'] === true? ['error' => $e->getMessage()] : []);
+            exit;
+        }
+
         if ($this->options['debug'] === true) {
             echo $this->container->get('errorController')->debug($e);
         }
