@@ -76,11 +76,11 @@ class Application
     }
 
     /**
-     * Error handler, passes flow over the exception logger with new ErrorException.
+     * Used with set_error_handler to convert some errors to exceptions.
      */
     public function logError(int $num, string $str, string $file, int $line): void
     {
-        $this->logException(new ErrorException( $str, 0, $num, $file, $line ));
+        throw new ErrorException( $str, 0, $num, $file, $line );
     }
 
     public function getContainer(): Container
