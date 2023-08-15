@@ -94,9 +94,9 @@ abstract class AbstractController
         $_SESSION['_flashMessage'] = [$type, $message, $args];
     }
 
-    public function redirect(string $uri): never
+    public function redirect(string $uri, bool $isAnAction = false): never
     {
-        header("location: $uri");
+        header('Location: ' . $uri, true, $isAnAction? 301 : 302);
         exit;
     }
 }
