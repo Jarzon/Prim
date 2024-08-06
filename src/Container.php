@@ -158,7 +158,7 @@ class Container
             return self::$shared[$name];
         }
 
-        if(isset($this->parameters[$name])) {
+        if($this->exists($name)) {
             $params = [];
 
             if(isset($this->serviceInjections[$name])) {
@@ -332,5 +332,10 @@ class Container
         $this->setParameter($name, $name);
 
         return $this->init($name, array_merge([$this->options], $args));
+    }
+
+    public function exists(string $name): bool
+    {
+        return isset($this->parameters[$name]);
     }
 }
