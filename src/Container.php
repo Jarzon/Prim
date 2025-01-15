@@ -51,7 +51,7 @@ class Container
 
         $this
             ->register('application', Application::class, [$this, $options])
-            ->register('console', Console::class, [$this, $options['root']])
+            ->register('console', Console::class, [$this, $options])
             ->register('view', View::class, [$packslist, $options])
             ->register('router', Router::class, [$this, $options])
             ->register('pdo', PDO::class, function (Container $dic) use($options) {

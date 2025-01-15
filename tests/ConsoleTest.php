@@ -48,7 +48,7 @@ class ConsoleTest extends TestCase
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg']);
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($container, $conf['root'], $input, $output, []);
+        $console = new Console($container, $conf, $input, $output, []);
 
         $this->assertIsObject($console);
 
@@ -85,7 +85,7 @@ class ConsoleTest extends TestCase
         $input = new Input(['bin/prim', 'nope'], vfsStream::url('root/WrongCommandStdin'));
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($container, $conf['root'], $input, $output);
+        $console = new Console($container, $conf, $input, $output);
 
         $console->addCommand( Command::class);
 
@@ -108,7 +108,7 @@ class ConsoleTest extends TestCase
         $input = new Input(['bin/prim']);
         $output = new Output(vfsStream::url('root/stdout'));
 
-        $console = new Console($container, $conf['root'], $input, $output);
+        $console = new Console($container, $conf, $input, $output);
 
         $console->addCommand(Command::class);
 

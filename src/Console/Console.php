@@ -7,7 +7,7 @@ use Prim\Container;
 
 class Console
 {
-    protected string $root = '\\';
+    protected array $options = ['root' => '\\'];
     protected array $commands = [];
 
     protected Container $container;
@@ -16,9 +16,9 @@ class Console
 
     protected bool $errorReported = false;
 
-    public function __construct(Container $container, string $root, Input $input = null, Output $output = null, array $commands = null)
+    public function __construct(Container $container, array $options, Input $input = null, Output $output = null, array $commands = null)
     {
-        $this->root = $root;
+        $this->options = $options;
 
         if($input === null) {
             global $argv;
@@ -35,7 +35,7 @@ class Console
 
         $this->setErrorHandlers();
 
-        if($commands === null) include("{$this->root}app/config/commands.php");
+        if($commands === null) include("{$this->options['root']}app/config/commands.php");
     }
 
     public function setErrorHandlers(): void
@@ -52,7 +52,9 @@ class Console
         if($this->errorReported) return;
         $this->errorReported = true;
 
-        echo $this->container->get('errorController')->logError($e);
+        if ($this->options['debug'] === false) {
+            $this->container->get('errorController')->logError($e);
+        }
 
         if(get_class($e) === 'ErrorException') {
             throw $e;
