@@ -40,9 +40,11 @@ class Console
 
     public function setErrorHandlers(): void
     {
-        register_shutdown_function( [$this, 'checkFatal'] );
-        set_error_handler( [$this, 'logError'] ); /** @phpstan-ignore-line */
-        set_exception_handler( [$this, 'logException'] );
+        if ($this->options['debug'] === false) {
+            register_shutdown_function([$this, 'checkFatal']);
+            set_error_handler([$this, 'logError']);
+            set_exception_handler([$this, 'logException']);
+        }
     }
     /**
      * Uncaught exception handler.
@@ -52,9 +54,7 @@ class Console
         if($this->errorReported) return;
         $this->errorReported = true;
 
-        if ($this->options['debug'] === false) {
-            $this->container->get('errorController')->logError($e);
-        }
+        $this->container->get('errorController')->logError($e);
 
         if(get_class($e) === 'ErrorException') {
             throw $e;
@@ -77,7 +77,7 @@ class Console
     /**
      * Used with set_error_handler to convert some errors to exceptions.
      */
-    public function logError(int $num, string $str, string $file, int $line): void
+    public function logError(int $num, string $str, string $file, int $line): bool
     {
         throw new \ErrorException( $str, 0, $num, $file, $line );
     }
