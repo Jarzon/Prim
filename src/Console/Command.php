@@ -12,7 +12,7 @@ class Command
     protected Input $input;
     protected Output $output;
 
-    public function __construct(array $options, Input $input = null, Output $output = null)
+    public function __construct(array $options, Input|null $input = null, Output|null $output = null)
     {
         $this->options = $options;
 

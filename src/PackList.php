@@ -10,7 +10,7 @@ class PackList
     protected ClassLoader $composer;
     protected string $root = '/';
 
-    public function __construct(string $root, ClassLoader $composer = null)
+    public function __construct(string $root, ClassLoader|null $composer = null)
     {
         if($composer === null) {
             $composer = "{$root}vendor/autoload.php";

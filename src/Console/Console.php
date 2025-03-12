@@ -16,7 +16,7 @@ class Console
 
     protected bool $errorReported = false;
 
-    public function __construct(Container $container, array $options, Input $input = null, Output $output = null, array $commands = null)
+    public function __construct(Container $container, array $options, Input|null $input = null, Output|null $output = null, array|null $commands = null)
     {
         $this->options = $options;
 
@@ -101,7 +101,7 @@ class Console
         $this->commands[$command->name] = $command;
     }
 
-    function getCommand(string $name = null): mixed
+    function getCommand(string|null $name = null): mixed
     {
         if($name === null) {
             $name = $this->input->getCommand();

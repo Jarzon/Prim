@@ -9,7 +9,7 @@ class Service
     protected array $options = [];
     protected array $services = [];
 
-    public function __construct(protected Container $container, array $options = [], PackList $packList = null, array $services = null)
+    public function __construct(protected Container $container, array $options = [], PackList|null $packList = null, array|null $services = null)
     {
         $this->options = $options += [
             'root' => ''
