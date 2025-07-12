@@ -105,4 +105,9 @@ abstract class AbstractController
         header('Location: ' . $uri, true, 302);
         exit;
     }
+
+    public function httpCode(int $code): void
+    {
+        http_response_code($code);
+    }
 }
