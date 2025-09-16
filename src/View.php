@@ -6,18 +6,21 @@ use Exception;
 
 class View implements ViewInterface
 {
+    /** @var Array<mixed> $options */
     protected array $options = [];
 
     protected string $templateName = 'design';
     protected string $templatePack = 'BasePack';
     protected string $pack = '';
 
+    /** @var Array<mixed> $vars */
     protected array $vars = [];
-
+    /** @var Array<string> $sections */
     protected array $sections = [];
     protected string $section = 'default';
     protected bool $sectionPush = false;
 
+    /** @param Array<mixed> $options */
     public function __construct(protected PackList $packList, array $options = [])
     {
         $this->options = $options += [
@@ -46,6 +49,7 @@ class View implements ViewInterface
         $this->renderTemplate($view, $pack, $vars, true, true);
     }
 
+    /** @param Array<mixed> $vars */
     public function render(string $view, string $pack = '', array $vars = [], bool $template = true): void
     {
         $this->renderTemplate($view, $pack, $vars, $template, false);
@@ -66,6 +70,10 @@ class View implements ViewInterface
         if(!isset($this->vars[$name])) $this->vars[$name] = $var;
     }
 
+    /**
+     * @param Array<mixed> $vars
+     * @return Array<mixed>
+     */
     public function vars(array $vars = []): array
     {
         if(!empty($vars)) {
@@ -75,6 +83,7 @@ class View implements ViewInterface
         return $this->vars;
     }
 
+    /** @param Array<mixed> $vars */
     public function renderTemplate(string $view, string $packDirectory = '', array $vars = [], bool $template = true, bool $default = false): void
     {
         $this->vars($vars);
@@ -151,6 +160,7 @@ class View implements ViewInterface
         return $this->sections[$section]?? '';
     }
 
+    /** @param Array<mixed> $vars */
     public function fetch(string $name, string $pack = '', array $vars = []): string
     {
         $this->start('fetch');
@@ -160,6 +170,7 @@ class View implements ViewInterface
         return $this->section('fetch');
     }
 
+    /** @param Array<mixed> $vars */
     public function insert(string $name, string $pack = '', array $vars = []): void
     {
         $this->renderTemplate($name, $pack, $vars, false, false);
@@ -177,6 +188,7 @@ class View implements ViewInterface
         }
     }
 
+    /** @return Array<mixed> */
     public function getVars(): array
     {
         return $this->vars;
@@ -214,6 +226,7 @@ class View implements ViewInterface
         return isset($_SESSION['_flashMessage']);
     }
 
+    /** @return Array<mixed> */
     public function getMessage(bool $canBeDeleted = true): array
     {
         $message = $_SESSION['_flashMessage']?? [];

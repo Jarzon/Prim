@@ -9,15 +9,23 @@ use Prim\Console\Output;
 
 class Container
 {
+    /** @var array<mixed> */
     protected array $serviceInjections = [];
+    /** @var array<mixed> */
 
     protected array $parameters = [];
+    /** @var array<mixed> */
     public array $options = [];
 
     protected Service $service;
 
+    /** @var array<mixed> */
     static protected array $shared = [];
 
+    /**
+     * @param array<mixed> $options
+     * @param array<mixed>|null $parameters
+     */
     public function __construct(array $options = [], array|null $parameters = null, Service|null $service = null)
     {
         $projectConfig = include("{$options['app']}config/config.php");
@@ -175,6 +183,7 @@ class Container
         throw new Exception("Can't find service $name");
     }
 
+    /** @param array<mixed>|callable|null $params */
     public function register(string $name, string $location, array|callable|null $params = null): Container
     {
         $this->setParameter($name, $location);

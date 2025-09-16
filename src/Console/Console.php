@@ -2,12 +2,13 @@
 namespace Prim\Console;
 
 use Exception;
-use Hoa\Stream\IStream\Out;
 use Prim\Container;
 
 class Console
 {
+    /** @var array<mixed> */
     protected array $options = ['root' => '\\'];
+    /** @var array<mixed> */
     protected array $commands = [];
 
     protected Container $container;
@@ -16,6 +17,10 @@ class Console
 
     protected bool $errorReported = false;
 
+    /**
+     * @param array<mixed> $options
+     * @param array<mixed>|null $commands
+     */
     public function __construct(Container $container, array $options, Input|null $input = null, Output|null $output = null, array|null $commands = null)
     {
         $this->options = $options;

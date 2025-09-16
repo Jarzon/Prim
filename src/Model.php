@@ -9,11 +9,15 @@ class Model
 {
     /* @phpstan-ignore-next-line */
     public PDO $db;
+    /** @var array<mixed> $options */
     protected array $options = [];
 
-    /* @phpstan-ignore-next-line */
-    function __construct(PDO $db, array $options = [])
-    {
+    /** @param array<mixed> $options */
+    function __construct(
+        /* @phpstan-ignore-next-line */
+        PDO $db,
+        array $options = []
+    ) {
         $this->db = $db;
         $this->options = $options += [];
     }
@@ -36,6 +40,10 @@ class Model
         return $this->db->prepare($statement, $driver_options);
     }
 
+    /**
+     * @param array<mixed> $data
+     * @param array<mixed> $whereValues
+     */
     public function update(string $table, array $data, string $where = '', array $whereValues = []): int
     {
         $values = array_values($data);
@@ -62,6 +70,7 @@ class Model
         Params: $valuesString");
     }
 
+    /** @param array<mixed> $data */
     public function insert(string $table, array $data): int
     {
         $columns = implode(',', array_keys($data));

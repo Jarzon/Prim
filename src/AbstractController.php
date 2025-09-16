@@ -5,9 +5,10 @@ abstract class AbstractController
 {
     public string $projectNamespace = '';
     public string $packNamespace = '';
-
+    /** @var array<mixed> */
     protected array $options = [];
 
+    /** @param array<mixed> $options */
     function __construct(public View $view, array $options = [])
     {
         $this->options = $options += [
@@ -69,11 +70,13 @@ abstract class AbstractController
         $this->view->setTemplate($design, $pack);
     }
 
+    /** @param array<mixed> $vars */
     public function design(string $view, string $pack = '', array $vars = []): void
     {
         $this->view->design($view, $pack, $vars);
     }
 
+    /** @param array<mixed> $vars */
     public function render(string $view, string $pack = '', array $vars = [], bool $template = true): void
     {
         $this->view->render($view, $pack, $vars, $template);
@@ -84,6 +87,7 @@ abstract class AbstractController
         $this->view->addVar($name, $var);
     }
 
+    /** @param array<mixed> $vars */
     public function addVars(array $vars): void
     {
         $this->view->addVars($vars);

@@ -11,12 +11,16 @@ class Router
     public RouteCollector $router;
     public Dispatcher $dispatcher;
 
+    /** @var array<mixed> $options */
     protected array $options = [];
+    /** @var array<mixed> $routes */
     protected array $routes = [];
     protected string $currentGroupPrefix = '';
+    /** @var array<mixed> $currentRoute */
     public array $currentRoute = [];
     public string $currentUri = '';
 
+    /** @param array<mixed> $options */
     public function __construct(public Container $container, array $options = [])
     {
         $this->options = $options += [
@@ -182,6 +186,7 @@ class Router
         return $this;
     }
 
+    /** @param Array<string> $type */
     function addRoute(array $type, string $route, string $controller, string $method): Router
     {
         $route = $this->currentGroupPrefix . $route;

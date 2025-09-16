@@ -5,13 +5,16 @@ class Input
 {
     protected string $execSource = '';
     protected ?string $command = '';
-
+    /** @var array<mixed> */
     protected array $flags = [];
+    /** @var array<mixed> */
     protected array $parameters = [];
+    /** @var array<mixed> */
     protected array $arguments = [];
 
     protected string $stdin;
 
+    /** @param array<mixed> $argv */
     public function __construct(array $argv, string|null $stdin = null)
     {
         if($stdin === null) {
@@ -23,6 +26,7 @@ class Input
         $this->setCommandArguments($argv);
     }
 
+    /** @param array<mixed> $args */
     public function setCommandArguments(array $args): void
     {
 
@@ -56,6 +60,7 @@ class Input
         return $this->command;
     }
 
+    /** @return array<mixed> */
     public function getArguments(): array
     {
         return $this->arguments;

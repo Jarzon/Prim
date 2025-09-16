@@ -5,10 +5,15 @@ namespace Prim;
 class Service
 {
     protected PackList $packList;
-
+    /** @var Array<mixed> $options */
     protected array $options = [];
+    /** @var Array<callable> $services */
     protected array $services = [];
 
+    /**
+     * @param Array<mixed> $options
+     * @param Array<callable>|null $services
+     */
     public function __construct(protected Container $container, array $options = [], PackList|null $packList = null, array|null $services = null)
     {
         $this->options = $options += [
@@ -29,6 +34,7 @@ class Service
         include("{$this->options['root']}app/config/services.php");
     }
 
+    /** @return Array<mixed> */
     function getServicesInjection(string|object $obj): array
     {
         $injections = [];
@@ -62,6 +68,10 @@ class Service
         return $inject;
     }
 
+    /**
+     * @param Array<callable> $input
+     * @return Array<callable>
+     */
     protected function preg_grep_keys(string $pattern, array $input, int $flags = 0): array
     {
         return array_intersect_key($input, array_flip(preg_grep($pattern, array_keys($input), $flags)));
@@ -91,11 +101,13 @@ class Service
         return $this;
     }
 
+    /** @param Array<callable> $services */
     function addServices(array $services): void
     {
         $this->services += $services;
     }
 
+    /** @return Array<mixed>|false */
     function fetchConfigFile(string $file): array|false
     {
         if(file_exists($file)) {

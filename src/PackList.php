@@ -6,6 +6,7 @@ use Exception;
 
 class PackList
 {
+    /** @var array<mixed> $vendorPacksList */
     protected array $vendorPacksList;
     protected ClassLoader $composer;
     protected string $root = '/';
@@ -38,6 +39,7 @@ class PackList
         return '';
     }
 
+    /** @return array<mixed> */
     protected function getComposerPacks(): array
     {
         $prefixes = array_merge($this->composer->getPrefixesPsr4(), $this->composer->getPrefixes());

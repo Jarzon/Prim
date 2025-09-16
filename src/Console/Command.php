@@ -7,11 +7,13 @@ class Command
 {
     public string $name;
     public string $description;
+    /** @var array<mixed> */
 
     protected array $options = [];
     protected Input $input;
     protected Output $output;
 
+    /** @param array<mixed> $options */
     public function __construct(array $options, Input|null $input = null, Output|null $output = null)
     {
         $this->options = $options;

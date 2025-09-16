@@ -5,9 +5,11 @@ use ErrorException;
 
 class Application
 {
+    /** @var array<mixed> */
     protected array $options = [];
     protected bool $errorReported = false;
 
+    /** @param array<mixed> $options */
     public function __construct(protected Container $container, array $options = [])
     {
         $this->options = $options += [
@@ -41,7 +43,7 @@ class Application
         if($this->errorReported) return;
         $this->errorReported = true;
 
-        if(get_class($e) === 'PDOException' && in_array($e->getCode(), [1045, 2002, 2003, 2006, 2008, 2013, 2014, 2055])) {
+        if(get_class($e) === 'PDOException' && in_array($e->getCode(), [1045, 1130, 2002, 2003, 2006, 2008, 2013, 2014, 2055])) {
             $this->container
                 ->get('view')
                 ->render('errors/503', 'PrimPack', $this->options['debug'] === true? ['error' => $e->getMessage()] : []);
