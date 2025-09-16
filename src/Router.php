@@ -99,6 +99,7 @@ class Router
                             $vars[($key)] = $param->getDefaultValue();
                         }
                         else if($type = (string)$param->getType()) {
+                            $type = str_replace('?', '', $type);
                             if(in_array($type, ['int', 'float', 'bool'])) {
                                 settype($vars[($key)], $type);
                             }
