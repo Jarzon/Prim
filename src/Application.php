@@ -26,6 +26,22 @@ class Application
             $router = $container->get('router');
             $router->dispatchRoute();
         }
+
+        if($options['environment'] === 'dev') {
+            $included = get_included_files();
+            $latest = 0;
+
+            foreach ($included as $file) {
+                $mtime = @filemtime($file);
+                if ($mtime > $latest) {
+                    $latest = $mtime;
+                }
+            }
+
+            if ($latest) {
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $latest) . ' GMT');
+            }
+        }
     }
 
     public function setErrorHandlers(): void
