@@ -51,7 +51,12 @@ class Application
         }
 
         if ($this->options['debug'] === true) {
-            echo $this->container->get('errorController')->debug($e);
+            try {
+                echo $this->container->get('errorController')->debug($e);
+            } catch (\Error $e) {
+                echo $e->getFile() . "<br>";
+                echo $e->getMessage() . "<br>";
+            }
         }
         else {
             $errorCode = 500;
