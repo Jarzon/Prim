@@ -27,7 +27,7 @@ class Application
             $router->dispatchRoute();
         }
 
-        if($options['environment'] === 'dev') {
+        if($options['environment'] === 'dev' && !headers_sent()) {
             $included = get_included_files();
             $latest = 0;
 
