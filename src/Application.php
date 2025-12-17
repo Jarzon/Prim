@@ -70,9 +70,10 @@ class Application
         if ($this->options['debug'] === true) {
             try {
                 echo $this->container->get('errorController')->debug($e);
-            } catch (\Error $e) {
+            } catch (\Throwable $newe) {
                 echo $e->getFile() . "<br>";
                 echo $e->getMessage() . "<br>";
+                exit;
             }
         }
         else {

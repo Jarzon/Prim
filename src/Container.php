@@ -180,7 +180,7 @@ class Container
             return $this->init($name, $params);
         }
 
-        throw new Exception("Can't find service $name");
+        throw new Exception("Can't find service named $name");
     }
 
     /** @param array<mixed>|callable|null $params */
