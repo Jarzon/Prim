@@ -23,6 +23,7 @@ class Application
         }
 
         if(!$this->options['disableRouter']) {
+            /** @var Router $router */
             $router = $container->get('router');
             $router->dispatchRoute();
         }

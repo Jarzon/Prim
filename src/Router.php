@@ -30,9 +30,8 @@ class Router
             'server' => $_SERVER
         ];
 
-        $this->loadRoutes();
-
         $this->dispatcher = CachedDispatcher(function(RouteCollector $router) {
+            $this->loadRoutes();
             $this->buildRoutes($router);
             $this->router = $router;
         }, [
@@ -161,7 +160,10 @@ class Router
             include($localFile);
         }
 
-        if(!$included) throw new Exception("Can't find routes file $routeFile in $pack");
+        if(!$included) {
+            throw new Exception("Can't find routes file $routeFile in $pack");
+        }
+
 
         return $this;
     }
