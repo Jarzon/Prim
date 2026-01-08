@@ -27,15 +27,18 @@ class Router
             'root' => '',
             'project_name' => '',
             'router_query_string' => true,
-            'server' => $_SERVER
+            'server' => $_SERVER,
+            'routing' => 'routing'
         ];
 
-        $this->dispatcher = CachedDispatcher(function(RouteCollector $router) {
-            $this->loadRoutes();
+        $routingFile = $this->options['routing'];
+
+        $this->dispatcher = CachedDispatcher(function(RouteCollector $router) use($routingFile) {
+            $this->loadRoutes($routingFile);
             $this->buildRoutes($router);
             $this->router = $router;
         }, [
-            'cacheFile' => "{$this->options['root']}/app/cache/route.cache",
+            'cacheFile' => "{$this->options['root']}/app/cache/$routingFile.cache",
             'cacheDisabled' => ($this->options['environment'] === 'dev'),
         ]);
     }
@@ -45,9 +48,9 @@ class Router
         return $this->currentRoute[1][0] ?? false;
     }
 
-    public function loadRoutes(): void
+    public function loadRoutes(string $file): void
     {
-        include("{$this->options['root']}app/config/routing.php");
+        include("{$this->options['root']}app/config/$file.php");
     }
 
     function dispatchRoute(): ?object
