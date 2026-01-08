@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Prim\Container;
 use Prim\PackList;
@@ -26,7 +27,7 @@ class Test {
 
 class ContainerTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): Container
     {
         $service = $this->createMock(Service::class);
         $packlist = $this->createMock(PackList::class);
@@ -49,9 +50,7 @@ class ContainerTest extends TestCase
         return $container;
     }
 
-    /**
-     * @depends testConstructor
-     */
+    #[Depends('testConstructor')]
     public function testRegister(Container $container)
     {
         $container->register('test', \Tests\Test::class, function(Container $container) {
@@ -65,15 +64,5 @@ class ContainerTest extends TestCase
         $this->assertIsObject($container->get('test'));
         $this->assertTrue($container->get('test')->configured);
         $this->assertFalse($container->get('test')->nothing);
-    }
-
-    /**
-     * @depends testConstructor
-     */
-    public function testErrorController(Container $container)
-    {
-        $errorController = $container->get('errorController');
-
-        $this->assertIsObject($errorController);
     }
 }

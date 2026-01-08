@@ -2,13 +2,14 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Prim\View;
 use Tests\Mocks\Controller;
 
 class ControllerTest extends TestCase
 {
-    public function testControllerConstruct()
+    public function testControllerConstruct(): Controller
     {
         $view = $this->createMock(View::class);
 
@@ -20,10 +21,8 @@ class ControllerTest extends TestCase
         return $controller;
     }
 
-    /**
-     * @depends testControllerConstruct
-     */
-    public function testgetNamespace($controller)
+    #[Depends('testControllerConstruct')]
+    public function testgetNamespace(Controller $controller)
     {
         $controller->getNamespace('\\Project\\TestPack\\Controller\\Test');
 

@@ -28,7 +28,12 @@ class Application
             $router->dispatchRoute();
         }
 
-        if($options['environment'] === 'dev' && !headers_sent()) {
+        $this->setLastModified();
+    }
+
+    public function setLastModified(): void
+    {
+        if($this->options['environment'] === 'dev' && !headers_sent()) {
             $included = get_included_files();
             $latest = 0;
 
@@ -71,8 +76,15 @@ class Application
             try {
                 echo $this->container->get('errorController')->debug($e);
             } catch (\Throwable $newe) {
-                echo $e->getFile() . "<br>";
-                echo $e->getMessage() . "<br>";
+                try {
+                    ob_end_flush();
+                    $this->container->get('view')->setTemplate('prim', 'PrimPack');
+                    $this->container->get('view')->render('debug', 'PrimPack', ['error' => $e, 'container' => $this->container]);
+                } catch (\Throwable $newe) {
+                    echo $newe->getFile() . "<br>";
+                    echo $newe->getMessage() . "<br>";
+                }
+                $this->setLastModified();
                 exit;
             }
         }

@@ -4,14 +4,15 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use Prim\Model;
-
-use Tests\Mocks\PDO;
+use \PDO;
 
 class ModelTest extends TestCase
 {
     public function testUpdate()
     {
-        $model = new Model(new PDO());
+        $pdo = $this->createMock(PDO::class);
+
+        $model = new Model($pdo);
 
         $model->update('test', ['test' => '0'], '', []);
 
@@ -22,7 +23,9 @@ class ModelTest extends TestCase
 
     public function testUpdateMultiple()
     {
-        $model = new Model(new PDO());
+        $pdo = $this->createMock(PDO::class);
+
+        $model = new Model($pdo);
 
         $model->update('test', ['test' => '0', 'name' => 'wot'], '', []);
 
@@ -33,7 +36,9 @@ class ModelTest extends TestCase
 
     public function testUpdateWhere()
     {
-        $model = new Model(new PDO());
+        $pdo = $this->createMock(PDO::class);
+
+        $model = new Model($pdo);
 
         $model->update('test', ['test' => '0'], 'id = ?', ['1']);
 
@@ -44,7 +49,9 @@ class ModelTest extends TestCase
 
     public function testInsert()
     {
-        $model = new Model(new PDO());
+        $pdo = $this->createMock(PDO::class);
+
+        $model = new Model($pdo);
 
         $model->insert('test', ['test' => '0']);
 

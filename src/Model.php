@@ -8,14 +8,14 @@ use PrimPack\Service\PDOStatement;
 class Model
 {
     /* @phpstan-ignore-next-line */
-    public PDO $db;
+    public PDO|\PDO $db;
     /** @var array<mixed> $options */
     protected array $options = [];
 
     /** @param array<mixed> $options */
     function __construct(
         /* @phpstan-ignore-next-line */
-        PDO $db,
+        PDO|\PDO $db,
         array $options = []
     ) {
         $this->db = $db;
@@ -33,8 +33,7 @@ class Model
         $this->options[$name] = $value;
     }
 
-    /* @phpstan-ignore-next-line */
-    public function prepare(string $statement, array $driver_options = []): PDOStatement
+    public function prepare(string $statement, array $driver_options = []): PDOStatement|\PDOStatement
     {
         /* @phpstan-ignore-next-line */
         return $this->db->prepare($statement, $driver_options);

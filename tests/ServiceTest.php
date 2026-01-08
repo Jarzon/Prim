@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 use Prim\Container;
@@ -11,7 +12,7 @@ use Prim\Service;
 class ServiceTest extends TestCase
 {
 
-    public function testConstructor()
+    public function testConstructor(): Service
     {
         $conf = ['project_name' => 'Project'];
 
@@ -40,9 +41,7 @@ class ServiceTest extends TestCase
         return $service;
     }
 
-    /**
-     * @depends testConstructor
-     */
+    #[Depends('testConstructor')]
     public function testGetServicesInjection(Service $service)
     {
         $this->assertEquals(['globInjection', 'directInjection'], $service->getServicesInjection('\Project\aPack\Controller\ControllerClass'));
@@ -52,9 +51,7 @@ class ServiceTest extends TestCase
         return $service;
     }
 
-    /**
-     * @depends testConstructor
-     */
+    #[Depends('testConstructor')]
     public function testGetServicesVendorPack(Service $service)
     {
         $this->assertEquals([], $service->getServicesInjection('aPack\Controller\ControllerClass'));

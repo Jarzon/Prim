@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -33,7 +34,7 @@ EOD;
         $this->root = vfsStream::setup('root', null, $structure);
     }
 
-    public function testRouterConstruct()
+    public function testRouterConstruct(): Router
     {
         $conf = [
             'root' => vfsStream::url('root/'),
@@ -55,9 +56,7 @@ EOD;
         return $router;
     }
 
-    /**
-     * @depends testRouterConstruct
-     */
+    #[Depends('testRouterConstruct')]
     public function testDispatchRoute(Router $router)
     {
         $controller = $router->dispatchRoute();

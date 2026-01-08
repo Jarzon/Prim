@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -35,7 +36,7 @@ EOD;
         $this->root = vfsStream::setup('root', null, $structure);
     }
 
-    public function testViewConstruct()
+    public function testViewConstruct(): View
     {
         $conf = [
             'project_name' => 'test',
@@ -51,9 +52,7 @@ EOD;
         return $view;
     }
 
-    /**
-     * @depends testViewConstruct
-     */
+    #[Depends('testViewConstruct')]
     public function testBasicRender(View $view)
     {
         $view->start('default');
@@ -63,9 +62,7 @@ EOD;
         $this->assertEquals('static page', $view->section('default'));
     }
 
-    /**
-     * @depends testViewConstruct
-     */
+    #[Depends('testViewConstruct')]
     public function testMissingView(View $view)
     {
         $this->expectException(\Exception::class);

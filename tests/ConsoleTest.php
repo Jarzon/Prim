@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Prim\Container;
 use org\bovigo\vfs\{vfsStream, vfsStreamDirectory};
@@ -33,7 +34,7 @@ class ConsoleTest extends TestCase
         $this->root = vfsStream::setup('root', null, $structure);
     }
 
-    public function testConstruct()
+    public function testConstruct(): Console
     {
         $conf = [
             'db_enable' => false,
@@ -55,9 +56,7 @@ class ConsoleTest extends TestCase
         return $console;
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testAddCommand(Console $console)
     {
         $console->addCommand( Command::class);

@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -24,7 +25,7 @@ class InputTest extends TestCase
         $this->root = vfsStream::setup('root', null, $structure);
     }
 
-    public function testConstruct()
+    public function testConstruct(): Input
     {
         $input = new Input(['bin/prim', 'command', '--flag', '--param=value', 'firstArg', 'secondArg'], vfsStream::url('root/stdin'));
 
@@ -33,49 +34,37 @@ class InputTest extends TestCase
         return $input;
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testGetUnsetArgument(Input $input)
     {
         $this->assertEquals(null, $input->getArgument(2));
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testGetArgument(Input $input)
     {
         $this->assertEquals("firstArg", $input->getArgument(0));
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testGetUnsetParameter(Input $input)
     {
         $this->assertEquals(null, $input->getParameter('noparam'));
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testGetParameter(Input $input)
     {
         $this->assertEquals('value', $input->getParameter('param'));
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testGetUnsetFlag(Input $input)
     {
         $this->assertEquals(false, $input->getFlag('noflag'));
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testGetFlag(Input $input)
     {
         $this->assertEquals(true, $input->getFlag('flag'), 'Input->getFlag should return true whem flag exist.');

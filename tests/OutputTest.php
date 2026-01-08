@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -24,7 +25,7 @@ class OutputTest extends TestCase
         $this->root = vfsStream::setup('root', null, $structure);
     }
 
-    public function testConstruct()
+    public function testConstruct(): Output
     {
         $stdout = vfsStream::url('root/stdout');
 
@@ -35,9 +36,7 @@ class OutputTest extends TestCase
         return $output;
     }
 
-    /**
-     * @depends testConstruct
-     */
+    #[Depends('testConstruct')]
     public function testWriteLine($output)
     {
         $output->writeLine('test');
