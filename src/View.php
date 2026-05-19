@@ -33,7 +33,7 @@ class View implements ViewInterface
         });
     }
 
-    public function getConfig(string $name): mixec
+    public function getConfig(string $name): mixed
     {
         return $this->options[$name];
     }
