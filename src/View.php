@@ -33,6 +33,11 @@ class View implements ViewInterface
         });
     }
 
+    public function getConfig(string $name): mixec
+    {
+        return $this->options[$name];
+    }
+
     public function setPack(string $pack): void
     {
         $this->pack = $pack;
