@@ -215,7 +215,7 @@ class Container
     /**
      * @return Model
      */
-    public function getModel(string $name): object
+    protected function getModel(string $name): object
     {
         if (isset(self::$shared[$name]))
         {
@@ -244,7 +244,7 @@ class Container
         return $this->getModel($modelNamespace);
     }
 
-    public function getEntity(string $name): object
+    protected function getEntity(string $name): object
     {
         if (isset(self::$shared[$name]))
         {
@@ -290,7 +290,7 @@ class Container
         return $this->getService($modelNamespace);
     }
 
-    public function getService(string $name): object
+    protected function getService(string $name): object
     {
         if (isset(self::$shared[$name]))
         {
@@ -319,7 +319,7 @@ class Container
         return $this->getForm($modelNamespace);
     }
 
-    public function getForm(string $name): object
+    protected function getForm(string $name): object
     {
         if (isset(self::$shared[$name]))
         {
