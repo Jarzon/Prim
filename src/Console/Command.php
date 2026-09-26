@@ -16,12 +16,6 @@ class Command
     /** @param array<mixed> $options */
     public function __construct(array $options, Input|null $input = null, Output|null $output = null)
     {
-        $commandConfigFile = "{$options['app']}config/config_command.php";
-
-        if(file_exists($commandConfigFile)) {
-            $options = array_merge($options, include($commandConfigFile));
-        }
-
         $this->options = $options;
 
         if($input === null) {

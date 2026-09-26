@@ -11,6 +11,12 @@ $config = [
     'app' => "{$root}app/"
 ];
 
+$commandConfigFile = "{$config['app']}config/config_command.php";
+
+if(file_exists($commandConfigFile)) {
+    $config = array_merge($config, include($commandConfigFile));
+}
+
 $container = new Prim\Container($config);
 
 $console = $container->get('console');
